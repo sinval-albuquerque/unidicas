@@ -1,0 +1,222 @@
+{
+  "eslint.config.mjs": {
+    "mtime": 1782592364.96272,
+    "ast_hash": "dfa1f5f6a7037bf39dc510f30b180002",
+    "semantic_hash": "dfa1f5f6a7037bf39dc510f30b180002"
+  },
+  "next.config.ts": {
+    "mtime": 1782592365.1459975,
+    "ast_hash": "9b77af189a21a7a64e4bd7a426f64176",
+    "semantic_hash": "9b77af189a21a7a64e4bd7a426f64176"
+  },
+  "package.json": {
+    "mtime": 1782593024.1139464,
+    "ast_hash": "1952236dd769b6e436d19f21875df003",
+    "semantic_hash": "1952236dd769b6e436d19f21875df003"
+  },
+  "postcss.config.mjs": {
+    "mtime": 1782592365.0128393,
+    "ast_hash": "239f3ebf717465dc636818a1a619398d",
+    "semantic_hash": "239f3ebf717465dc636818a1a619398d"
+  },
+  "src/app/categorias/[categoria]/comparar/page.tsx": {
+    "mtime": 1782594831.2028258,
+    "ast_hash": "f89cfdd467aa601c0228a0859a5d1d81",
+    "semantic_hash": "f89cfdd467aa601c0228a0859a5d1d81"
+  },
+  "src/app/categorias/[categoria]/page.tsx": {
+    "mtime": 1782594812.407374,
+    "ast_hash": "b4140bcebaf53d9dc62348837ba8438f",
+    "semantic_hash": "b4140bcebaf53d9dc62348837ba8438f"
+  },
+  "src/app/layout.tsx": {
+    "mtime": 1782594795.1460605,
+    "ast_hash": "622d9a0645e3539dcf2268bd70c89fbb",
+    "semantic_hash": "622d9a0645e3539dcf2268bd70c89fbb"
+  },
+  "src/app/page.tsx": {
+    "mtime": 1782594802.5509014,
+    "ast_hash": "ed8e80b17f1f760236ccb5169d7e4f45",
+    "semantic_hash": "ed8e80b17f1f760236ccb5169d7e4f45"
+  },
+  "src/app/robots.ts": {
+    "mtime": 1782594936.6714168,
+    "ast_hash": "0cbf90a264cc4775121e2a856315895a",
+    "semantic_hash": "0cbf90a264cc4775121e2a856315895a"
+  },
+  "src/app/sitemap.ts": {
+    "mtime": 1782594952.9703255,
+    "ast_hash": "2a85a47eae7f578ac5af2a72cfd3bf73",
+    "semantic_hash": "2a85a47eae7f578ac5af2a72cfd3bf73"
+  },
+  "src/components/AttributeRanking.tsx": {
+    "mtime": 1782594617.6285155,
+    "ast_hash": "09ab943629175bf80b755fea4523fe52",
+    "semantic_hash": "09ab943629175bf80b755fea4523fe52"
+  },
+  "src/components/BestByAttributeCard.tsx": {
+    "mtime": 1782594616.8707254,
+    "ast_hash": "d936c84b596bdbfced3f9e5cd513e17b",
+    "semantic_hash": "d936c84b596bdbfced3f9e5cd513e17b"
+  },
+  "src/components/ComparisonTable.tsx": {
+    "mtime": 1782594616.5125296,
+    "ast_hash": "6b69c77ce24cdf756df084e34248e9db",
+    "semantic_hash": "6b69c77ce24cdf756df084e34248e9db"
+  },
+  "src/components/Footer.tsx": {
+    "mtime": 1782594853.092295,
+    "ast_hash": "dd38561479bbc248299c99239abb0c16",
+    "semantic_hash": "dd38561479bbc248299c99239abb0c16"
+  },
+  "src/components/Header.tsx": {
+    "mtime": 1782594615.6233442,
+    "ast_hash": "0ed7a79dffe87b5a86679591fe1c7cd1",
+    "semantic_hash": "0ed7a79dffe87b5a86679591fe1c7cd1"
+  },
+  "src/components/Hero.tsx": {
+    "mtime": 1782594618.0037894,
+    "ast_hash": "f8b7c40792ca31e3576ac6c0cb1d36df",
+    "semantic_hash": "f8b7c40792ca31e3576ac6c0cb1d36df"
+  },
+  "src/components/RatingBadge.tsx": {
+    "mtime": 1782594614.8866556,
+    "ast_hash": "27cdb306cf3cc25e4f96dd950b11406f",
+    "semantic_hash": "27cdb306cf3cc25e4f96dd950b11406f"
+  },
+  "src/components/ReviewCard.tsx": {
+    "mtime": 1782594839.196565,
+    "ast_hash": "61dd4f5a1cfa382f5560e5e313e027dd",
+    "semantic_hash": "61dd4f5a1cfa382f5560e5e313e027dd"
+  },
+  "src/components/ReviewList.tsx": {
+    "mtime": 1782594605.6289282,
+    "ast_hash": "214157f14bef5fcd9c8a43c331a39116",
+    "semantic_hash": "214157f14bef5fcd9c8a43c331a39116"
+  },
+  "src/components/SearchBar.tsx": {
+    "mtime": 1782594615.253908,
+    "ast_hash": "fcc8691c81faeeab7572e947a59748ec",
+    "semantic_hash": "fcc8691c81faeeab7572e947a59748ec"
+  },
+  "src/lib/categorias.ts": {
+    "mtime": 1782594612.3716047,
+    "ast_hash": "f0b196cfe6e5c5f4eaa18cd98d71bbf6",
+    "semantic_hash": "f0b196cfe6e5c5f4eaa18cd98d71bbf6"
+  },
+  "src/lib/comparacoes.ts": {
+    "mtime": 1782594614.0293608,
+    "ast_hash": "6d196404edbdacaf740ffc8050cc6dc9",
+    "semantic_hash": "6d196404edbdacaf740ffc8050cc6dc9"
+  },
+  "src/lib/constants.ts": {
+    "mtime": 1782594784.6312973,
+    "ast_hash": "a3106cd892a868e090ba58abfa9e33d4",
+    "semantic_hash": "a3106cd892a868e090ba58abfa9e33d4"
+  },
+  "src/lib/reviews.ts": {
+    "mtime": 1782594612.7637162,
+    "ast_hash": "36849bdc37bb624c74701b570827642e",
+    "semantic_hash": "36849bdc37bb624c74701b570827642e"
+  },
+  "src/lib/search.ts": {
+    "mtime": 1782594613.1788118,
+    "ast_hash": "ed9ef09167bb8fa5e232b006a11e67ca",
+    "semantic_hash": "ed9ef09167bb8fa5e232b006a11e67ca"
+  },
+  "src/tests/comparacoes.test.ts": {
+    "mtime": 1782594618.7284658,
+    "ast_hash": "496e946d946b7bdb9747f9ca4625eb75",
+    "semantic_hash": "496e946d946b7bdb9747f9ca4625eb75"
+  },
+  "src/tests/search.test.ts": {
+    "mtime": 1782594619.100797,
+    "ast_hash": "8739dfc07112bd80aa62082cb3a8ce39",
+    "semantic_hash": "8739dfc07112bd80aa62082cb3a8ce39"
+  },
+  "src/tests/setup.ts": {
+    "mtime": 1782594611.928918,
+    "ast_hash": "5efb4398e986442d4b511254089c5766",
+    "semantic_hash": "5efb4398e986442d4b511254089c5766"
+  },
+  "src/types/review.ts": {
+    "mtime": 1782594611.5175505,
+    "ast_hash": "25ace37778dc9bcfaf062a58ec98da2d",
+    "semantic_hash": "25ace37778dc9bcfaf062a58ec98da2d"
+  },
+  "tsconfig.json": {
+    "mtime": 1782592687.1743057,
+    "ast_hash": "ee17fd1c97c735e9f3564e3f5251f125",
+    "semantic_hash": "ee17fd1c97c735e9f3564e3f5251f125"
+  },
+  "vitest.config.ts": {
+    "mtime": 1782594610.3762667,
+    "ast_hash": "da758805212417b1c28a68a0d13c170d",
+    "semantic_hash": "da758805212417b1c28a68a0d13c170d"
+  },
+  "AGENTS.md": {
+    "mtime": 1782592871.8651502,
+    "ast_hash": "9e09241799026ac05be315a2f0b50055",
+    "semantic_hash": "9e09241799026ac05be315a2f0b50055"
+  },
+  "CLAUDE.md": {
+    "mtime": 1782592871.8651502,
+    "ast_hash": "5c27369b226fcf2be8a6cfe52224e767",
+    "semantic_hash": "5c27369b226fcf2be8a6cfe52224e767"
+  },
+  "README.md": {
+    "mtime": 1782592364.9299233,
+    "ast_hash": "f15aaa42d5d299d091b1171097ea56ad",
+    "semantic_hash": "f15aaa42d5d299d091b1171097ea56ad"
+  },
+  "src/content/reviews/fone-bluetooth-anc.mdx": {
+    "mtime": 1782593408.898412,
+    "ast_hash": "766c6c2d27de3a0f6630ff27f7582e9d",
+    "semantic_hash": "766c6c2d27de3a0f6630ff27f7582e9d"
+  },
+  "src/content/reviews/fone-studio-qualidade.mdx": {
+    "mtime": 1782594591.8983786,
+    "ast_hash": "97a44f6da5fd8fa179726f4de7cc893c",
+    "semantic_hash": "97a44f6da5fd8fa179726f4de7cc893c"
+  },
+  "src/content/reviews/notebook-gamer-rtx-4060.mdx": {
+    "mtime": 1782594591.8983786,
+    "ast_hash": "b04363210ed59f1237bb12b18a98d20c",
+    "semantic_hash": "b04363210ed59f1237bb12b18a98d20c"
+  },
+  "src/content/reviews/notebook-ultrabook-bateria.mdx": {
+    "mtime": 1782594591.8983786,
+    "ast_hash": "180221f2ca715a8d038747f8ad6bf1ef",
+    "semantic_hash": "180221f2ca715a8d038747f8ad6bf1ef"
+  },
+  "src/content/reviews/notebook-workstation-32gb.mdx": {
+    "mtime": 1782594591.8983786,
+    "ast_hash": "2cfc7cfc04138ab52f0832aad299c8fe",
+    "semantic_hash": "2cfc7cfc04138ab52f0832aad299c8fe"
+  },
+  "public/file.svg": {
+    "mtime": 1782592365.0293686,
+    "ast_hash": "d09f95206c3fa0bb9bd9fefabfd0ea71",
+    "semantic_hash": "d09f95206c3fa0bb9bd9fefabfd0ea71"
+  },
+  "public/globe.svg": {
+    "mtime": 1782592365.0593271,
+    "ast_hash": "2aaafa6a49b6563925fe440891e32717",
+    "semantic_hash": "2aaafa6a49b6563925fe440891e32717"
+  },
+  "public/next.svg": {
+    "mtime": 1782592365.079286,
+    "ast_hash": "8e061864f388b47f33a1c3780831193e",
+    "semantic_hash": "8e061864f388b47f33a1c3780831193e"
+  },
+  "public/vercel.svg": {
+    "mtime": 1782592365.1027086,
+    "ast_hash": "c0af2f507b369b085b35ef4bbe3bcf1e",
+    "semantic_hash": "c0af2f507b369b085b35ef4bbe3bcf1e"
+  },
+  "public/window.svg": {
+    "mtime": 1782592365.1128535,
+    "ast_hash": "a2760511c65806022ad20adf74370ff3",
+    "semantic_hash": "a2760511c65806022ad20adf74370ff3"
+  }
+}
