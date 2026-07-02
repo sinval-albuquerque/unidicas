@@ -83,8 +83,17 @@ h1, h2, h3, h4, h5, h6 {
   letter-spacing: -0.01em;
 }
 
-a { color: var(--color-primary); text-decoration: none; }
-a:hover { text-decoration: underline; text-underline-offset: 3px; }
+/* Links de texto (não botões) — usa :where() pra ter 0 de especificidade,
+   permitindo que utilities Tailwind (text-white, text-primary, etc.)
+   sempre sobrescrevam a cor em botões/badges. */
+:where(a):not([class*="bg-"]):not([class*="hover:bg-"]) {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+:where(a):not([class*="bg-"]):not([class*="hover:bg-"]):hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
 
 /* Article prose — usado em MDX */
 .prose-article {
