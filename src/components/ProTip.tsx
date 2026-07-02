@@ -14,7 +14,7 @@ export function ProTip({
         💡
       </span>
       <div>
-        <p className="text-xs font-extrabold uppercase tracking-wider text-accent mb-1">
+        <p className="text-xs font-extrabold uppercase tracking-wider text-amber-900 mb-1">
           {title}
         </p>
         <div className="text-sm text-text-soft leading-relaxed">{children}</div>

@@ -112,7 +112,7 @@ export default async function ReviewSinglePage({
             <div className="flex flex-wrap items-center gap-4 mb-5">
               <RatingBadge nota={review.nota} />
               {review.emDestaque && (
-                <span className="bg-accent-soft text-accent text-xs font-bold px-2.5 py-0.5 rounded uppercase tracking-wide">
+                <span className="bg-accent-soft text-amber-900 text-xs font-bold px-2.5 py-0.5 rounded uppercase tracking-wide">
                   Destaque
                 </span>
               )}

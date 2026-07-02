@@ -6,7 +6,7 @@ export function RatingBadge({ nota, max = 5 }: { nota: number; max?: number }) {
 
   return (
     <div className="flex items-center gap-1.5 text-sm">
-      <span className="text-accent" aria-hidden>
+      <span className="text-amber-500" aria-hidden>
         {"★".repeat(estrelasCheias)}
         {meia ? "⯨" : ""}
         {"☆".repeat(vazias)}

@@ -23,7 +23,7 @@ export function AttributeRanking({
       <ol className="space-y-2">
         {ordenadas.map((r, i) => (
           <li key={r.slug} className="flex items-center gap-3 text-sm">
-            <span className={`font-extrabold w-6 text-center ${i === 0 ? "text-accent" : "text-text-muted"}`}>
+            <span className={`font-extrabold w-6 text-center ${i === 0 ? "text-amber-900" : "text-text-muted"}`}>
               {i + 1}
             </span>
             <Link href={`/reviews/${r.slug}`} className="flex-1 hover:text-primary font-medium truncate">

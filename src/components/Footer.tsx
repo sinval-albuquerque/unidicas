@@ -81,11 +81,6 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/adicionar-produto" className="text-sm text-text-soft hover:text-primary no-underline">
-                  ✨ Adicionar produto
-                </Link>
-              </li>
-              <li>
                 <Link href="/contato" className="text-sm text-text-soft hover:text-primary no-underline">
                   Contato
                 </Link>

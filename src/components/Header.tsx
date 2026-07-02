@@ -8,7 +8,7 @@ export function Header() {
     <header className="sticky top-0 z-50 bg-bg/95 backdrop-blur border-b border-border">
       {/* Barra superior fina: tagline / contato */}
       <div className="bg-bg-alt border-b border-border">
-        <div className="max-w-6xl mx-auto px-4 py-1.5 text-xs text-text-muted flex justify-between">
+        <div className="max-w-6xl mx-auto px-4 py-1.5 text-xs text-text-soft flex justify-between">
           <span>
             <span aria-hidden>★</span> Reviews honestas, ofertas reais, sem
             enrolação.
@@ -73,14 +73,6 @@ export function Header() {
           </nav>
 
           <div className="flex items-center gap-3">
-            <Link
-              href="/adicionar-produto"
-              className="hidden lg:inline-flex items-center gap-1.5 text-xs text-text-muted hover:text-primary no-underline border border-border px-2.5 py-1 rounded-full transition"
-              title="Como adicionar produtos aqui no chat"
-            >
-              <span aria-hidden>✨</span>
-              Adicionar produto
-            </Link>
             <Link
               href="/produtos"
               className="bg-primary hover:bg-primary-dark text-white text-sm font-semibold px-4 py-2 rounded-lg no-underline transition"
