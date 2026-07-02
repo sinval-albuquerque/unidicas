@@ -15,9 +15,10 @@ export function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: { categoria: string };
+  params: Promise<{ categoria: string }>;
 }): Promise<Metadata> {
-  const categoria = obterCategoria(params.categoria);
+  const { categoria: slug } = await params;
+  const categoria = obterCategoria(slug);
   if (!categoria) return { title: "Categoria não encontrada" };
   return {
     title: categoria.nome,
@@ -26,12 +27,13 @@ export async function generateMetadata({
 }
 
 /** Página de categoria: hero, melhores por atributo, reviews, comparativo. */
-export default function CategoriaPage({
+export default async function CategoriaPage({
   params,
 }: {
-  params: { categoria: string };
+  params: Promise<{ categoria: string }>;
 }) {
-  const categoria = obterCategoria(params.categoria);
+  const { categoria: slug } = await params;
+  const categoria = obterCategoria(slug);
   if (!categoria) notFound();
 
   const reviews = obterReviewsPorCategoria(categoria.slug);

@@ -18,9 +18,10 @@ export function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const materia = obterMateriaPorSlug(params.slug);
+  const { slug } = await params;
+  const materia = obterMateriaPorSlug(slug);
   if (!materia) return { title: "Matéria não encontrada" };
   return {
     title: materia.titulo,
@@ -32,9 +33,10 @@ export async function generateMetadata({
 export default async function MateriaSinglePage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
-  const materia = obterMateriaPorSlug(params.slug);
+  const { slug } = await params;
+  const materia = obterMateriaPorSlug(slug);
   if (!materia) return notFound();
 
   const todas = obterTodasMaterias();

@@ -24,9 +24,10 @@ export function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const review = obterReviewPorSlug(params.slug);
+  const { slug } = await params;
+  const review = obterReviewPorSlug(slug);
   if (!review) return { title: "Review não encontrada" };
   return {
     title: review.titulo,
@@ -38,9 +39,10 @@ export async function generateMetadata({
 export default async function ReviewSinglePage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
-  const review = obterReviewPorSlug(params.slug);
+  const { slug } = await params;
+  const review = obterReviewPorSlug(slug);
   if (!review) return notFound();
 
   const categoria = obterCategoria(review.categoria);
