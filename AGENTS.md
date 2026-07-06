@@ -20,14 +20,16 @@ Site de reviews de produtos (afiliados). Stack: **Next.js 16 (App Router) + Type
 
 - `src/content/reviews/*.mdx` — reviews (frontmatter + MDX)
 - `src/content/materias/*.mdx` — matérias e guias
+- `src/content/ofertas/*.mdx` — ofertas curadas para `/ofertas` (frontmatter com `linkAfiliado` rastreado)
 - `src/lib/categorias.ts` — **single source of truth** de categorias e atributos comparáveis
 - `src/lib/secoes.ts` — agrupamento de categorias (cor, ícone)
-- `src/lib/reviews.ts` — leitura de MDX com `gray-matter`
+- `src/lib/reviews.ts` — leitura de MDX de reviews com `gray-matter`
+- `src/lib/ofertas-content.ts` — leitura de MDX de ofertas com `gray-matter`
 - `src/lib/comparacoes.ts` — funções **puras** de ranking (testadas em `src/tests/comparacoes.test.ts`)
 - `src/lib/search.ts` — busca textual sobre as reviews
 - `src/app/<secao>/<categoria>/...` — rotas dinâmicas (App Router)
 - `src/components/` — UI de cards, tabelas, badges
-- `src/types/review.ts` — contratos de domínio (não duplicar em outros lugares)
+- `src/types/review.ts`, `src/types/oferta.ts` — contratos de domínio
 
 ## Modelo de conteúdo
 

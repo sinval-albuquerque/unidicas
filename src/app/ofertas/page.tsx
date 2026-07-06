@@ -1,33 +1,38 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { obterTodasReviews } from "@/lib/reviews";
+import { OfertaCuratedCard } from "@/components/OfertaCuratedCard";
 import { OfertaCard } from "@/components/OfertaCard";
-import { MlOfertaCard } from "@/components/MlOfertaCard";
+import { obterTodasOfertas } from "@/lib/ofertas-content";
+import { obterTodasReviews } from "@/lib/reviews";
 import {
   AFILIADO_ML_PERFIL_URL,
   OFERTAS_ML_LABEL,
   OFERTAS_ML_LISTA_URL,
 } from "@/lib/ofertas";
-import { buscarOfertasML, ML_AFFILIATE_NICK_PUBLIC } from "@/lib/ml";
 
 /**
- * Página /ofertas — Server Component dinâmico.
+ * Página /ofertas
  *
- * - Faz até 3 buscas paralelas na API pública do ML (categorias amplas).
- * - Cacheia por 1h (revalidate=3600).
- * - Se a API falhar (403, timeout, sem rede), cai para o fallback
- *   com reviews já existentes no Unidicas.
+ * Fonte primária: ofertas curadas manualmente em `src/content/ofertas/*.mdx`.
+ * Cada oferta tem link de afiliado com `?matt_word=sinvalalbuquerque` —
+ * rastreamento oficial do programa de afiliados do Mercado Livre.
  *
- * Isso replica o padrão do Promobit: dados renderizados no servidor,
- * hidratação client, e fallback gracioso.
+ * Fonte secundária (fallback): reviews do Unidicas com desconto ativo.
+ *
+ * Por que não usar a API do Mercado Livre?
+ * O ML fechou todos os endpoints de search/trends/highlights para IPs de
+ * datacenter (incluindo AWS/Vercel) em 2025. Tentamos:
+ *  - /sites/MLB/search       → 403 PolicyAgent
+ *  - /trends/MLB             → 403
+ *  - /highlights/MLB         → 403
+ *  - lista.mercadolivre.com.br (LPSM) → account-verification anti-bot
+ * Solução: curadoria manual = 100% confiável, sem risco de ban.
  */
-
-export const revalidate = 3600; // 1h — equivalente ao que o Promobit faz
 
 export const metadata: Metadata = {
   title: "Ofertas em destaque",
   description:
-    "Ofertas verificadas do Mercado Livre via Unidicas — descontos em informática, celulares, casa e mais. Link de afiliado.",
+    "Ofertas curadas com link de afiliado Mercado Livre (Unidicas) — descontos verificados e rastreados.",
   alternates: { canonical: "/ofertas" },
   openGraph: {
     title: "Ofertas em destaque — Unidicas",
@@ -37,50 +42,16 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function OfertasPage() {
-  // Busca paralela nas 3 maiores categorias do nosso escopo.
-  // Cada chamada é independente — se uma falhar, as outras ainda aparecem.
-  const [resInformatica, resCelulares, resCasa] = await Promise.allSettled([
-    buscarOfertasML({ query: "promocao", categoryId: "MLB1648", limit: 8 }),
-    buscarOfertasML({ query: "promocao", categoryId: "MLB1051", limit: 8 }),
-    buscarOfertasML({ query: "promocao", categoryId: "MLB1574", limit: 8 }),
-  ]);
-
-  // Junta resultados com sucesso e deduplica por ID.
-  const seen = new Set<string>();
-  const mlItems = [
-    resInformatica,
-    resCelulares,
-    resCasa,
-  ].flatMap((r) => (r.status === "fulfilled" ? r.value.results : []))
-    .filter((item) => {
-      if (seen.has(item.id)) return false;
-      seen.add(item.id);
-      return true;
-    })
-    .slice(0, 12);
-
-  // Erros por categoria (para mostrar debug só em dev).
-  const erros = [resInformatica, resCelulares, resCasa]
-    .map((r, i) => ({
-      cat: ["Informática", "Celulares", "Casa"][i],
-      msg: r.status === "rejected" ? String(r.reason) : r.value.error?.message,
-    }))
-    .filter((e) => e.msg);
-
-  const mlFalhou = mlItems.length === 0;
-
-  // Fallback: reviews locais com desconto.
-  const reviews = mlFalhou
-    ? obterTodasReviews()
-        .filter((r) => r.precoOriginal && r.precoOriginal > r.preco)
-        .sort((a, b) => b.nota - a.nota)
-        .slice(0, 12)
-    : [];
+export default function OfertasPage() {
+  const ofertasCuradas = obterTodasOfertas();
+  const reviews = obterTodasReviews()
+    .filter((r) => r.precoOriginal && r.precoOriginal > r.preco)
+    .sort((a, b) => b.nota - a.nota)
+    .slice(0, 6);
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-10">
-      {/* ===== Hero da página ===== */}
+      {/* ===== Hero ===== */}
       <header className="mb-8">
         <p className="text-xs uppercase tracking-[0.2em] text-accent font-extrabold mb-2">
           🔥 Ofertas em destaque
@@ -94,13 +65,6 @@ export default async function OfertasPage() {
           você comprar, o Unidicas ganha uma pequena comissão, sem custo
           extra para você.
         </p>
-        {mlFalhou && (
-          <div className="mt-4 bg-accent-soft border border-accent/30 rounded-lg px-4 py-3 text-sm">
-            <strong>Modo de contingência ativo:</strong> a API do Mercado
-            Livre não respondeu agora. Mostrando as últimas ofertas
-            curadas pelo Unidicas. Tente recarregar em alguns minutos.
-          </div>
-        )}
       </header>
 
       {/* ===== Card "Abrir lista oficial" ===== */}
@@ -144,52 +108,70 @@ export default async function OfertasPage() {
         </div>
       </a>
 
-      {/* ===== Grade: ML API ou fallback ===== */}
-      <section>
-        <div className="flex items-end justify-between mb-5 border-b border-border pb-3">
-          <div>
-            <h2 className="text-xl font-extrabold text-text">
-              {mlFalhou
-                ? "Top descontos do Unidicas"
-                : `Ofertas de hoje no ${OFERTAS_ML_LABEL}`}
-            </h2>
-            <p className="text-sm text-text-soft mt-1">
-              {mlFalhou
-                ? "12 reviews selecionados — em ordem de maior economia."
-                : `${mlItems.length} ${
-                    mlItems.length === 1 ? "oferta" : "ofertas"
-                  } com pelo menos 20% de desconto — atualizado a cada 1h.`}
-            </p>
-          </div>
-          <Link
-            href="/produtos"
-            className="text-sm font-semibold text-primary hover:underline"
-          >
-            Ver todos →
-          </Link>
-        </div>
-
-        {mlFalhou ? (
-          reviews.length === 0 ? (
-            <p className="text-text-soft">
-              Nenhuma oferta com desconto no momento. Confira a lista
-              oficial do {OFERTAS_ML_LABEL} acima.
-            </p>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-              {reviews.map((review) => (
-                <OfertaCard key={review.slug} review={review} />
-              ))}
+      {/* ===== Ofertas curadas (primário) ===== */}
+      {ofertasCuradas.length > 0 && (
+        <section className="mb-12">
+          <div className="flex items-end justify-between mb-5 border-b border-border pb-3">
+            <div>
+              <h2 className="text-xl font-extrabold text-text">
+                Ofertas curadas
+              </h2>
+              <p className="text-sm text-text-soft mt-1">
+                {ofertasCuradas.length}{" "}
+                {ofertasCuradas.length === 1
+                  ? "oferta selecionada"
+                  : "ofertas selecionadas"}{" "}
+                — atualizadas manualmente pelo Unidicas.
+              </p>
             </div>
-          )
-        ) : (
+            <span className="text-[0.7rem] text-text-muted uppercase tracking-wider font-bold">
+              {ofertasCuradas.filter((o) => o.emDestaque).length} em destaque
+            </span>
+          </div>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-            {mlItems.map((item) => (
-              <MlOfertaCard key={item.id} item={item} />
+            {ofertasCuradas.map((oferta) => (
+              <OfertaCuratedCard key={oferta.slug} oferta={oferta} />
             ))}
           </div>
-        )}
-      </section>
+        </section>
+      )}
+
+      {/* ===== Fallback: reviews com desconto ===== */}
+      {reviews.length > 0 && (
+        <section>
+          <div className="flex items-end justify-between mb-5 border-b border-border pb-3">
+            <div>
+              <h2 className="text-xl font-extrabold text-text">
+                Reviews do Unidicas com desconto
+              </h2>
+              <p className="text-sm text-text-soft mt-1">
+                Produtos que já avaliamos e que estão com promoção ativa.
+              </p>
+            </div>
+            <Link
+              href="/produtos"
+              className="text-sm font-semibold text-primary hover:underline"
+            >
+              Ver todos →
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+            {reviews.map((review) => (
+              <OfertaCard key={review.slug} review={review} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* ===== Vazio (nunca deve acontecer, mas defensivo) ===== */}
+      {ofertasCuradas.length === 0 && reviews.length === 0 && (
+        <p className="text-text-soft">
+          Nenhuma oferta no momento. Confira a lista oficial do{" "}
+          {OFERTAS_ML_LABEL} acima.
+        </p>
+      )}
 
       {/* ===== Rodapé de transparência ===== */}
       <footer className="mt-12 pt-6 border-t border-border text-sm text-text-soft">
@@ -201,25 +183,11 @@ export default async function OfertasPage() {
             rel="noopener noreferrer"
             className="text-primary font-semibold underline"
           >
-            {OFERTAS_ML_LABEL} ({ML_AFFILIATE_NICK_PUBLIC})
+            {OFERTAS_ML_LABEL} (sinvalalbuquerque)
           </a>
           . Ao comprar por eles, o Unidicas recebe uma comissão, sem
           alterar o preço para você.
         </p>
-        {process.env.NODE_ENV === "development" && erros.length > 0 && (
-          <details className="mt-3 text-xs text-text-muted">
-            <summary className="cursor-pointer">
-              Debug: {erros.length} chamada(s) com erro
-            </summary>
-            <ul className="list-disc pl-5 mt-2 space-y-1">
-              {erros.map((e, i) => (
-                <li key={i}>
-                  {e.cat}: {e.msg}
-                </li>
-              ))}
-            </ul>
-          </details>
-        )}
       </footer>
     </div>
   );
