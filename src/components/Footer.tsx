@@ -94,6 +94,44 @@ export function Footer() {
           </div>
         </div>
 
+        {/* Redes sociais */}
+        <div className="mb-8">
+          <h4 className="text-xs font-extrabold uppercase tracking-wider mb-3 text-text">
+            Siga o {SITE_NAME}
+          </h4>
+          <div className="flex items-center gap-3">
+            <a
+              href="https://instagram.com/unidicas1"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram do Unidicas (@unidicas1)"
+              className="inline-flex items-center gap-2 text-sm text-text-soft hover:text-primary no-underline transition"
+            >
+              <span
+                aria-hidden
+                className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-gradient-to-tr from-[#feda75] via-[#d62976] to-[#962fbf] text-white"
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden
+                >
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+                </svg>
+              </span>
+              <span>@unidicas1</span>
+            </a>
+          </div>
+        </div>
+
         <div className="pt-6 border-t border-border">
           <p className="text-xs text-text-muted leading-relaxed max-w-3xl mb-3">
             <strong>Divulgação:</strong> alguns links deste site são de

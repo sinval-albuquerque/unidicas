@@ -44,6 +44,12 @@ export function Header() {
               Início
             </Link>
             <Link
+              href="/secoes"
+              className="text-text-soft hover:text-primary no-underline"
+            >
+              Seções
+            </Link>
+            <Link
               href="/materias"
               className="text-text-soft hover:text-primary no-underline"
             >

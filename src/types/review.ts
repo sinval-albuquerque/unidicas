@@ -6,6 +6,9 @@
 /** Slug de categoria (ex: "notebooks", "fones"). */
 export type CategoriaSlug = string;
 
+/** Slug de seção (nível acima das categorias, ex: "tecnologia", "kits"). */
+export type SecaoSlug = string;
+
 /** Identificador de atributo comparável (ex: "bateria", "memoria"). */
 export type AtributoId = string;
 
@@ -27,7 +30,27 @@ export interface Categoria {
   slug: CategoriaSlug;
   nome: string;
   descricao: string;
+  /** Seção pai (nível acima da categoria). Ver SECOES em src/lib/secoes.ts. */
+  secao: SecaoSlug;
   atributos: AtributoComparacao[];
+}
+
+/**
+ * Seção do site — agrupamento de nível superior das categorias.
+ * Cada seção tem uma cor própria para diferenciar visualmente suas páginas.
+ */
+export interface Secao {
+  slug: SecaoSlug;
+  nome: string;
+  descricao: string;
+  /** Cor principal (hex) — usada em badges e bordas de destaque. */
+  cor: string;
+  /** Variação escura (hover/ativo). */
+  corDark: string;
+  /** Variação clara (fundo suave de badges). */
+  corLight: string;
+  /** Emoji representativo. */
+  icone?: string;
 }
 
 /**

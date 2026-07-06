@@ -9,6 +9,7 @@ export const CATEGORIAS: Categoria[] = [
     slug: "notebooks",
     nome: "Notebooks",
     descricao: "Notebooks para trabalho, estudo e games.",
+    secao: "tecnologia",
     atributos: [
       { id: "memoria", label: "Memória RAM", unidade: "GB", maiorMelhor: true, icone: "💾" },
       { id: "bateria", label: "Bateria", unidade: "h", maiorMelhor: true, icone: "🔋" },
@@ -22,6 +23,7 @@ export const CATEGORIAS: Categoria[] = [
     slug: "celulares",
     nome: "Celulares",
     descricao: "Smartphones Android e iPhone.",
+    secao: "tecnologia",
     atributos: [
       { id: "camera", label: "Câmera", unidade: "Mpx", maiorMelhor: true, icone: "📷" },
       { id: "bateria", label: "Bateria", unidade: "mAh", maiorMelhor: true, icone: "🔋" },
@@ -34,6 +36,7 @@ export const CATEGORIAS: Categoria[] = [
     slug: "fones",
     nome: "Fones de Ouvido",
     descricao: "Fones bluetooth e com fio.",
+    secao: "tecnologia",
     atributos: [
       { id: "bateria", label: "Bateria", unidade: "h", maiorMelhor: true, icone: "🔋" },
       { id: "anc", label: "Cancelamento de ruído", unidade: "pts", maiorMelhor: true, icone: "🔇" },
@@ -45,6 +48,7 @@ export const CATEGORIAS: Categoria[] = [
     slug: "air-fryers",
     nome: "Air Fryers",
     descricao: "Fritadeiras sem óleo.",
+    secao: "kits",
     atributos: [
       { id: "capacidade", label: "Capacidade", unidade: "L", maiorMelhor: true, icone: "🛢️" },
       { id: "potencia", label: "Potência", unidade: "W", maiorMelhor: true, icone: "⚡" },
@@ -56,6 +60,7 @@ export const CATEGORIAS: Categoria[] = [
     slug: "smartwatches",
     nome: "Smartwatches",
     descricao: "Relógios inteligentes e esportivos.",
+    secao: "tecnologia",
     atributos: [
       { id: "bateria", label: "Bateria", unidade: "dias", maiorMelhor: true, icone: "🔋" },
       { id: "gps", label: "Precisão GPS", unidade: "pts", maiorMelhor: true, icone: "🛰️" },

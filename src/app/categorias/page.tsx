@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { CATEGORIAS } from "@/lib/categorias";
 import { obterReviewsPorCategoria } from "@/lib/reviews";
+import { obterSecaoDaCategoria } from "@/lib/secoes";
+import { SecaoBadge } from "@/components/SecaoBadge";
 
 export const metadata = {
   title: "Categorias",
@@ -20,19 +22,30 @@ export default function CategoriasIndexPage() {
         </h1>
         <p className="text-base text-text-soft max-w-2xl">
           Navegue por categoria para ver reviews, comparativos e o melhor
-          produto em cada atributo.
+          produto em cada atributo. As categorias estão agrupadas em{" "}
+          <Link href="/secoes" className="text-primary font-semibold underline">
+            seções
+          </Link>
+          , cada uma com sua cor.
         </p>
       </header>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         {CATEGORIAS.map((c) => {
           const reviews = obterReviewsPorCategoria(c.slug);
+          const secao = obterSecaoDaCategoria(c.slug);
           return (
             <Link
               key={c.slug}
               href={`/categorias/${c.slug}`}
               className="group block bg-bg border border-border rounded-xl p-6 hover:border-primary hover:shadow-md transition no-underline"
+              style={secao ? { borderTop: `3px solid ${secao.cor}` } : undefined}
             >
+              {secao && (
+                <div className="mb-2">
+                  <SecaoBadge secao={secao} link />
+                </div>
+              )}
               <h2 className="text-xl font-extrabold text-text group-hover:text-primary mb-2">
                 {c.nome}
               </h2>

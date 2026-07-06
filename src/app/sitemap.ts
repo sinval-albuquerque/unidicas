@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/lib/constants";
 import { CATEGORIAS } from "@/lib/categorias";
+import { SECOES } from "@/lib/secoes";
 import { obterTodasReviews } from "@/lib/reviews";
 import { obterTodasMaterias } from "@/lib/materias";
 
@@ -14,6 +15,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/materias`, changeFrequency: "weekly", priority: 0.9, lastModified: now },
     { url: `${base}/reviews`, changeFrequency: "daily", priority: 0.9, lastModified: now },
     { url: `${base}/categorias`, changeFrequency: "weekly", priority: 0.8, lastModified: now },
+    { url: `${base}/secoes`, changeFrequency: "weekly", priority: 0.8, lastModified: now },
     { url: `${base}/sobre`, changeFrequency: "monthly", priority: 0.4, lastModified: now },
     { url: `${base}/contato`, changeFrequency: "monthly", priority: 0.3, lastModified: now },
     { url: `${base}/privacidade`, changeFrequency: "yearly", priority: 0.2, lastModified: now },
@@ -34,6 +36,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: now,
   }));
 
+  const secoes: MetadataRoute.Sitemap = SECOES.map((s) => ({
+    url: `${base}/secoes/${s.slug}`,
+    changeFrequency: "weekly",
+    priority: 0.8,
+    lastModified: now,
+  }));
+
   const reviews: MetadataRoute.Sitemap = obterTodasReviews().map((r) => ({
     url: `${base}/reviews/${r.slug}`,
     changeFrequency: "monthly",
@@ -50,6 +59,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return [
     ...estaticas,
+    ...secoes,
     ...categorias,
     ...comparacoes,
     ...reviews,

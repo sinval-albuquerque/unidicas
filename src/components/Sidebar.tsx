@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { CATEGORIAS } from "@/lib/categorias";
+import { SECOES, obterCategoriasPorSecao } from "@/lib/secoes";
 import { obterTodasReviews, obterReviewsEmDestaque } from "@/lib/reviews";
 import { obterTodasMaterias } from "@/lib/materias";
 import { MateriaCard } from "./MateriaCard";
 
-/** Sidebar reutilizável (widgets): busca, categorias, últimas matérias, top reviews. */
+/** Sidebar reutilizável (widgets): busca, seções, categorias, últimas matérias, top reviews. */
 export function Sidebar() {
   const reviews = obterReviewsEmDestaque().slice(0, 4);
   const materias = obterTodasMaterias().slice(0, 3);
@@ -12,6 +13,43 @@ export function Sidebar() {
 
   return (
     <aside className="space-y-8">
+      {/* Seções */}
+      <div className="bg-bg border border-border rounded-xl p-5">
+        <h3 className="text-sm font-extrabold uppercase tracking-wider mb-4 pb-2 border-b border-border">
+          Seções
+        </h3>
+        <ul className="space-y-2.5">
+          {SECOES.map((s) => {
+            const cats = obterCategoriasPorSecao(s.slug);
+            const count = todasReviews.filter((r) =>
+              cats.some((c) => c.slug === r.categoria),
+            ).length;
+            return (
+              <li key={s.slug}>
+                <Link
+                  href={`/secoes/${s.slug}`}
+                  className="flex items-center justify-between text-sm text-text-soft hover:text-primary no-underline"
+                >
+                  <span className="flex items-center gap-2">
+                    <span
+                      className="w-2.5 h-2.5 rounded-full"
+                      style={{ backgroundColor: s.cor }}
+                      aria-hidden
+                    />
+                    <span>
+                      {s.icone} {s.nome}
+                    </span>
+                  </span>
+                  <span className="text-xs text-text-muted bg-bg-gray rounded-full px-2 py-0.5">
+                    {count}
+                  </span>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+
       {/* Categorias */}
       <div className="bg-bg border border-border rounded-xl p-5">
         <h3 className="text-sm font-extrabold uppercase tracking-wider mb-4 pb-2 border-b border-border">
