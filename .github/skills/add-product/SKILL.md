@@ -32,7 +32,7 @@ description: Adiciona um novo produto (review) ou matéria no projeto Unidicas. 
 
 4. Criar o arquivo `.mdx` com o template em `.github/copilot-instructions.md`.
 
-5. Preencher `atributos` com base na categoria (ver `src/lib/categorias.ts`).
+5. Preencher `atributos` com base na categoria (ver `src/lib/categorias.ts` — single source of truth).
 
 6. Confirmar ao usuário com um resumo curto.
 
@@ -48,7 +48,7 @@ Se o usuário só der nome + categoria + preço, criar com placeholders:
 ## Validações
 
 - Slug único (sem espaços, sem acentos, kebab-case)
-- `categoria` válida
+- `categoria` válida (deve estar em `src/lib/categorias.ts`)
 - `atributos.preco` sempre presente
 - Imagem é URL válida (começa com `http`)
 - Nota entre 0 e 5

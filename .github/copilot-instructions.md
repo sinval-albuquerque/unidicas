@@ -48,13 +48,7 @@ Texto da review em MDX. Você pode usar:
 - `<Cite source="Fonte" href="https://...">Citação</Cite>`
 ```
 
-**Atributos por categoria** (referência de `src/lib/categorias.ts`):
-
-- `notebooks`: `memoria`, `bateria`, `processador`, `armazenamento`, `tela`, `preco`
-- `celulares`: `camera`, `bateria`, `processador`, `tela`, `preco`
-- `fones`: `bateria`, `anc`, `som`, `preco`
-- `air-fryers`: `capacidade`, `potencia`, `funcoes`, `preco`
-- `smartwatches`: `bateria`, `gps`, `resistencia`, `tela`, `preco`
+**IDs de atributos por categoria:** ver [`src/lib/categorias.ts`](src/lib/categorias.ts) — é a fonte única de verdade. Não duplicar aqui.
 
 ## Como adicionar uma nova matéria
 

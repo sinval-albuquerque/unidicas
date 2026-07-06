@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { CATEGORIAS } from "@/lib/categorias";
 import { Logo } from "./Logo";
+import { NavBar } from "./NavBar";
 
 /** Cabeçalho fixo no topo — logo à esquerda, nav central, busca + CTA à direita. */
 export function Header() {
@@ -35,50 +35,9 @@ export function Header() {
         <div className="flex items-center justify-between gap-6 py-3">
           <Logo size={32} priority />
 
-
-          <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
-            <Link
-              href="/"
-              className="text-text-soft hover:text-primary no-underline"
-            >
-              Início
-            </Link>
-            <Link
-              href="/secoes"
-              className="text-text-soft hover:text-primary no-underline"
-            >
-              Seções
-            </Link>
-            <Link
-              href="/materias"
-              className="text-text-soft hover:text-primary no-underline"
-            >
-              Matérias
-            </Link>
-            <Link
-              href="/produtos"
-              className="text-text-soft hover:text-primary no-underline"
-            >
-              Produtos
-            </Link>
-            <Link
-              href="/top-10"
-              className="text-text-soft hover:text-primary no-underline"
-            >
-              Top 10
-            </Link>
-            {CATEGORIAS.slice(0, 3).map((c) => (
-              <Link
-                key={c.slug}
-                href={`/categorias/${c.slug}`}
-                className="text-text-soft hover:text-primary no-underline"
-              >
-                {c.nome}
-              </Link>
-            ))}
-          </nav>
-
-          <div className="flex items-center gap-3">
+          {/* Em mobile o CTA "Ver catálogo" + hambúrguer moram dentro do NavBar. */}
+          {/* Em desktop o NavBar mostra só a nav horizontal; o CTA vive aqui. */}
+          <div className="hidden md:flex items-center gap-3">
             <Link
               href="/produtos"
               className="bg-primary hover:bg-primary-dark text-white text-sm font-semibold px-4 py-2 rounded-lg no-underline transition"
@@ -86,6 +45,8 @@ export function Header() {
               Ver catálogo
             </Link>
           </div>
+
+          <NavBar />
         </div>
       </div>
     </header>

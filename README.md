@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Unidicas
 
-## Getting Started
+Site de reviews de produtos (afiliados). Stack: **Next.js 16 (App Router) + TypeScript + Tailwind v4 + MDX**. Conteúdo estático em `src/content/` — sem banco de dados.
 
-First, run the development server:
+> **Aviso:** esta versão do Next.js tem breaking changes. Antes de escrever código Next, leia os guias em `node_modules/next/dist/docs/`.
+
+## Comandos
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run dev        # dev server (Turbopack)
+npm run build      # build de produção
+npm run start      # servidor de produção
+npm run lint       # ESLint
+npm test           # Vitest (uma vez)
+npm run test:watch # Vitest em modo watch
+npm run typecheck  # tsc --noEmit
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Estrutura
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- `src/content/reviews/*.mdx` — reviews (frontmatter + MDX)
+- `src/content/materias/*.mdx` — matérias e guias
+- `src/lib/categorias.ts` — single source of truth de categorias e atributos comparáveis
+- `src/lib/secoes.ts` — agrupamento de categorias (cor, ícone)
+- `src/lib/reviews.ts` — leitura de MDX com `gray-matter`
+- `src/lib/comparacoes.ts` — funções puras de ranking
+- `src/app/<secao>/<categoria>/...` — rotas dinâmicas
+- `src/components/` — UI de cards, tabelas, badges
+- `src/tests/` — testes Vitest
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Adicionando uma review
 
-## Learn More
+1. Crie `src/content/reviews/<slug>.mdx` (slug em kebab-case).
+2. Use o frontmatter modelo de [`.github/copilot-instructions.md`](.github/copilot-instructions.md).
+3. IDs de atributos por categoria: ver `src/lib/categorias.ts`.
+4. Toda review precisa de `atributos.preco` (o ranking depende disso).
 
-To learn more about Next.js, take a look at the following resources:
+Para um workflow guiado de entrevista com o usuário, use a skill `add-product` em `.github/skills/add-product/SKILL.md`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Documentação para agentes de IA
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- [`AGENTS.md`](AGENTS.md) — onboarding canônico (também lido por Claude Code, Aider, Codex).
+- [`.github/copilot-instructions.md`](.github/copilot-instructions.md) — instruções específicas do Copilot.
+- [`.github/skills/add-product/SKILL.md`](.github/skills/add-product/SKILL.md) — skill de adicionar produto.
 
-## Deploy on Vercel
+## Deploy
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+O projeto é estático e roda bem na [Vercel](https://vercel.com).

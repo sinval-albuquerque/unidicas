@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Unidicas">
+  <title>Unidicas</title>
+
+  <!-- Seta esquerda (verde-azulado) -->
+  <path
+    fill="#0E8FA0"
+    d="M 25 6
+       L 41 25
+       L 33 25
+       L 33 60
+       C 33 78, 42 86, 50 86
+       C 40 86, 23 84, 23 62
+       L 23 25
+       L 9 25
+       Z"
+  />
+
+  <!-- Seta direita (laranja) -->
+  <path
+    fill="#F39237"
+    d="M 75 6
+       L 59 25
+       L 67 25
+       L 67 60
+       C 67 78, 58 86, 50 86
+       C 60 86, 77 84, 77 62
+       L 77 25
+       L 91 25
+       Z"
+  />
+</svg>
