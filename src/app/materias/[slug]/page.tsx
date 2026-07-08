@@ -201,8 +201,8 @@ export default async function MateriaSinglePage({
               <div className="mt-12 not-prose">
                 <AffiliateCta
                   variant="primary"
-                  titulo="Oferta selecionada para voce"
-                  subtitulo="Aproveite o preco promocional enquanto esta disponivel."
+                  titulo="Oferta selecionada para você"
+                  subtitulo="Aproveite o preço promocional enquanto está disponível."
                   href={oferta.linkAfiliado}
                   ctaLabel="Ver oferta agora"
                   produto={oferta.titulo}
@@ -248,7 +248,7 @@ export default async function MateriaSinglePage({
                   <div className="mt-8 bg-bg-alt border border-border rounded-2xl p-5">
                     <h3 className="text-sm font-extrabold uppercase tracking-widest text-text-soft mb-4 flex items-center gap-2">
                       <span className="w-2 h-2 bg-accent rounded-full" />
-                      Ultimas materias
+                      Últimas matérias
                     </h3>
                     <ul className="space-y-4">
                       {todas
@@ -301,7 +301,7 @@ export default async function MateriaSinglePage({
           <div className="max-w-6xl mx-auto px-4">
             <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight mb-8 flex items-center gap-3">
               <span className="w-1 h-8 bg-primary rounded-full" />
-              Leia tambem
+              Leia também
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {relacionadas.map((m) => (
