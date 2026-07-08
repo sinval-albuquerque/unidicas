@@ -8,8 +8,10 @@ import { ProductCallout } from "@/components/ProductCallout";
 import { ProductGrid } from "@/components/ProductGrid";
 import { ProductList } from "@/components/ProductList";
 import { ProTip, Warning, Cite } from "@/components/ProTip";
+import { SecaoBadge } from "@/components/SecaoBadge";
 import { obterMateriaPorSlug, obterTodasMaterias } from "@/lib/materias";
-import { CATEGORIAS } from "@/lib/categorias";
+import { CATEGORIAS, obterCategoria } from "@/lib/categorias";
+import { obterSecao } from "@/lib/secoes";
 
 export function generateStaticParams() {
   return obterTodasMaterias().map((m) => ({ slug: m.slug }));
@@ -24,8 +26,14 @@ export async function generateMetadata({
   const materia = obterMateriaPorSlug(slug);
   if (!materia) return { title: "Matéria não encontrada" };
   return {
-    title: materia.titulo,
-    description: materia.resumo,
+    title: materia.metaTitle ?? materia.titulo,
+    description: materia.metaDescription ?? materia.resumo,
+    keywords: materia.metaKeywords,
+    openGraph: {
+      title: materia.metaTitle ?? materia.titulo,
+      description: materia.metaDescription ?? materia.resumo,
+      type: "article",
+    },
   };
 }
 
@@ -43,6 +51,9 @@ export default async function MateriaSinglePage({
   const relacionadas = todas
     .filter((m) => m.slug !== materia.slug)
     .slice(0, 3);
+
+  const categoria = materia.categoria ? obterCategoria(materia.categoria) : undefined;
+  const secao = categoria ? obterSecao(categoria.secao) : undefined;
 
   const compiled = await compileMDX({
     source: materia.conteudo,
@@ -67,6 +78,24 @@ export default async function MateriaSinglePage({
         <Link href="/materias" className="hover:text-primary no-underline">
           Matérias
         </Link>{" "}
+        {categoria && secao && (
+          <>
+            /{" "}
+            <Link
+              href={`/secoes/${secao.slug}`}
+              className="hover:text-primary no-underline"
+            >
+              {secao.nome}
+            </Link>{" "}
+            /{" "}
+            <Link
+              href={`/categorias/${categoria.slug}`}
+              className="hover:text-primary no-underline"
+            >
+              {categoria.nome}
+            </Link>
+          </>
+        )}{" "}
         / <span className="text-text">{materia.titulo}</span>
       </nav>
 
@@ -74,9 +103,14 @@ export default async function MateriaSinglePage({
         <article className="lg:col-span-2">
           {/* Cabeçalho */}
           <header className="mb-8">
-            <p className="text-xs uppercase tracking-[0.2em] text-primary font-bold mb-2">
-              Matéria
-            </p>
+            <div className="flex items-center gap-2 mb-3">
+              <p className="text-xs uppercase tracking-[0.2em] text-primary font-bold">
+                Matéria
+              </p>
+              {categoria && secao && (
+                <SecaoBadge secao={secao} link size="sm" />
+              )}
+            </div>
             <h1 className="text-3xl md:text-4xl font-extrabold leading-tight tracking-tight mb-4">
               {materia.titulo}
             </h1>

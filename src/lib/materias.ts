@@ -28,6 +28,10 @@ export function obterTodasMaterias(): Materia[] {
         data: frontmatter.data,
         imagem: frontmatter.imagem,
         destaque: frontmatter.destaque ?? false,
+        categoria: frontmatter.categoria,
+        metaTitle: frontmatter.metaTitle,
+        metaDescription: frontmatter.metaDescription,
+        metaKeywords: frontmatter.metaKeywords,
         conteudo: content,
       } as Materia;
     })

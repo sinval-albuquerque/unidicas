@@ -69,6 +69,18 @@ export const CATEGORIAS: Categoria[] = [
       { id: "preco", label: "Preço", unidade: "R$", maiorMelhor: false, icone: "💰" },
     ],
   },
+  {
+    slug: "fitness-acessorios",
+    nome: "Acessórios de Fitness",
+    descricao: "Faixas elásticas, mini bands, halteres, colchonetes e acessórios para treino em casa e na academia.",
+    secao: "esportes-e-fitness",
+    atributos: [
+      { id: "resistencia", label: "Níveis de resistência", unidade: "qtd", maiorMelhor: true, icone: "💪" },
+      { id: "material", label: "Qualidade do material", unidade: "pts", maiorMelhor: true, icone: "🧱" },
+      { id: "versatilidade", label: "Versatilidade de uso", unidade: "pts", maiorMelhor: true, icone: "🔄" },
+      { id: "preco", label: "Preço", unidade: "R$", maiorMelhor: false, icone: "💰" },
+    ],
+  },
 ];
 
 /** Mapa slug -> Categoria para acesso O(1). */
