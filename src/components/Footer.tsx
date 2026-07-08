@@ -11,7 +11,7 @@ export function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
           <div className="col-span-2 md:col-span-1">
             <div className="mb-4">
-              <Logo size={36} />
+              <Logo size={44} />
             </div>
             <p className="text-sm text-text-muted leading-relaxed">
               Reviews honestas e ofertas reais para você comprar certo.

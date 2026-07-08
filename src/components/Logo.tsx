@@ -3,28 +3,34 @@ import Image from "next/image";
 import { SITE_NAME } from "@/lib/constants";
 
 interface LogoProps {
-  /** Altura do logo em pixels. Largura é proporcional (2.15:1). */
+  /** Altura do logo em pixels. Largura é proporcional. */
   size?: number;
   /** Prioridade de carregamento (true para header — LCP). */
   priority?: boolean;
   /** Classes extras para o container. */
   className?: string;
+  /**
+   * Proporção do logo. Default: 1 (quadrado — Logotipo unidicas.png é
+   * 2000x2000). Para o wordmark horizontal (mais raro), usar 2.15.
+   */
+  aspectRatio?: number;
 }
 
 /**
- * Logo oficial do Unidicas — usa /brand/logo.png (com fundo transparente e
- * proporção ~2.15:1) via next/image.
- * - Versão WebP em /brand/logo.webp (~164 KB) e PNG em /brand/logo.png
- *  (~799 KB) ficam disponíveis; next/image escolhe o melhor formato.
- * - Lazy load por padrão; priority=true no Header para LCP.
+ * Logo oficial do Unidicas — usa /brand/logo.png via next/image.
  *
- * Para trocar a logo: salve um PNG em public/brand/logo.png.
- *  Recomendado: imagem com fundo transparente, proporção 2.15:1 e
- *  ~280px de altura para qualidade retina sem inflar o bundle.
+ * - Lazy load por padrão; priority=true no Header para LCP.
+ * - Para trocar a logo: salve um PNG em public/brand/logo.png.
+ *  Recomendado: imagem quadrada (1:1) com fundo transparente,
+ *  ~2000px de lado para qualidade retina.
  */
-export function Logo({ size = 28, priority = false, className = "" }: LogoProps) {
-  // Proporção aproximada do logo (~2.15:1)
-  const width = Math.round(size * 2.15);
+export function Logo({
+  size = 28,
+  priority = false,
+  className = "",
+  aspectRatio = 1,
+}: LogoProps) {
+  const width = Math.round(size * aspectRatio);
 
   return (
     <Link

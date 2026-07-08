@@ -33,7 +33,7 @@ export function Header() {
       {/* Barra principal */}
       <div className="max-w-6xl mx-auto px-4">
         <div className="flex items-center justify-between gap-6 py-3">
-          <Logo size={32} priority />
+          <Logo size={40} priority />
 
           {/* Em mobile o CTA "Ver catálogo" + hambúrguer moram dentro do NavBar. */}
           {/* Em desktop o NavBar mostra só a nav horizontal; o CTA vive aqui. */}
