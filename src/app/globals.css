@@ -1,31 +1,61 @@
 @import "tailwindcss";
 
 /* =========================================================================
-   UNIDICAS — Sistema de design (estética blog profissional)
-   Foco: tipografia legível, hierarquia clara, espaçamentos generosos,
-   paleta sóbria com 1 cor de destaque (azul).
+   UNIDICAS — Sistema de design moderno (estilo Linear/Stripe)
+   - Tipografia precisa
+   - Sombras em camadas
+   - Gradientes sutis
+   - Microinteracoes refinadas
    ========================================================================= */
 
 :root {
-  /* Paleta */
-  --color-primary: #1e40af;
-  --color-primary-dark: #1e3a8a;
-  --color-primary-light: #eff6ff;
-  --color-accent: #f59e0b;
+  /* ===== Paleta base ===== */
+  --color-primary: #4f46e5;        /* indigo-600 */
+  --color-primary-dark: #4338ca;   /* indigo-700 */
+  --color-primary-light: #eef2ff;  /* indigo-50 */
+  --color-primary-glow: rgba(79, 70, 229, 0.18);
+
+  --color-accent: #f59e0b;         /* amber-500 */
   --color-accent-soft: #fef3c7;
-  --color-success: #15803d;
-  --color-success-soft: #dcfce7;
-  --color-danger: #b91c1c;
+  --color-accent-glow: rgba(245, 158, 11, 0.18);
+
+  --color-success: #10b981;        /* emerald-500 */
+  --color-success-dark: #059669;
+  --color-success-soft: #d1fae5;
+
+  --color-danger: #ef4444;         /* red-500 */
   --color-danger-soft: #fee2e2;
-  --color-text: #111827;
-  --color-text-soft: #374151;
-  --color-text-muted: #6b7280;
+
+  --color-text: #0f172a;           /* slate-900 */
+  --color-text-soft: #475569;      /* slate-600 */
+  --color-text-muted: #94a3b8;     /* slate-400 */
+
   --color-bg: #ffffff;
-  --color-bg-alt: #f9fafb;
-  --color-bg-gray: #f3f4f6;
+  --color-bg-alt: #f8fafc;         /* slate-50 */
+  --color-bg-gray: #f1f5f9;        /* slate-100 */
   --color-bg-dark: #0f172a;
-  --color-border: #e5e7eb;
-  --color-border-strong: #d1d5db;
+
+  --color-border: #e2e8f0;         /* slate-200 */
+  --color-border-strong: #cbd5e1;  /* slate-300 */
+
+  /* ===== Sombras em camadas (estilo Stripe) ===== */
+  --shadow-soft: 0 1px 2px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.06);
+  --shadow-elevated: 0 4px 6px -1px rgba(15, 23, 42, 0.06), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+  --shadow-floating: 0 10px 25px -5px rgba(15, 23, 42, 0.10), 0 8px 10px -6px rgba(15, 23, 42, 0.05);
+  --shadow-pop: 0 20px 35px -10px rgba(15, 23, 42, 0.15), 0 10px 15px -10px rgba(15, 23, 42, 0.08);
+  --shadow-glow-primary: 0 0 0 1px rgba(79, 70, 229, 0.10), 0 8px 24px -8px rgba(79, 70, 229, 0.25);
+
+  /* ===== Gradientes ===== */
+  --gradient-hero: linear-gradient(135deg, #4f46e5 0%, #6366f1 45%, #818cf8 100%);
+  --gradient-hero-soft: linear-gradient(180deg, #eef2ff 0%, #f8fafc 100%);
+  --gradient-text: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  --gradient-accent: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+
+  /* ===== Raios ===== */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
 }
 
 @theme inline {
@@ -35,6 +65,7 @@
   --color-accent: var(--color-accent);
   --color-accent-soft: var(--color-accent-soft);
   --color-success: var(--color-success);
+  --color-success-dark: var(--color-success-dark);
   --color-success-soft: var(--color-success-soft);
   --color-danger: var(--color-danger);
   --color-danger-soft: var(--color-danger-soft);
@@ -48,7 +79,7 @@
   --color-border: var(--color-border);
   --color-border-strong: var(--color-border-strong);
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", serif;
+  --font-display: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
 html { scroll-behavior: smooth; }
@@ -61,41 +92,88 @@ body {
   -moz-osx-font-smoothing: grayscale;
   font-size: 16px;
   line-height: 1.65;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "cv11", "ss01", "ss03";
 }
 
 ::selection { background: var(--color-primary); color: white; }
 
-/* Animations */
-.slide-fade { animation: slideFade 0.6s ease-out; }
-@keyframes slideFade { from { opacity: 0; transform: translateY(8px);} to { opacity: 1; transform: translateY(0);} }
+/* =========================================================================
+   Animacoes
+   ========================================================================= */
+@keyframes slideFade {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.4; transform: scale(0.9); }
+}
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+@keyframes gradientShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
 
-.pulse-dot { animation: pulseDot 1.5s infinite; }
-@keyframes pulseDot { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+.slide-fade { animation: slideFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.fade-in    { animation: fadeIn 0.4s ease-out both; }
+.pulse-dot  { animation: pulseDot 1.5s ease-in-out infinite; }
+.float      { animation: float 4s ease-in-out infinite; }
 
-.fade-in { animation: fadeIn 0.4s ease-out; }
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.gradient-animated {
+  background: linear-gradient(120deg, #4f46e5, #7c3aed, #4f46e5);
+  background-size: 200% 200%;
+  animation: gradientShift 8s ease infinite;
+}
 
-/* Typography */
+/* =========================================================================
+   Tipografia
+   ========================================================================= */
 h1, h2, h3, h4, h5, h6 {
   color: var(--color-text);
   font-weight: 800;
-  line-height: 1.2;
-  letter-spacing: -0.01em;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
 }
 
-/* Links de texto (não botões) — usa :where() pra ter 0 de especificidade,
-   permitindo que utilities Tailwind (text-white, text-primary, etc.)
-   sempre sobrescrevam a cor em botões/badges. */
-:where(a):not([class*="bg-"]):not([class*="hover:bg-"]) {
+h1 { letter-spacing: -0.03em; }
+h2 { letter-spacing: -0.025em; }
+
+.gradient-text {
+  background: var(--gradient-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* Links de texto */
+:where(a):not([class*="bg-"]):not([class*="hover:bg-"]):not([class*="text-white"]):not([class*="text-black"]) {
   color: var(--color-primary);
   text-decoration: none;
+  transition: color 0.15s ease;
 }
-:where(a):not([class*="bg-"]):not([class*="hover:bg-"]):hover {
+:where(a):not([class*="bg-"]):not([class*="hover:bg-"]):not([class*="text-white"]):not([class*="text-black"]):hover {
   text-decoration: underline;
   text-underline-offset: 3px;
+  text-decoration-thickness: 1.5px;
 }
 
-/* Article prose — usado em MDX */
+/* =========================================================================
+   Article prose
+   ========================================================================= */
 .prose-article {
   color: var(--color-text-soft);
   font-size: 1.0625rem;
@@ -103,15 +181,20 @@ h1, h2, h3, h4, h5, h6 {
   max-width: 70ch;
 }
 .prose-article > * + * { margin-top: 1.25em; }
-.prose-article h2 { font-size: 1.625rem; margin-top: 2.25em; letter-spacing: -0.015em; }
-.prose-article h3 { font-size: 1.25rem; margin-top: 1.75em; }
+.prose-article h2 {
+  font-size: 1.75rem;
+  margin-top: 2.25em;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+}
+.prose-article h3 { font-size: 1.3rem; margin-top: 1.75em; color: var(--color-text); }
 .prose-article p { color: var(--color-text-soft); }
 .prose-article strong { color: var(--color-text); font-weight: 700; }
 .prose-article a {
   color: var(--color-primary);
   font-weight: 600;
   text-decoration: underline;
-  text-decoration-thickness: 1px;
+  text-decoration-thickness: 1.5px;
   text-underline-offset: 3px;
 }
 .prose-article ul, .prose-article ol { padding-left: 1.5em; }
@@ -122,7 +205,7 @@ h1, h2, h3, h4, h5, h6 {
   border-left: 4px solid var(--color-primary);
   background: var(--color-primary-light);
   padding: 1em 1.25em;
-  border-radius: 0 8px 8px 0;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
   font-style: italic;
   color: var(--color-text-soft);
 }
@@ -137,12 +220,61 @@ h1, h2, h3, h4, h5, h6 {
   background: var(--color-bg-dark);
   color: #e2e8f0;
   padding: 1em 1.25em;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   overflow-x: auto;
   font-size: 0.9em;
 }
 .prose-article pre code { background: transparent; padding: 0; color: inherit; }
-.prose-article hr { border: 0; border-top: 1px solid var(--color-border); margin: 2.5em 0; }
+.prose-article hr {
+  border: 0;
+  border-top: 1px solid var(--color-border);
+  margin: 2.5em 0;
+}
+.prose-article img {
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-elevated);
+  margin: 2em 0;
+}
+
+/* =========================================================================
+   Utilities — sombras, hover-lift, glass
+   ========================================================================= */
+.shadow-soft      { box-shadow: var(--shadow-soft); }
+.shadow-elevated  { box-shadow: var(--shadow-elevated); }
+.shadow-floating  { box-shadow: var(--shadow-floating); }
+.shadow-pop       { box-shadow: var(--shadow-pop); }
+.shadow-glow-primary { box-shadow: var(--shadow-glow-primary); }
+
+.hover-lift {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.hover-lift:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-floating);
+}
+.hover-scale {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.hover-scale:hover {
+  transform: scale(1.02);
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+}
+
+.bg-mesh-hero {
+  background:
+    radial-gradient(at 27% 37%, hsla(215, 98%, 61%, 0.18) 0px, transparent 50%),
+    radial-gradient(at 97% 21%, hsla(256, 96%, 67%, 0.15) 0px, transparent 50%),
+    radial-gradient(at 52% 99%, hsla(354, 98%, 61%, 0.10) 0px, transparent 50%),
+    radial-gradient(at 10% 29%, hsla(256, 96%, 67%, 0.12) 0px, transparent 50%),
+    radial-gradient(at 97% 96%, hsla(38, 60%, 74%, 0.10) 0px, transparent 50%),
+    linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+}
 
 /* Scrollbar discreta */
 ::-webkit-scrollbar { width: 10px; height: 10px; }
