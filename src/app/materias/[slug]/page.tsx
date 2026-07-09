@@ -87,6 +87,7 @@ export default async function MateriaSinglePage({
       ProductCallout,
       ProductGrid,
       ProductList,
+      AffiliateCta,
       ProTip,
       Warning,
       Cite,
