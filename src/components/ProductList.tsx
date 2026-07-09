@@ -9,7 +9,7 @@ import { obterReviewPorSlug, obterReviewsPorCategoria } from "@/lib/reviews";
  *
  * Uso no MDX (3 formas equivalentes):
  *
- *   <ProductList ids={["fone-bluetooth-anc", "fone-studio-qualidade"]} />
+ *   <ProductList ids={["smartphone-galaxy-a36-256gb", "iphone-16-256gb"]} />
  *   <ProductList categoria="notebooks" limite={5} titulo="Top 5 notebooks" />
  *   <ProductList reviews={minhaLista} />
  */

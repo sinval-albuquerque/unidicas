@@ -7,7 +7,7 @@ import { ReviewCard } from "./ReviewCard";
  *
  * Uso no MDX (3 formas equivalentes):
  *
- *   <ProductGrid ids={["fone-bluetooth-anc", "fone-studio-qualidade"]} />
+ *   <ProductGrid ids={["smartphone-galaxy-a36-256gb", "iphone-16-256gb"]} />
  *   <ProductGrid categoria="fones" limite={3} titulo="Melhores fones" />
  *   <ProductGrid reviews={minhaLista} />
  */
