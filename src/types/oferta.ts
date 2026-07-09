@@ -5,7 +5,7 @@
  * você controla 100% dos dados, sem depender de API externa.
  *
  * O `linkAfiliado` deve ser a URL canônica do produto no ML já com
- * o parâmetro `?matt_word=sinvalalbuquerque` para rastreamento.
+ * o parâmetro `?matt_word=unidicasofertas` para rastreamento.
  *
  * Vantagens sobre scraping/API:
  * - 100% confiável (não quebra)
@@ -29,7 +29,7 @@ export interface OfertaFrontmatter {
   imagem: string;
   /** Marketplace (Mercado Livre, Amazon, etc.). */
   marketplace: string;
-  /** Link de afiliado — OBRIGATÓRIO conter `?matt_word=sinvalalbuquerque`. */
+  /** Link de afiliado — OBRIGATÓRIO conter `?matt_word=unidicasofertas`. */
   linkAfiliado: string;
   /** Cupom de desconto, se houver. */
   cupom?: string;
@@ -39,6 +39,8 @@ export interface OfertaFrontmatter {
   tags?: string[];
   /** true = aparece em destaque na home. */
   emDestaque?: boolean;
+  /** Nota média do produto (0–5). Opcional — usada no card da Home. */
+  nota?: number;
   /** Resumo curto (1 linha) para cards compactos. */
   resumo: string;
 }

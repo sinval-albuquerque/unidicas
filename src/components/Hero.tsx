@@ -1,12 +1,34 @@
 import Link from "next/link";
-import { CATEGORIAS } from "@/lib/categorias";
+import { CATEGORIAS, CATEGORIA_POR_SLUG } from "@/lib/categorias";
 import { obterTodasReviews } from "@/lib/reviews";
-import { obterTodasOfertas } from "@/lib/ofertas-content";
+import { obterTodasOfertas, obterOfertasEmDestaque } from "@/lib/ofertas-content";
+import { EXTERNAL_LINK_REL } from "@/lib/constants";
+
+/** Formata número como BRL (R$ 1.997). */
+const brl = (n: number) =>
+  n.toLocaleString("pt-BR", { maximumFractionDigits: 0 });
 
 /** Hero da home — moderno, com gradiente, stats ao vivo e CTAs duplos. */
 export function Hero() {
   const totalReviews = obterTodasReviews().length;
   const totalOfertas = obterTodasOfertas().length;
+
+  // Oferta "em destaque" usada no card flutuante da Home.
+  // Se nenhuma oferta tiver `emDestaque: true`, mantém o placeholder.
+  const ofertaDestaque = obterOfertasEmDestaque()[0];
+  const categoriaLabel = ofertaDestaque
+    ? CATEGORIA_POR_SLUG[ofertaDestaque.categoria as keyof typeof CATEGORIA_POR_SLUG]?.nome ??
+      ofertaDestaque.categoria
+    : "Notebook";
+  const desconto = ofertaDestaque?.precoOriginal
+    ? Math.round(
+        ((ofertaDestaque.precoOriginal - ofertaDestaque.preco) /
+          ofertaDestaque.precoOriginal) *
+          100,
+      )
+    : 19;
+  const nota = ofertaDestaque?.nota ?? 4.6;
+  const ratingWidth = Math.max(0, Math.min(100, Math.round((nota / 5) * 100)));
 
   return (
     <section className="relative overflow-hidden bg-mesh-hero">
@@ -90,25 +112,53 @@ export function Hero() {
                   <span className="px-2 py-0.5 bg-accent-soft text-accent text-[0.65rem] font-extrabold rounded uppercase tracking-wider">
                     Em destaque
                   </span>
-                  <span className="text-xs text-text-muted">Notebook</span>
+                  <span className="text-xs text-text-muted">{categoriaLabel}</span>
                 </div>
-                <h3 className="text-lg font-bold mb-1.5">Notebook Gamer RTX 4060</h3>
+                <h3 className="text-lg font-bold mb-1.5">
+                  {ofertaDestaque
+                    ? ofertaDestaque.titulo
+                    : "Notebook Gamer RTX 4060"}
+                </h3>
                 <p className="text-sm text-text-soft mb-4">
-                  RTX 4060 + 16GB RAM + 512GB SSD. Bom custo-benefício para jogos 1080p.
+                  {ofertaDestaque
+                    ? ofertaDestaque.resumo
+                    : "RTX 4060 + 16GB RAM + 512GB SSD. Bom custo-benefício para jogos 1080p."}
                 </p>
                 <div className="flex items-baseline gap-2 mb-4">
-                  <span className="text-2xl font-extrabold">R$ 5.499</span>
-                  <span className="text-sm text-text-muted line-through">R$ 6.799</span>
+                  <span className="text-2xl font-extrabold">
+                    R$ {ofertaDestaque ? brl(ofertaDestaque.preco) : "5.499"}
+                  </span>
+                  {ofertaDestaque?.precoOriginal ? (
+                    <span className="text-sm text-text-muted line-through">
+                      R$ {brl(ofertaDestaque.precoOriginal)}
+                    </span>
+                  ) : (
+                    <span className="text-sm text-text-muted line-through">R$ 6.799</span>
+                  )}
                   <span className="ml-auto text-xs font-bold text-success bg-success-soft px-2 py-0.5 rounded">
-                    -19%
+                    -{desconto}%
                   </span>
                 </div>
                 <div className="h-1.5 bg-bg-gray rounded-full overflow-hidden mb-4">
-                  <div className="h-full w-4/5 bg-gradient-to-r from-primary to-primary-light rounded-full" />
+                  <div
+                    className="h-full bg-gradient-to-r from-primary to-primary-light rounded-full"
+                    style={{ width: `${ratingWidth}%` }}
+                  />
                 </div>
-                <button className="w-full bg-primary hover:bg-primary-dark text-white text-sm font-semibold py-2.5 rounded-lg transition">
-                  Ver oferta →
-                </button>
+                {ofertaDestaque ? (
+                  <a
+                    href={ofertaDestaque.linkAfiliado}
+                    target="_blank"
+                    rel={EXTERNAL_LINK_REL}
+                    className="block w-full bg-primary hover:bg-primary-dark text-white text-sm font-semibold py-2.5 rounded-lg transition text-center no-underline"
+                  >
+                    Ver oferta →
+                  </a>
+                ) : (
+                  <button className="w-full bg-primary hover:bg-primary-dark text-white text-sm font-semibold py-2.5 rounded-lg transition">
+                    Ver oferta →
+                  </button>
+                )}
               </div>
 
               {/* Card secundário flutuante */}
@@ -123,7 +173,7 @@ export function Hero() {
                   </span>
                 </div>
                 <p className="text-xs font-semibold text-text leading-tight">
-                  Preço caiu 19% nas últimas 24h
+                  Preço caiu {desconto}% nas últimas 24h
                 </p>
               </div>
 
@@ -133,7 +183,9 @@ export function Hero() {
                 style={{ animationDelay: "0.5s" }}
               >
                 <p className="text-[0.65rem] uppercase tracking-wider text-text-muted">Nota</p>
-                <p className="text-xl font-extrabold">4.6 <span className="text-accent">★</span></p>
+                <p className="text-xl font-extrabold">
+                  {nota.toFixed(1)} <span className="text-accent">★</span>
+                </p>
               </div>
             </div>
           </div>

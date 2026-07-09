@@ -14,7 +14,7 @@ import {
  * Página /ofertas
  *
  * Fonte primária: ofertas curadas manualmente em `src/content/ofertas/*.mdx`.
- * Cada oferta tem link de afiliado com `?matt_word=sinvalalbuquerque` —
+ * Cada oferta tem link de afiliado com `?matt_word=unidicasofertas` —
  * rastreamento oficial do programa de afiliados do Mercado Livre.
  *
  * Fonte secundária (fallback): reviews do Unidicas com desconto ativo.
@@ -183,7 +183,7 @@ export default function OfertasPage() {
             rel="noopener noreferrer"
             className="text-primary font-semibold underline"
           >
-            {OFERTAS_ML_LABEL} (sinvalalbuquerque)
+            {OFERTAS_ML_LABEL} (unidicasofertas)
           </a>
           . Ao comprar por eles, o Unidicas recebe uma comissão, sem
           alterar o preço para você.

@@ -15,7 +15,7 @@ export const OFERTAS_ML_LISTA_URL =
  * Usado como origem nos links externos de produto.
  */
 export const AFILIADO_ML_PERFIL_URL =
-  "https://www.mercadolivre.com.br/social/sinvalalbuquerque";
+  "https://www.mercadolivre.com.br/social/unidicasofertas";
 
 /** Mercado Livre (para destacar a fonte). */
 export const OFERTAS_ML_LABEL = "Mercado Livre";

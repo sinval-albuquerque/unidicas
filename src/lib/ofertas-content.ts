@@ -48,6 +48,7 @@ export function obterTodasOfertas(): Oferta[] {
         expiraEm: fm.expiraEm,
         tags: fm.tags ?? [],
         emDestaque: fm.emDestaque ?? false,
+        nota: fm.nota,
         resumo: fm.resumo ?? "",
         conteudo: content,
       } as Oferta;
@@ -65,6 +66,14 @@ export function obterTodasOfertas(): Oferta[] {
 /** Retorna ofertas filtradas por categoria. */
 export function obterOfertasPorCategoria(categoria: string): Oferta[] {
   return obterTodasOfertas().filter((o) => o.categoria === categoria);
+}
+
+/**
+ * Retorna apenas as ofertas com `emDestaque: true`.
+ * Já vêm ordenadas por maior desconto (ordem de `obterTodasOfertas`).
+ */
+export function obterOfertasEmDestaque(): Oferta[] {
+  return obterTodasOfertas().filter((o) => o.emDestaque);
 }
 
 /** Retorna uma oferta pelo slug. */
