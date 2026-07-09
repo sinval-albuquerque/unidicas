@@ -1,34 +1,34 @@
 import Link from "next/link";
-import { CATEGORIAS, CATEGORIA_POR_SLUG } from "@/lib/categorias";
+import { CATEGORIAS } from "@/lib/categorias";
 import { obterTodasReviews } from "@/lib/reviews";
-import { obterTodasOfertas, obterOfertasEmDestaque } from "@/lib/ofertas-content";
-import { EXTERNAL_LINK_REL } from "@/lib/constants";
-
-/** Formata número como BRL (R$ 1.997). */
-const brl = (n: number) =>
-  n.toLocaleString("pt-BR", { maximumFractionDigits: 0 });
+import { obterTodasOfertas } from "@/lib/ofertas-content";
+import { HeroOfertaRotativa } from "./HeroOfertaRotativa";
+import {
+  JANELA_ROTACAO_MS,
+  selecionarOfertaRotativa,
+} from "@/lib/oferta-rotativa";
 
 /** Hero da home — moderno, com gradiente, stats ao vivo e CTAs duplos. */
 export function Hero() {
   const totalReviews = obterTodasReviews().length;
   const totalOfertas = obterTodasOfertas().length;
 
-  // Oferta "em destaque" usada no card flutuante da Home.
-  // Se nenhuma oferta tiver `emDestaque: true`, mantém o placeholder.
-  const ofertaDestaque = obterOfertasEmDestaque()[0];
-  const categoriaLabel = ofertaDestaque
-    ? CATEGORIA_POR_SLUG[ofertaDestaque.categoria as keyof typeof CATEGORIA_POR_SLUG]?.nome ??
-      ofertaDestaque.categoria
-    : "Notebook";
-  const desconto = ofertaDestaque?.precoOriginal
-    ? Math.round(
-        ((ofertaDestaque.precoOriginal - ofertaDestaque.preco) /
-          ofertaDestaque.precoOriginal) *
-          100,
-      )
-    : 19;
-  const nota = ofertaDestaque?.nota ?? 4.6;
-  const ratingWidth = Math.max(0, Math.min(100, Math.round((nota / 5) * 100)));
+  // Pool de ofertas candidatas ao card rotativo da Home.
+  // Prioridade: ofertas marcadas com `emDestaque: true`.
+  // Fallback: todas as ofertas com desconto (precoOriginal > preco),
+  // ordenadas por maior desconto absoluto (já vem de `obterTodasOfertas`).
+  const todas = obterTodasOfertas();
+  const destaque = todas.filter((o) => o.emDestaque);
+  const comDesconto = todas.filter(
+    (o) => o.precoOriginal && o.precoOriginal > o.preco,
+  );
+  const pool = destaque.length > 0 ? destaque : comDesconto;
+
+  // Oferta "atual" segundo a janela de 30min — calculada de forma
+  // determinística no servidor para casar com o primeiro tick do client.
+  const agora = Date.now();
+  const ofertaDestaque =
+    selecionarOfertaRotativa(pool, agora, JANELA_ROTACAO_MS) ?? null;
 
   return (
     <section className="relative overflow-hidden bg-mesh-hero">
@@ -103,92 +103,8 @@ export function Hero() {
             </div>
           </div>
 
-          {/* Card flutuante decorativo */}
-          <div className="lg:col-span-5 hidden lg:block">
-            <div className="relative">
-              {/* Card principal */}
-              <div className="relative bg-bg border border-border rounded-2xl shadow-pop p-6 hover-lift">
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="px-2 py-0.5 bg-accent-soft text-accent text-[0.65rem] font-extrabold rounded uppercase tracking-wider">
-                    Em destaque
-                  </span>
-                  <span className="text-xs text-text-muted">{categoriaLabel}</span>
-                </div>
-                <h3 className="text-lg font-bold mb-1.5">
-                  {ofertaDestaque
-                    ? ofertaDestaque.titulo
-                    : "Notebook Gamer RTX 4060"}
-                </h3>
-                <p className="text-sm text-text-soft mb-4">
-                  {ofertaDestaque
-                    ? ofertaDestaque.resumo
-                    : "RTX 4060 + 16GB RAM + 512GB SSD. Bom custo-benefício para jogos 1080p."}
-                </p>
-                <div className="flex items-baseline gap-2 mb-4">
-                  <span className="text-2xl font-extrabold">
-                    R$ {ofertaDestaque ? brl(ofertaDestaque.preco) : "5.499"}
-                  </span>
-                  {ofertaDestaque?.precoOriginal ? (
-                    <span className="text-sm text-text-muted line-through">
-                      R$ {brl(ofertaDestaque.precoOriginal)}
-                    </span>
-                  ) : (
-                    <span className="text-sm text-text-muted line-through">R$ 6.799</span>
-                  )}
-                  <span className="ml-auto text-xs font-bold text-success bg-success-soft px-2 py-0.5 rounded">
-                    -{desconto}%
-                  </span>
-                </div>
-                <div className="h-1.5 bg-bg-gray rounded-full overflow-hidden mb-4">
-                  <div
-                    className="h-full bg-gradient-to-r from-primary to-primary-light rounded-full"
-                    style={{ width: `${ratingWidth}%` }}
-                  />
-                </div>
-                {ofertaDestaque ? (
-                  <a
-                    href={ofertaDestaque.linkAfiliado}
-                    target="_blank"
-                    rel={EXTERNAL_LINK_REL}
-                    className="block w-full bg-primary hover:bg-primary-dark text-white text-sm font-semibold py-2.5 rounded-lg transition text-center no-underline"
-                  >
-                    Ver oferta →
-                  </a>
-                ) : (
-                  <button className="w-full bg-primary hover:bg-primary-dark text-white text-sm font-semibold py-2.5 rounded-lg transition">
-                    Ver oferta →
-                  </button>
-                )}
-              </div>
-
-              {/* Card secundário flutuante */}
-              <div
-                className="absolute -top-6 -right-6 bg-bg border border-border rounded-xl shadow-floating p-3 w-44 float"
-                style={{ animationDelay: "1s" }}
-              >
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="w-2 h-2 bg-success rounded-full pulse-dot" />
-                  <span className="text-[0.65rem] font-bold text-success uppercase">
-                    Atualizado
-                  </span>
-                </div>
-                <p className="text-xs font-semibold text-text leading-tight">
-                  Preço caiu {desconto}% nas últimas 24h
-                </p>
-              </div>
-
-              {/* Badge flutuante */}
-              <div
-                className="absolute -bottom-4 -left-4 bg-bg-dark text-white rounded-xl shadow-pop px-3 py-2 float"
-                style={{ animationDelay: "0.5s" }}
-              >
-                <p className="text-[0.65rem] uppercase tracking-wider text-text-muted">Nota</p>
-                <p className="text-xl font-extrabold">
-                  {nota.toFixed(1)} <span className="text-accent">★</span>
-                </p>
-              </div>
-            </div>
-          </div>
+          {/* Card flutuante decorativo — oferta rotativa (a cada 30 min) */}
+          <HeroOfertaRotativa pool={pool} fallback={ofertaDestaque} />
         </div>
 
         {/* Categorias pills */}
