@@ -57,13 +57,13 @@ export function MateriaCard({ materia, variant = "default" }: Props) {
           className="block relative aspect-[16/9] rounded-2xl overflow-hidden bg-bg-gray mb-5 no-underline shadow-elevated"
         >
           {materia.imagem ? (
-            <div className="w-full h-full bg-gradient-to-br from-primary to-primary-dark flex items-center justify-center">
-              <span className="text-white/70 text-xs font-extrabold uppercase tracking-widest">
+            <div className="w-full h-full bg-bg-gray flex items-center justify-center">
+              <span className="text-text-muted text-xs font-extrabold uppercase tracking-widest">
                 {categoria?.nome ?? "materia"}
               </span>
             </div>
           ) : (
-            <div className="w-full h-full bg-gradient-to-br from-primary to-primary-dark" />
+            <div className="w-full h-full bg-bg-gray" />
           )}
 
           {/* Overlay gradient inferior para legibilidade */}
@@ -103,13 +103,13 @@ export function MateriaCard({ materia, variant = "default" }: Props) {
         className="block relative aspect-[16/10] overflow-hidden bg-bg-gray no-underline"
       >
         {materia.imagem ? (
-          <div className="w-full h-full bg-gradient-to-br from-primary to-primary-dark flex items-center justify-center">
-            <span className="text-white/70 text-xs font-extrabold uppercase tracking-widest">
+          <div className="w-full h-full bg-bg-gray flex items-center justify-center">
+            <span className="text-text-muted text-xs font-extrabold uppercase tracking-widest">
               {categoria?.nome ?? "materia"}
             </span>
           </div>
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-primary to-primary-dark" />
+          <div className="w-full h-full bg-bg-gray" />
         )}
 
         {categoria && (

@@ -45,21 +45,63 @@ function tempoLeitura(texto: string): number {
   return Math.max(1, Math.round(palavras / 200));
 }
 
-function pickOfertaPrincipal(materia: { categoria?: string }) {
+function pickOfertaPrincipal(materia: { categoria?: string; titulo: string; slug: string }) {
   const ofertas = obterTodasOfertas();
-  if (ofertas.length > 0) {
-    if (materia.categoria) {
-      const match = ofertas.find((o) => o.categoria === materia.categoria);
-      if (match) return match;
-    }
-    return ofertas[0];
-  }
   const reviews = obterTodasReviews();
+
+  // 1) Match exato por categoria — caso feliz (categoria preenchida no frontmatter)
   if (materia.categoria) {
-    const match = reviews.find((r) => r.categoria === materia.categoria);
-    if (match) return match;
+    const o = ofertas.find((x) => x.categoria === materia.categoria);
+    if (o) return o;
+    const r = reviews.find((x) => x.categoria === materia.categoria);
+    if (r) return r;
   }
-  return reviews[0];
+
+  // 2) Match por keyword no titulo/slug (cobre o caso "categoria" ausente).
+  //    Ex.: materia de "air fryer" sem categoria ainda casa com produtos de air-fryers.
+  const chave = `${materia.titulo} ${materia.slug}`.toLowerCase();
+  const aliases: Array<{ termo: string; categoria: string }> = [
+    { termo: "air fryer", categoria: "air-fryers" },
+    { termo: "airfryer", categoria: "air-fryers" },
+    { termo: "fritadeira", categoria: "air-fryers" },
+    { termo: "iphone", categoria: "celulares" },
+    { termo: "galaxy", categoria: "celulares" },
+    { termo: "celular", categoria: "celulares" },
+    { termo: "smartphone", categoria: "celulares" },
+    { termo: "xiaomi", categoria: "celulares" },
+    { termo: "moto g", categoria: "celulares" },
+    { termo: "fone", categoria: "fones" },
+    { termo: "headphone", categoria: "fones" },
+    { termo: "earbud", categoria: "fones" },
+    { termo: "notebook", categoria: "notebooks" },
+    { termo: "laptop", categoria: "notebooks" },
+    { termo: "ultrabook", categoria: "notebooks" },
+    { termo: "smartwatch", categoria: "smartwatches" },
+    { termo: "relógio", categoria: "smartwatches" },
+    { termo: "relogio", categoria: "smartwatches" },
+    { termo: "faixa elástica", categoria: "fitness-acessorios" },
+    { termo: "faixa elastica", categoria: "fitness-acessorios" },
+    { termo: "mini band", categoria: "fitness-acessorios" },
+    { termo: "halter", categoria: "fitness-acessorios" },
+    { termo: "bicicleta", categoria: "fitness-acessorios" },
+    { termo: "bike", categoria: "fitness-acessorios" },
+    { termo: "ergométrica", categoria: "fitness-acessorios" },
+    { termo: "ergometrica", categoria: "fitness-acessorios" },
+    { termo: "spinning", categoria: "fitness-acessorios" },
+  ];
+  for (const { termo, categoria } of aliases) {
+    if (chave.includes(termo)) {
+      const o = ofertas.find((x) => x.categoria === categoria);
+      if (o) return o;
+      const r = reviews.find((x) => x.categoria === categoria);
+      if (r) return r;
+    }
+  }
+
+  // 3) Fallback: primeira oferta disponível. Em ultimo caso, primeira review.
+  if (ofertas.length > 0) return ofertas[0];
+  if (reviews.length > 0) return reviews[0];
+  return undefined;
 }
 
 export default async function MateriaSinglePage({
