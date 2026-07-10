@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Review } from "@/types/review";
 import { EXTERNAL_LINK_REL } from "@/lib/constants";
 import { RatingBadge } from "./RatingBadge";
+import { MarketplaceBadge } from "./MarketplaceBadge";
 
 /**
  * Card de oferta — visual "Promobit-like" (claro, badge de desconto,
@@ -41,9 +42,14 @@ export function OfertaCard({ review }: { review: Review }) {
             </span>
           )}
         </div>
-        <span className="absolute bottom-2 right-2 bg-bg/90 backdrop-blur text-[0.65rem] font-bold px-2 py-0.5 rounded uppercase tracking-wide text-text-soft">
-          {review.marketplace}
-        </span>
+        <div className="absolute bottom-2 right-2">
+          <MarketplaceBadge
+            nome={review.marketplace}
+            link={review.linkAfiliado}
+            asLink
+            size="sm"
+          />
+        </div>
       </div>
 
       <div className="p-3.5 flex flex-col flex-1">

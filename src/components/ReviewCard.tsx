@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Review } from "@/types/review";
 import { EXTERNAL_LINK_REL } from "@/lib/constants";
 import { RatingBadge } from "./RatingBadge";
+import { MarketplaceBadge } from "./MarketplaceBadge";
 import { obterCategoria } from "@/lib/categorias";
 
 /** Card de review reutilizavel com CTA de oferta. Estilo Linear/Stripe. */
@@ -75,9 +76,14 @@ export function ReviewCard({ review }: { review: Review }) {
             </span>
           )}
           {review.marketplace && (
-            <span className="ml-auto text-[0.65rem] font-semibold text-text-muted uppercase">
-              {review.marketplace}
-            </span>
+            <div className="ml-auto">
+              <MarketplaceBadge
+                nome={review.marketplace}
+                link={review.linkAfiliado}
+                asLink
+                size="sm"
+              />
+            </div>
           )}
         </div>
 
