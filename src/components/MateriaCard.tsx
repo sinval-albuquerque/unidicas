@@ -24,14 +24,11 @@ export function MateriaCard({ materia, variant = "default" }: Props) {
         {materia.imagem && (
           <Link
             href={`/materias/${materia.slug}`}
-            className="shrink-0 relative w-20 h-20 rounded-lg overflow-hidden bg-bg-gray shadow-soft"
+            className="shrink-0 relative w-20 h-20 rounded-lg overflow-hidden bg-bg-gray shadow-soft flex items-center justify-center"
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={materia.imagem}
-              alt=""
-              className="w-full h-full object-cover transition duration-500 group-hover:scale-110"
-            />
+            <span className="text-[0.55rem] text-text-muted font-bold uppercase tracking-widest">
+              {categoria?.nome ?? "materia"}
+            </span>
           </Link>
         )}
         <div className="flex-1 min-w-0">
@@ -60,12 +57,11 @@ export function MateriaCard({ materia, variant = "default" }: Props) {
           className="block relative aspect-[16/9] rounded-2xl overflow-hidden bg-bg-gray mb-5 no-underline shadow-elevated"
         >
           {materia.imagem ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={materia.imagem}
-              alt={materia.titulo}
-              className="w-full h-full object-cover transition duration-700 group-hover:scale-[1.04]"
-            />
+            <div className="w-full h-full bg-gradient-to-br from-primary to-primary-dark flex items-center justify-center">
+              <span className="text-white/70 text-xs font-extrabold uppercase tracking-widest">
+                {categoria?.nome ?? "materia"}
+              </span>
+            </div>
           ) : (
             <div className="w-full h-full bg-gradient-to-br from-primary to-primary-dark" />
           )}
@@ -107,12 +103,11 @@ export function MateriaCard({ materia, variant = "default" }: Props) {
         className="block relative aspect-[16/10] overflow-hidden bg-bg-gray no-underline"
       >
         {materia.imagem ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={materia.imagem}
-            alt={materia.titulo}
-            className="w-full h-full object-cover transition duration-500 group-hover:scale-105"
-          />
+          <div className="w-full h-full bg-gradient-to-br from-primary to-primary-dark flex items-center justify-center">
+            <span className="text-white/70 text-xs font-extrabold uppercase tracking-widest">
+              {categoria?.nome ?? "materia"}
+            </span>
+          </div>
         ) : (
           <div className="w-full h-full bg-gradient-to-br from-primary to-primary-dark" />
         )}

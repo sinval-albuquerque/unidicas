@@ -1,118 +1,125 @@
-# Graph Report - .  (2026-06-27)
+# Graph Report - c:\Users\Sinval\Projetos\unidicas  (2026-07-09)
 
 ## Corpus Check
-- Corpus is ~6,053 words - fits in a single context window. You may not need a graph.
+- 176 files · ~255,076 words
+- Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 155 nodes · 273 edges · 16 communities (11 shown, 5 thin omitted)
-- Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 10 edges (avg confidence: 0.7)
+- 92 nodes · 22 edges · 72 communities (1 shown, 71 thin omitted)
+- Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Community Hubs (Navigation)
-- [[_COMMUNITY_Category & Comparison Pages|Category & Comparison Pages]]
-- [[_COMMUNITY_Layout, SEO & Metadata|Layout, SEO & Metadata]]
-- [[_COMMUNITY_Review UI Components|Review UI Components]]
-- [[_COMMUNITY_TypeScript Config|TypeScript Config]]
-- [[_COMMUNITY_Production Dependencies|Production Dependencies]]
-- [[_COMMUNITY_Comparison Attributes|Comparison Attributes]]
-- [[_COMMUNITY_Dev Dependencies|Dev Dependencies]]
-- [[_COMMUNITY_Homepage & Review Data|Homepage & Review Data]]
-- [[_COMMUNITY_Next.js Docs & Branding|Next.js Docs & Branding]]
-- [[_COMMUNITY_ESLint Config|ESLint Config]]
-- [[_COMMUNITY_Next Config|Next Config]]
-- [[_COMMUNITY_PostCSS Config|PostCSS Config]]
-- [[_COMMUNITY_UI Icons|UI Icons]]
-- [[_COMMUNITY_Globe Icon|Globe Icon]]
+- [[_COMMUNITY_Community 0 tsconfig_compileroptions, tsconfig_compileroptions_allowjs, tsconfig_compileroptions_esmoduleinterop, tsconfig_compileroptions_incremental|Community 0: tsconfig_compileroptions, tsconfig_compileroptions_allowjs, tsconfig_compileroptions_esmoduleinterop, tsconfig_compileroptions_incremental]]
+- [[_COMMUNITY_Community 1 tsconfig, tsconfig_exclude, tsconfig_include|Community 1: tsconfig, tsconfig_exclude, tsconfig_include]]
+- [[_COMMUNITY_Community 2 tsconfig_compileroptions_paths, tsconfig_paths|Community 2: tsconfig_compileroptions_paths, tsconfig_paths]]
+- [[_COMMUNITY_Community 3 types_materia_materia, types_materia_materiafrontmatter|Community 3: types_materia_materia, types_materia_materiafrontmatter]]
+- [[_COMMUNITY_Community 4 types_oferta_oferta, types_oferta_ofertafrontmatter|Community 4: types_oferta_oferta, types_oferta_ofertafrontmatter]]
+- [[_COMMUNITY_Community 5 types_review_review, types_review_reviewfrontmatter|Community 5: types_review_review, types_review_reviewfrontmatter]]
+- [[_COMMUNITY_Community 6 app_robots_robots|Community 6: app_robots_robots]]
+- [[_COMMUNITY_Community 7 app_sitemap_sitemap|Community 7: app_sitemap_sitemap]]
+- [[_COMMUNITY_Community 8 categoria_page_generatemetadata|Community 8: categoria_page_generatemetadata]]
+- [[_COMMUNITY_Community 9 categoria_page_generatestaticparams|Community 9: categoria_page_generatestaticparams]]
+- [[_COMMUNITY_Community 10 comparar_page_compararcategoriapage|Community 10: comparar_page_compararcategoriapage]]
+- [[_COMMUNITY_Community 11 comparar_page_generatemetadata|Community 11: comparar_page_generatemetadata]]
+- [[_COMMUNITY_Community 12 comparar_page_generatestaticparams|Community 12: comparar_page_generatestaticparams]]
+- [[_COMMUNITY_Community 13 components_affiliatecta_affiliatecta|Community 13: components_affiliatecta_affiliatecta]]
+- [[_COMMUNITY_Community 14 components_attributeranking_attributeranking|Community 14: components_attributeranking_attributeranking]]
+- [[_COMMUNITY_Community 15 components_bestbyattributecard_bestbyattributecard|Community 15: components_bestbyattributecard_bestbyattributecard]]
+- [[_COMMUNITY_Community 16 components_footer_footer|Community 16: components_footer_footer]]
+- [[_COMMUNITY_Community 17 components_header_header|Community 17: components_header_header]]
+- [[_COMMUNITY_Community 18 components_logo_logo|Community 18: components_logo_logo]]
+- [[_COMMUNITY_Community 19 components_marketplacebadge_detectarmarketplace|Community 19: components_marketplacebadge_detectarmarketplace]]
+- [[_COMMUNITY_Community 20 components_marketplacebadge_marketplacebadge|Community 20: components_marketplacebadge_marketplacebadge]]
+- [[_COMMUNITY_Community 21 components_marketplacebadge_marketplaceslug|Community 21: components_marketplacebadge_marketplaceslug]]
+- [[_COMMUNITY_Community 22 components_productcallout_productcallout|Community 22: components_productcallout_productcallout]]
+- [[_COMMUNITY_Community 23 components_protip_cite|Community 23: components_protip_cite]]
+- [[_COMMUNITY_Community 24 components_protip_protip|Community 24: components_protip_protip]]
+- [[_COMMUNITY_Community 25 components_protip_warning|Community 25: components_protip_warning]]
+- [[_COMMUNITY_Community 26 components_ratingbadge_ratingbadge|Community 26: components_ratingbadge_ratingbadge]]
+- [[_COMMUNITY_Community 27 components_searchbar_searchbar|Community 27: components_searchbar_searchbar]]
+- [[_COMMUNITY_Community 28 components_secaobadge_secaobadge|Community 28: components_secaobadge_secaobadge]]
+- [[_COMMUNITY_Community 29 contato_page_contatopage|Community 29: contato_page_contatopage]]
+- [[_COMMUNITY_Community 30 lib_categorias_obtercategoria|Community 30: lib_categorias_obtercategoria]]
+- [[_COMMUNITY_Community 31 lib_comparacoes_obtermelhoresporatributo|Community 31: lib_comparacoes_obtermelhoresporatributo]]
+- [[_COMMUNITY_Community 32 lib_comparacoes_obtermelhorporatributo|Community 32: lib_comparacoes_obtermelhorporatributo]]
+- [[_COMMUNITY_Community 33 lib_comparacoes_obtertabelacomparativa|Community 33: lib_comparacoes_obtertabelacomparativa]]
+- [[_COMMUNITY_Community 34 lib_comparacoes_ordenarporatributo|Community 34: lib_comparacoes_ordenarporatributo]]
+- [[_COMMUNITY_Community 35 lib_constants_marketplace|Community 35: lib_constants_marketplace]]
+- [[_COMMUNITY_Community 36 lib_materias_obtermateriaporslug|Community 36: lib_materias_obtermateriaporslug]]
+- [[_COMMUNITY_Community 37 lib_materias_obtertodasmaterias|Community 37: lib_materias_obtertodasmaterias]]
+- [[_COMMUNITY_Community 38 lib_nav_navitem|Community 38: lib_nav_navitem]]
+- [[_COMMUNITY_Community 39 lib_oferta_rotativa_msateproximarotacao|Community 39: lib_oferta_rotativa_msateproximarotacao]]
+- [[_COMMUNITY_Community 40 lib_oferta_rotativa_selecionarofertarotativa|Community 40: lib_oferta_rotativa_selecionarofertarotativa]]
+- [[_COMMUNITY_Community 41 lib_ofertas_content_obterofertaporslug|Community 41: lib_ofertas_content_obterofertaporslug]]
+- [[_COMMUNITY_Community 42 lib_ofertas_content_obterofertasemdestaque|Community 42: lib_ofertas_content_obterofertasemdestaque]]
+- [[_COMMUNITY_Community 43 lib_ofertas_content_obterofertasporcategoria|Community 43: lib_ofertas_content_obterofertasporcategoria]]
+- [[_COMMUNITY_Community 44 lib_ofertas_content_obtertodasofertas|Community 44: lib_ofertas_content_obtertodasofertas]]
+- [[_COMMUNITY_Community 45 lib_reviews_obterreviewporslug|Community 45: lib_reviews_obterreviewporslug]]
+- [[_COMMUNITY_Community 46 lib_reviews_obterreviewsemdestaque|Community 46: lib_reviews_obterreviewsemdestaque]]
+- [[_COMMUNITY_Community 47 lib_reviews_obterreviewsporcategoria|Community 47: lib_reviews_obterreviewsporcategoria]]
+- [[_COMMUNITY_Community 48 lib_reviews_obtertodasreviews|Community 48: lib_reviews_obtertodasreviews]]
+- [[_COMMUNITY_Community 49 lib_search_filtrarreviews|Community 49: lib_search_filtrarreviews]]
+- [[_COMMUNITY_Community 50 lib_secoes_obtercategoriasporsecao|Community 50: lib_secoes_obtercategoriasporsecao]]
+- [[_COMMUNITY_Community 51 lib_secoes_obtersecao|Community 51: lib_secoes_obtersecao]]
+- [[_COMMUNITY_Community 52 lib_secoes_obtersecaodacategoria|Community 52: lib_secoes_obtersecaodacategoria]]
+- [[_COMMUNITY_Community 53 privacidade_page_privacidadepage|Community 53: privacidade_page_privacidadepage]]
+- [[_COMMUNITY_Community 54 secao_page_generatemetadata|Community 54: secao_page_generatemetadata]]
+- [[_COMMUNITY_Community 55 secao_page_generatestaticparams|Community 55: secao_page_generatestaticparams]]
+- [[_COMMUNITY_Community 56 secoes_page_secoesindexpage|Community 56: secoes_page_secoesindexpage]]
+- [[_COMMUNITY_Community 57 sobre_page_sobrepage|Community 57: sobre_page_sobrepage]]
+- [[_COMMUNITY_Community 58 src_app_materias_slug_page_tsx_slug_page_generatemetadata|Community 58: src_app_materias_slug_page_tsx_slug_page_generatemetadata]]
+- [[_COMMUNITY_Community 59 src_app_materias_slug_page_tsx_slug_page_generatestaticparams|Community 59: src_app_materias_slug_page_tsx_slug_page_generatestaticparams]]
+- [[_COMMUNITY_Community 60 src_app_reviews_slug_page_tsx_slug_page_generatemetadata|Community 60: src_app_reviews_slug_page_tsx_slug_page_generatemetadata]]
+- [[_COMMUNITY_Community 61 src_app_reviews_slug_page_tsx_slug_page_generatestaticparams|Community 61: src_app_reviews_slug_page_tsx_slug_page_generatestaticparams]]
+- [[_COMMUNITY_Community 62 termos_page_termospage|Community 62: termos_page_termospage]]
+- [[_COMMUNITY_Community 63 types_review_atributocomparacao|Community 63: types_review_atributocomparacao]]
+- [[_COMMUNITY_Community 64 types_review_atributoid|Community 64: types_review_atributoid]]
+- [[_COMMUNITY_Community 65 types_review_categoria|Community 65: types_review_categoria]]
+- [[_COMMUNITY_Community 66 types_review_categoriaslug|Community 66: types_review_categoriaslug]]
+- [[_COMMUNITY_Community 67 types_review_linhacomparativa|Community 67: types_review_linhacomparativa]]
+- [[_COMMUNITY_Community 68 types_review_melhorporatributo|Community 68: types_review_melhorporatributo]]
+- [[_COMMUNITY_Community 69 types_review_secao|Community 69: types_review_secao]]
+- [[_COMMUNITY_Community 70 types_review_secaoslug|Community 70: types_review_secaoslug]]
+- [[_COMMUNITY_Community 71 types_review_tabelacomparativa|Community 71: types_review_tabelacomparativa]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `compilerOptions` - 16 edges
-2. `Review` - 10 edges
-3. `Ultrabook 14 18h bateria (review)` - 10 edges
-4. `obterReviewsPorCategoria()` - 9 edges
-5. `Notebook Gamer RTX 4060 16GB (review)` - 9 edges
-6. `Workstation 32GB RTX 4070 (review)` - 9 edges
-7. `obterCategoria()` - 8 edges
-8. `CATEGORIAS` - 7 edges
-9. `obterTabelaComparativa()` - 7 edges
-10. `Fone Bluetooth ANC 30h (review)` - 7 edges
+2. `paths` - 2 edges
+3. `target` - 1 edges
+4. `lib` - 1 edges
+5. `allowJs` - 1 edges
+6. `skipLibCheck` - 1 edges
+7. `strict` - 1 edges
+8. `noEmit` - 1 edges
+9. `esModuleInterop` - 1 edges
+10. `module` - 1 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `Next.js logo (wordmark SVG)` --conceptually_related_to--> `Next.js project bootstrap (create-next-app)`  [INFERRED]
-  public/next.svg → README.md
-- `Vercel logo (triangle SVG)` --conceptually_related_to--> `Next.js project bootstrap (create-next-app)`  [INFERRED]
-  public/vercel.svg → README.md
-- `Next.js project bootstrap (create-next-app)` --conceptually_related_to--> `Next.js breaking-changes warning (read node_modules/next docs)`  [INFERRED]
-  README.md → AGENTS.md
-- `CLAUDE agent rules (references AGENTS.md)` --references--> `Next.js breaking-changes warning (read node_modules/next docs)`  [EXTRACTED]
-  CLAUDE.md → AGENTS.md
-- `Fone Bluetooth ANC 30h (review)` --semantically_similar_to--> `Fone Studio Wireless Hi-Res (review)`  [INFERRED] [semantically similar]
-  src/content/reviews/fone-bluetooth-anc.mdx → src/content/reviews/fone-studio-qualidade.mdx
+- None detected - all connections are within the same source files.
 
 ## Import Cycles
 - None detected.
 
-## Hyperedges (group relationships)
-- **Notebooks comparison set** — reviews_notebook_gamer_rtx_4060, reviews_notebook_ultrabook_bateria, reviews_notebook_workstation_32gb [EXTRACTED 0.95]
-- **Fones comparison set** — reviews_fone_bluetooth_anc, reviews_fone_studio_qualidade [EXTRACTED 0.95]
-- **Battery leadership attribute group** — reviews_atributo_bateria, reviews_fone_bluetooth_anc, reviews_notebook_ultrabook_bateria [INFERRED 0.75]
+## Communities (72 total, 71 thin omitted)
 
-## Communities (16 total, 5 thin omitted)
-
-### Community 0 - "Category & Comparison Pages"
-Cohesion: 0.16
-Nodes (19): CategoriaPage(), CompararPage(), AttributeRanking(), BestByAttributeCard(), ComparisonTable(), obterCategoria(), obterMelhoresPorAtributo(), obterMelhorPorAtributo() (+11 more)
-
-### Community 1 - "Layout, SEO & Metadata"
-Cohesion: 0.15
-Nodes (10): inter, metadata, Footer(), Header(), CATEGORIA_POR_SLUG, CATEGORIAS, SLUGS_VALIDOS, Marketplace (+2 more)
-
-### Community 2 - "Review UI Components"
-Cohesion: 0.18
-Nodes (12): RatingBadge(), ReviewCard(), ReviewList(), SearchBar(), REVIEWS_DIR, filtrarReviews(), reviews, AtributoId (+4 more)
-
-### Community 3 - "TypeScript Config"
-Cohesion: 0.10
-Nodes (19): compilerOptions, allowJs, esModuleInterop, incremental, isolatedModules, jsx, lib, module (+11 more)
-
-### Community 4 - "Production Dependencies"
+### Community 0 - "Community 0: tsconfig_compileroptions, tsconfig_compileroptions_allowjs, tsconfig_compileroptions_esmoduleinterop, tsconfig_compileroptions_incremental"
 Cohesion: 0.13
-Nodes (14): dependencies, gray-matter, next, next-mdx-remote, react, react-dom, name, private (+6 more)
-
-### Community 5 - "Comparison Attributes"
-Cohesion: 0.34
-Nodes (15): Atributo: ANC, Atributo: armazenamento, Atributo: bateria, Atributo: memoria, Atributo: preco, Atributo: processador, Atributo: som, Atributo: tela (+7 more)
-
-### Community 6 - "Dev Dependencies"
-Cohesion: 0.14
-Nodes (14): devDependencies, eslint, eslint-config-next, jsdom, tailwindcss, @tailwindcss/postcss, @testing-library/jest-dom, @testing-library/react (+6 more)
-
-### Community 7 - "Homepage & Review Data"
-Cohesion: 0.48
-Nodes (5): HomePage(), Hero(), obterReviewPorSlug(), obterReviewsEmDestaque(), obterTodasReviews()
-
-### Community 8 - "Next.js Docs & Branding"
-Cohesion: 0.50
-Nodes (5): Next.js breaking-changes warning (read node_modules/next docs), CLAUDE agent rules (references AGENTS.md), Next.js logo (wordmark SVG), Vercel logo (triangle SVG), Next.js project bootstrap (create-next-app)
+Nodes (15): compilerOptions, allowJs, esModuleInterop, incremental, isolatedModules, jsx, lib, module (+7 more)
 
 ## Knowledge Gaps
-- **62 isolated node(s):** `eslintConfig`, `nextConfig`, `name`, `version`, `private` (+57 more)
+- **89 isolated node(s):** `target`, `lib`, `allowJs`, `skipLibCheck`, `strict` (+84 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **5 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **71 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `devDependencies` connect `Dev Dependencies` to `Production Dependencies`?**
-  _High betweenness centrality (0.023) - this node is a cross-community bridge._
-- **Why does `Review` connect `Review UI Components` to `Category & Comparison Pages`?**
-  _High betweenness centrality (0.012) - this node is a cross-community bridge._
-- **Are the 3 inferred relationships involving `Ultrabook 14 18h bateria (review)` (e.g. with `Fone Bluetooth ANC 30h (review)` and `Notebook Gamer RTX 4060 16GB (review)`) actually correct?**
-  _`Ultrabook 14 18h bateria (review)` has 3 INFERRED edges - model-reasoned connections that need verification._
-- **What connects `eslintConfig`, `nextConfig`, `name` to the rest of the system?**
-  _62 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `Layout, SEO & Metadata` be split into smaller, more focused modules?**
-  _Cohesion score 0.14736842105263157 - nodes in this community are weakly interconnected._
-- **Should `TypeScript Config` be split into smaller, more focused modules?**
-  _Cohesion score 0.1 - nodes in this community are weakly interconnected._
-- **Should `Production Dependencies` be split into smaller, more focused modules?**
+- **Why does `compilerOptions` connect `Community 0` to `Community 1`, `Community 2`?**
+  _High betweenness centrality (0.041) - this node is a cross-community bridge._
+- **Why does `paths` connect `Community 2` to `Community 0`?**
+  _High betweenness centrality (0.004) - this node is a cross-community bridge._
+- **What connects `target`, `lib`, `allowJs` to the rest of the system?**
+  _89 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **Should `Community 0` be split into smaller, more focused modules?**
   _Cohesion score 0.13333333333333333 - nodes in this community are weakly interconnected._

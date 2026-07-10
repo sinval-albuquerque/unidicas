@@ -123,12 +123,11 @@ export default async function SecaoPage({
                     href={`/reviews/${r.slug}`}
                     className="group block bg-bg border border-border rounded-xl overflow-hidden hover:shadow-md transition no-underline"
                   >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={r.imagem}
-                      alt={r.produto}
-                      className="w-full h-32 object-cover bg-bg-gray"
-                    />
+                    <div className="w-full h-32 bg-bg-gray flex items-center justify-center">
+                      <span className="text-text-muted text-xs font-bold uppercase tracking-widest">
+                        {r.categoria}
+                      </span>
+                    </div>
                     <div className="p-3">
                       <h3 className="text-sm font-bold leading-snug group-hover:text-primary line-clamp-2">
                         {r.titulo}

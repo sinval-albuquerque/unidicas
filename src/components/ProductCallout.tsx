@@ -75,12 +75,14 @@ export function ProductCallout({
     return (
       <aside className="not-prose my-6 flex gap-4 items-center bg-bg border border-border rounded-xl p-4">
         {image && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={image}
-            alt={title}
-            className="shrink-0 w-20 h-20 rounded-lg object-cover bg-bg-gray"
-          />
+          <div
+            aria-hidden
+            className="shrink-0 w-20 h-20 rounded-lg bg-bg-gray flex items-center justify-center"
+          >
+            <span className="text-[0.55rem] text-text-muted font-bold uppercase tracking-widest">
+              {marketplace ?? "img"}
+            </span>
+          </div>
         )}
         <div className="flex-1 min-w-0">
           <p className="text-xs uppercase tracking-wider text-primary font-bold">
@@ -114,13 +116,10 @@ export function ProductCallout({
   return (
     <aside className="not-prose my-8 bg-bg border border-border rounded-xl overflow-hidden">
       {image && (
-        <div className="aspect-[16/7] overflow-hidden bg-bg-gray">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={image}
-            alt={title}
-            className="w-full h-full object-cover"
-          />
+        <div className="aspect-[16/7] overflow-hidden bg-bg-gray flex items-center justify-center">
+          <span className="text-text-muted text-xs font-extrabold uppercase tracking-widest">
+            {marketplace ?? "Produto em destaque"}
+          </span>
         </div>
       )}
       <div className="p-6">

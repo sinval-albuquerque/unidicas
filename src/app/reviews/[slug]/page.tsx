@@ -17,6 +17,7 @@ import {
 import { obterCategoria } from "@/lib/categorias";
 import { obterSecao } from "@/lib/secoes";
 import { EXTERNAL_LINK_REL, SITE_NAME } from "@/lib/constants";
+import { buildReviewMetadata } from "@/lib/seo";
 
 export function generateStaticParams() {
   return obterTodasReviews().map((r) => ({ slug: r.slug }));
@@ -29,11 +30,13 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const review = obterReviewPorSlug(slug);
-  if (!review) return { title: "Review não encontrada" };
-  return {
-    title: `${review.titulo} - Review ${review.nota}/5`,
-    description: review.resumo,
-  };
+  if (!review) {
+    return {
+      title: "Review não encontrada",
+      robots: { index: false, follow: true },
+    };
+  }
+  return buildReviewMetadata(review);
 }
 
 function tempoLeitura(texto: string): number {
@@ -81,7 +84,7 @@ export default async function ReviewSinglePage({
           BARRA DE SESSAO + BREADCRUMB
          ================================================================= */}
       <div className="border-b border-border bg-bg-alt">
-        <div className="max-w-6xl mx-auto px-4 py-3 flex items-center gap-2 text-xs uppercase tracking-widest font-bold text-text-soft overflow-x-auto no-scrollbar">
+        <div className="max-w-6xl mx-auto px-4 py-3 flex items-center gap-2 text-[0.65rem] sm:text-xs uppercase tracking-widest font-bold text-text-soft overflow-x-auto no-scrollbar min-w-0">
           <Link href="/" className="hover:text-primary no-underline shrink-0">
             {SITE_NAME}
           </Link>
@@ -109,18 +112,18 @@ export default async function ReviewSinglePage({
               <span className="text-text-muted shrink-0">/</span>
             </>
           )}
-          <span className="text-text truncate">{review.titulo}</span>
+          <span className="text-text truncate min-w-0 max-w-[60vw] sm:max-w-none">{review.titulo}</span>
         </div>
       </div>
 
       {/* =================================================================
           HEADER DA REVIEW
          ================================================================= */}
-      <header className="max-w-6xl mx-auto px-4 pt-10 md:pt-16 pb-8">
-        <div className="flex flex-wrap items-center gap-3 mb-6">
+      <header className="max-w-6xl mx-auto px-4 pt-8 sm:pt-12 md:pt-16 pb-8">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-5 sm:mb-6 max-w-full">
           {categoria && secao && (
             <span
-              className="inline-flex items-center gap-1 text-[0.7rem] font-extrabold uppercase tracking-widest px-3 py-1 rounded-full border"
+              className="inline-flex items-center gap-1 text-[0.65rem] sm:text-[0.7rem] font-extrabold uppercase tracking-widest px-2.5 sm:px-3 py-1 rounded-full border max-w-full truncate"
               style={{
                 color: secao.cor,
                 backgroundColor: secao.corLight,
@@ -132,40 +135,40 @@ export default async function ReviewSinglePage({
             </span>
           )}
           {review.emDestaque && (
-            <span className="inline-flex items-center gap-1 bg-accent text-bg-dark text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">
+            <span className="inline-flex items-center gap-1 bg-accent text-bg-dark text-[0.65rem] sm:text-xs font-extrabold px-2.5 sm:px-3 py-1 rounded-full uppercase tracking-wider whitespace-nowrap">
               ★ Destaque
             </span>
           )}
-          <span className="inline-flex items-center gap-1.5 bg-bg-alt border border-border text-text-soft text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+          <span className="inline-flex items-center gap-1.5 bg-bg-alt border border-border text-text-soft text-[0.65rem] sm:text-xs font-bold px-2.5 sm:px-3 py-1 rounded-full uppercase tracking-wider whitespace-nowrap">
             {review.marketplace}
           </span>
         </div>
 
-        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-[1.05] tracking-tight text-text mb-6">
+        <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-[1.1] sm:leading-[1.05] tracking-tight text-text mb-5 sm:mb-6 text-balance break-words-anywhere">
           {review.titulo}
         </h1>
 
-        <p className="text-lg md:text-xl text-text-soft leading-relaxed max-w-3xl mb-8">
+        <p className="text-base sm:text-lg md:text-xl text-text-soft leading-relaxed max-w-3xl mb-6 sm:mb-8 text-pretty">
           {review.resumo}
         </p>
 
-        <div className="flex flex-wrap items-center gap-x-5 gap-y-3 text-sm text-text-soft">
-          <div className="flex items-center gap-2">
-            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary to-primary-light text-white flex items-center justify-center font-extrabold text-sm">
+        <div className="flex flex-wrap items-center gap-x-3 sm:gap-x-5 gap-y-2 sm:gap-y-3 text-xs sm:text-sm text-text-soft">
+          <div className="flex items-center gap-2 min-w-0">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gradient-to-br from-primary to-primary-light text-white flex items-center justify-center font-extrabold text-xs sm:text-sm shrink-0">
               U
             </div>
-            <div>
-              <p className="font-semibold text-text leading-tight">Equipe {SITE_NAME}</p>
-              <p className="text-xs text-text-muted">Review independente</p>
+            <div className="min-w-0">
+              <p className="font-semibold text-text leading-tight truncate">Equipe {SITE_NAME}</p>
+              <p className="text-[0.65rem] sm:text-xs text-text-muted truncate">Review independente</p>
             </div>
           </div>
           <span className="hidden sm:inline text-border">•</span>
           <div className="flex items-center gap-2">
             <RatingBadge nota={review.nota} />
-            <span className="text-xs text-text-muted">/ 5</span>
+            <span className="text-[0.65rem] sm:text-xs text-text-muted">/ 5</span>
           </div>
           <span className="hidden sm:inline text-border">•</span>
-          <span className="uppercase tracking-wider text-xs font-semibold text-text-muted">
+          <span className="uppercase tracking-wider text-[0.65rem] sm:text-xs font-semibold text-text-muted">
             {tempo} min de leitura
           </span>
         </div>
@@ -174,14 +177,11 @@ export default async function ReviewSinglePage({
       {/* =================================================================
           IMAGEM DESTAQUE
          ================================================================= */}
-      <figure className="max-w-6xl mx-auto px-4 mb-12">
-        <div className="relative aspect-[16/9] rounded-2xl overflow-hidden bg-bg-gray shadow-floating">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={review.imagem}
-            alt={review.produto}
-            className="w-full h-full object-cover"
-          />
+      <figure className="max-w-6xl mx-auto px-4 mb-10 sm:mb-12">
+        <div className="relative aspect-[16/9] rounded-xl sm:rounded-2xl overflow-hidden bg-bg-gray shadow-floating flex items-center justify-center">
+          <span className="text-text-muted font-extrabold uppercase tracking-widest">
+            {review.produto}
+          </span>
         </div>
       </figure>
 
@@ -189,7 +189,7 @@ export default async function ReviewSinglePage({
           CONTEUDO (2 colunas) + SIDEBAR
          ================================================================= */}
       <div className="max-w-6xl mx-auto px-4 pb-16">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-10">
           <div className="lg:col-span-8 min-w-0">
             <div className="prose-article">{compiled.content}</div>
 
@@ -207,36 +207,35 @@ export default async function ReviewSinglePage({
                 preco={review.preco}
                 precoOriginal={review.precoOriginal}
                 marketplace={review.marketplace}
-                imagem={review.imagem}
               />
             </div>
           </div>
 
-          <aside className="lg:col-span-4 space-y-6">
-            <div className="sticky top-24">
+          <aside className="lg:col-span-4 space-y-6 min-w-0">
+            <div className="lg:sticky lg:top-24">
               {/* SIDEBAR: FICHA TECNICA + CTA COMPACTO */}
-              <div className="bg-bg border border-border rounded-2xl p-5 shadow-elevated">
-                <p className="text-xs font-bold uppercase tracking-widest text-text-muted mb-3">
+              <div className="bg-bg border border-border rounded-2xl p-4 sm:p-5 shadow-elevated min-w-0">
+                <p className="text-[0.65rem] sm:text-xs font-bold uppercase tracking-widest text-text-muted mb-3">
                   Ficha técnica
                 </p>
-                <p className="text-base font-extrabold text-text mb-1 leading-tight">
+                <p className="text-sm sm:text-base font-extrabold text-text mb-1 leading-tight text-balance break-words-anywhere">
                   {review.produto}
                 </p>
-                <p className="text-xs text-text-muted mb-4">
+                <p className="text-[0.65rem] sm:text-xs text-text-muted mb-4">
                   {review.marketplace}
                 </p>
 
-                <div className="flex items-baseline gap-2 mb-4 pb-4 border-b border-border">
-                  <span className="text-2xl font-extrabold text-primary">
+                <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1 mb-4 pb-4 border-b border-border min-w-0">
+                  <span className="text-xl sm:text-2xl font-extrabold text-primary whitespace-nowrap">
                     R$ {review.preco.toLocaleString("pt-BR")}
                   </span>
                   {review.precoOriginal && (
-                    <span className="text-xs text-text-muted line-through">
+                    <span className="text-xs text-text-muted line-through whitespace-nowrap">
                       R$ {review.precoOriginal.toLocaleString("pt-BR")}
                     </span>
                   )}
                   {desconto > 0 && (
-                    <span className="ml-auto bg-danger text-white text-xs font-extrabold px-2 py-1 rounded-md">
+                    <span className="ml-auto bg-danger text-white text-xs font-extrabold px-2 py-1 rounded-md whitespace-nowrap">
                       -{desconto}%
                     </span>
                   )}
@@ -257,27 +256,24 @@ export default async function ReviewSinglePage({
 
               {/* RELACIONADOS */}
               {relacionados.length > 0 && (
-                <div className="mt-8 bg-bg-alt border border-border rounded-2xl p-5">
-                  <h3 className="text-sm font-extrabold uppercase tracking-widest text-text-soft mb-4 flex items-center gap-2">
+                <div className="mt-6 sm:mt-8 bg-bg-alt border border-border rounded-2xl p-4 sm:p-5">
+                  <h3 className="text-xs sm:text-sm font-extrabold uppercase tracking-widest text-text-soft mb-4 flex items-center gap-2">
                     <span className="w-2 h-2 bg-primary rounded-full" />
                     Outras reviews
                   </h3>
                   <ul className="space-y-4">
                     {relacionados.map((r) => (
-                      <li key={r.slug} className="flex gap-3 group">
+                      <li key={r.slug} className="flex gap-3 group min-w-0">
                         <Link
                           href={`/reviews/${r.slug}`}
-                          className="shrink-0 w-16 h-16 rounded-lg overflow-hidden bg-bg-gray"
+                          className="shrink-0 w-14 h-14 sm:w-16 sm:h-16 rounded-lg overflow-hidden bg-bg-gray flex items-center justify-center"
                         >
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
-                            src={r.imagem}
-                            alt=""
-                            className="w-full h-full object-cover transition group-hover:scale-110"
-                          />
+                          <span className="text-[0.55rem] text-text-muted font-bold uppercase">
+                            ver
+                          </span>
                         </Link>
                         <div className="flex-1 min-w-0">
-                          <h4 className="text-sm font-bold leading-snug line-clamp-3 group-hover:text-primary transition">
+                          <h4 className="text-xs sm:text-sm font-bold leading-snug line-clamp-3 group-hover:text-primary transition break-words-anywhere">
                             <Link
                               href={`/reviews/${r.slug}`}
                               className="text-text no-underline"
@@ -285,7 +281,7 @@ export default async function ReviewSinglePage({
                               {r.titulo}
                             </Link>
                           </h4>
-                          <p className="text-xs text-text-muted mt-1">
+                          <p className="text-[0.65rem] sm:text-xs text-text-muted mt-1 truncate">
                             Nota {r.nota.toFixed(1)} • R$ {r.preco.toLocaleString("pt-BR")}
                           </p>
                         </div>
@@ -303,13 +299,15 @@ export default async function ReviewSinglePage({
           REVIEWS RELACIONADAS (full width)
          ================================================================= */}
       {relacionados.length > 0 && (
-        <section className="border-t border-border bg-bg-alt py-14">
+        <section className="border-t border-border bg-bg-alt py-10 sm:py-14">
           <div className="max-w-6xl mx-auto px-4">
-            <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight mb-8 flex items-center gap-3">
-              <span className="w-1 h-8 bg-primary rounded-full" />
-              Outras reviews de {categoria?.nome ?? "produtos"}
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight mb-6 sm:mb-8 flex items-center gap-3 text-balance">
+              <span className="w-1 h-6 sm:h-8 bg-primary rounded-full shrink-0" />
+              <span className="min-w-0 break-words-anywhere">
+                Outras reviews de {categoria?.nome ?? "produtos"}
+              </span>
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
               {relacionados.map((r) => (
                 <ReviewCard key={r.slug} review={r} />
               ))}

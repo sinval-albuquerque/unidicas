@@ -75,13 +75,10 @@ export function AffiliateCta({
         </div>
 
         {imagem && (
-          <div className="aspect-[16/10] bg-white/10 overflow-hidden">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={imagem}
-              alt={produto ?? "Produto"}
-              className="w-full h-full object-cover"
-            />
+          <div className="aspect-[16/10] bg-white/10 overflow-hidden flex items-center justify-center">
+            <span className="text-white/60 text-xs font-extrabold uppercase tracking-widest">
+              {marketplace}
+            </span>
           </div>
         )}
 
@@ -195,13 +192,10 @@ export function AffiliateCta({
         {/* Imagem */}
         {imagem && (
           <div className="md:col-span-2 flex items-center justify-center">
-            <div className="relative w-full aspect-square max-w-[280px] bg-white/10 rounded-2xl overflow-hidden shadow-pop">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={imagem}
-                alt={produto ?? "Produto"}
-                className="w-full h-full object-cover"
-              />
+            <div className="relative w-full aspect-square max-w-[280px] bg-white/10 rounded-2xl overflow-hidden shadow-pop flex items-center justify-center">
+              <span className="text-white/60 text-xs font-extrabold uppercase tracking-widest text-center px-4">
+                {produto ?? marketplace}
+              </span>
             </div>
           </div>
         )}

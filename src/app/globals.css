@@ -281,3 +281,24 @@ h2 { letter-spacing: -0.025em; }
 ::-webkit-scrollbar-track { background: var(--color-bg-alt); }
 ::-webkit-scrollbar-thumb { background: var(--color-border-strong); border-radius: 5px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--color-text-muted); }
+
+/* =========================================================================
+   Utilities — overflow guards + mobile-first helpers
+   ========================================================================= */
+
+/* Esconde scrollbar mas mantem scroll (ex: breadcrumb horizontal no mobile). */
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+/* Trava scroll horizontal em todo o site (defesa contra transbordo). */
+html, body { overflow-x: hidden; }
+
+/* Quebra de linha mais amigável em titulos longos. */
+.text-balance { text-wrap: balance; }
+.text-pretty  { text-wrap: pretty; }
+
+/* Forca quebra de strings longas (URLs, slugs, IDs) em mobile. */
+.break-words-anywhere {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}

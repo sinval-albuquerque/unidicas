@@ -14,31 +14,28 @@ export function ReviewCard({ review }: { review: Review }) {
   const categoria = obterCategoria(review.categoria as never);
 
   return (
-    <article className="group bg-bg border border-border rounded-2xl overflow-hidden hover-lift flex flex-col shadow-soft hover:shadow-floating">
-      <div className="relative overflow-hidden">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={review.imagem}
-          alt={review.produto}
-          className="w-full h-44 object-cover bg-bg-gray transition duration-500 group-hover:scale-[1.05]"
-        />
+    <article className="group bg-bg border border-border rounded-2xl overflow-hidden hover-lift flex flex-col shadow-soft hover:shadow-floating min-w-0">
+      <div className="relative aspect-[16/10] sm:aspect-auto sm:h-44 bg-bg-gray flex items-center justify-center">
+        <span className="text-text-muted text-sm font-bold uppercase tracking-widest">
+          {review.categoria}
+        </span>
 
-        {/* Badges no canto superior */}
-        <div className="absolute top-3 left-3 flex flex-col gap-1.5">
+        {/* Badges no canto superior — max-w impede estourar canto */}
+        <div className="absolute top-2.5 left-2.5 sm:top-3 sm:left-3 flex flex-col gap-1.5 max-w-[60%]">
           {review.emDestaque && (
-            <span className="bg-accent text-bg-dark text-[0.65rem] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-soft">
+            <span className="bg-accent text-bg-dark text-[0.65rem] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-soft whitespace-nowrap">
               ★ Destaque
             </span>
           )}
           {desconto > 0 && (
-            <span className="bg-danger text-white text-[0.65rem] font-extrabold px-2.5 py-1 rounded-full shadow-soft">
+            <span className="bg-danger text-white text-[0.65rem] font-extrabold px-2.5 py-1 rounded-full shadow-soft whitespace-nowrap">
               -{desconto}%
             </span>
           )}
         </div>
 
         {/* Nota no canto inferior direito */}
-        <div className="absolute bottom-3 right-3">
+        <div className="absolute bottom-2.5 right-2.5 sm:bottom-3 sm:right-3">
           <RatingBadge nota={review.nota} compact />
         </div>
 
@@ -46,44 +43,44 @@ export function ReviewCard({ review }: { review: Review }) {
         <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-black/20 to-transparent pointer-events-none" />
       </div>
 
-      <div className="p-5 flex flex-col flex-1">
+      <div className="p-4 sm:p-5 flex flex-col flex-1 min-w-0">
         {categoria && (
           <Link
             href={`/categorias/${categoria.slug}`}
-            className="text-[0.65rem] font-bold text-primary uppercase tracking-widest hover:text-primary-dark no-underline"
+            className="text-[0.65rem] font-bold text-primary uppercase tracking-widest hover:text-primary-dark no-underline truncate"
           >
             {categoria.nome}
           </Link>
         )}
-        <Link href={`/reviews/${review.slug}`} className="block mt-1.5">
-          <h3 className="text-base font-bold leading-snug min-h-[2.6rem] text-text group-hover:text-primary transition">
+        <Link href={`/reviews/${review.slug}`} className="block mt-1.5 min-w-0">
+          <h3 className="text-base font-bold leading-snug min-h-[2.6rem] sm:min-h-[3.2rem] text-text group-hover:text-primary transition text-balance break-words-anywhere">
             {review.titulo}
           </h3>
         </Link>
 
-        <p className="text-xs text-text-soft mt-2 mb-4 flex-1 line-clamp-2 leading-relaxed">
+        <p className="text-xs sm:text-sm text-text-soft mt-2 mb-4 flex-1 line-clamp-2 leading-relaxed">
           {review.resumo}
         </p>
 
-        {/* Preco + desconto */}
-        <div className="flex items-baseline gap-2 mb-4 pb-4 border-b border-border">
-          <span className="text-2xl font-extrabold text-text">
+        {/* Preco + desconto — flex-wrap para nao estourar em mobile. */}
+        <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1.5 mb-4 pb-4 border-b border-border min-w-0">
+          <span className="text-xl sm:text-2xl font-extrabold text-text whitespace-nowrap">
             R$ {review.preco.toLocaleString("pt-BR")}
           </span>
           {review.precoOriginal && (
-            <span className="text-xs text-text-muted line-through">
+            <span className="text-xs text-text-muted line-through whitespace-nowrap">
               R$ {review.precoOriginal.toLocaleString("pt-BR")}
             </span>
           )}
           {review.marketplace && (
-            <div className="ml-auto">
+            <span className="ml-auto shrink-0 max-w-full truncate">
               <MarketplaceBadge
                 nome={review.marketplace}
                 link={review.linkAfiliado}
                 asLink
                 size="sm"
               />
-            </div>
+            </span>
           )}
         </div>
 
@@ -91,7 +88,7 @@ export function ReviewCard({ review }: { review: Review }) {
           href={review.linkAfiliado}
           rel={EXTERNAL_LINK_REL}
           target="_blank"
-          className="block text-center bg-success hover:bg-success-dark text-white py-2.5 rounded-xl font-bold text-sm transition shadow-soft hover:shadow-elevated"
+          className="block text-center bg-success hover:bg-success-dark text-white py-2.5 rounded-xl font-bold text-sm transition shadow-soft hover:shadow-elevated whitespace-nowrap"
         >
           Ver oferta →
         </a>

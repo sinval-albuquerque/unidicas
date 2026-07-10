@@ -1,0 +1,9 @@
+mlb_id,categoria,categoria_slug,status,cupom
+MLB1234567890,Notebooks,notebooks,ativa,NOTA10
+MLB9876543210,Fones,fones,ativa,
+MLB5555555555,Smartwatch,smartwatches,ativa,SMART15
+MLB1111111111,Air Fryer,air-fryers,ativa,FRYER20
+MLB2222222222,Aspirador,outros,inativa,
+MLB3333333333,Cafeteira,outros,ativa,CAFE5
+MLB4444444444,Mouse Gamer,outros,ativa,
+MLB61595839,Transmissor HDMI,outros,ativa,

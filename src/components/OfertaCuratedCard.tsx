@@ -23,66 +23,65 @@ export function OfertaCuratedCard({ oferta }: { oferta: Oferta }) {
     oferta.preco >= 12 ? Math.max(1, Math.floor(oferta.preco / 12)) : oferta.preco;
 
   return (
-    <article className="bg-bg border border-border rounded-xl overflow-hidden transition hover:shadow-lg hover:-translate-y-0.5 flex flex-col">
-      <div className="relative">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={oferta.imagem}
-          alt={oferta.produto}
-          loading="lazy"
-          className="w-full h-44 object-cover bg-bg-gray"
-        />
-        <div className="absolute top-2 left-2 flex flex-col gap-1.5">
+    <article className="bg-bg border border-border rounded-xl overflow-hidden transition hover:shadow-lg hover:-translate-y-0.5 flex flex-col min-w-0">
+      <div className="relative aspect-[16/10] sm:aspect-auto sm:h-44 bg-bg-gray flex items-center justify-center">
+        <span className="text-text-muted text-sm font-bold uppercase tracking-widest">
+          {oferta.categoria}
+        </span>
+        <div className="absolute top-2 left-2 flex flex-col gap-1.5 max-w-[65%]">
           {desconto > 0 && (
-            <span className="bg-danger text-white text-[0.7rem] font-extrabold px-2 py-0.5 rounded uppercase tracking-wide">
+            <span className="bg-danger text-white text-[0.7rem] font-extrabold px-2 py-0.5 rounded uppercase tracking-wide whitespace-nowrap">
               -{desconto}%
             </span>
           )}
           {oferta.emDestaque && (
-            <span className="bg-accent text-black text-[0.65rem] font-extrabold px-2 py-0.5 rounded uppercase tracking-wide">
+            <span className="bg-accent text-black text-[0.65rem] font-extrabold px-2 py-0.5 rounded uppercase tracking-wide whitespace-nowrap">
               Top
             </span>
           )}
           {oferta.tags?.slice(0, 2).map((tag) => (
             <span
               key={tag}
-              className="bg-success-soft text-success text-[0.65rem] font-extrabold px-2 py-0.5 rounded uppercase tracking-wide border border-success/30"
+              className="bg-success-soft text-success text-[0.65rem] font-extrabold px-2 py-0.5 rounded uppercase tracking-wide border border-success/30 whitespace-nowrap"
             >
               {tag}
             </span>
           ))}
         </div>
-        <span className="absolute bottom-2 right-2 bg-bg/90 backdrop-blur text-[0.65rem] font-bold px-2 py-0.5 rounded uppercase tracking-wide text-text-soft">
+        <span className="absolute bottom-2 right-2 bg-bg/90 backdrop-blur text-[0.65rem] font-bold px-2 py-0.5 rounded uppercase tracking-wide text-text-soft max-w-[55%] truncate">
           {oferta.marketplace}
         </span>
       </div>
 
-      <div className="p-3.5 flex flex-col flex-1">
-        <span className="text-[0.65rem] font-bold text-primary uppercase tracking-wide">
+      <div className="p-3.5 flex flex-col flex-1 min-w-0">
+        <span className="text-[0.65rem] font-bold text-primary uppercase tracking-wide truncate">
           {oferta.categoria}
         </span>
-        <h3 className="text-sm font-bold my-1.5 leading-snug min-h-[2.6rem]">
+        <h3 className="text-sm font-bold my-1.5 leading-snug min-h-[2.6rem] sm:min-h-[3.2rem] text-balance break-words-anywhere">
           {oferta.titulo}
         </h3>
-        <p className="text-xs text-text-muted mb-2 flex-1">{oferta.resumo}</p>
+        <p className="text-xs text-text-muted mb-2 flex-1 line-clamp-2 break-words-anywhere">
+          {oferta.resumo}
+        </p>
 
         {oferta.precoOriginal && (
-          <span className="text-xs text-text-muted line-through">
+          <span className="text-xs text-text-muted line-through whitespace-nowrap">
             de R$ {oferta.precoOriginal.toLocaleString("pt-BR")}
           </span>
         )}
-        <div className="flex items-baseline gap-2 mb-1">
-          <span className="text-2xl font-extrabold text-text">
+        <div className="flex items-baseline gap-2 mb-1 min-w-0">
+          <span className="text-xl sm:text-2xl font-extrabold text-text whitespace-nowrap">
             R$ {oferta.preco.toLocaleString("pt-BR")}
           </span>
         </div>
-        <span className="text-[0.7rem] text-text-muted mb-2">
+        <span className="text-[0.7rem] text-text-muted mb-2 break-words-anywhere">
           em até 12x de R$ {parcela.toLocaleString("pt-BR")} sem juros
         </span>
 
         {oferta.cupom && (
-          <div className="bg-accent-soft border border-accent/40 rounded-md px-2.5 py-1.5 mb-3 text-[0.7rem] font-bold text-text">
-            🎟️ Cupom: <code className="font-mono">{oferta.cupom}</code>
+          <div className="bg-accent-soft border border-accent/40 rounded-md px-2.5 py-1.5 mb-3 text-[0.7rem] font-bold text-text truncate">
+            <span aria-hidden>🎟️ </span>Cupom:{" "}
+            <code className="font-mono">{oferta.cupom}</code>
           </div>
         )}
 
@@ -90,7 +89,7 @@ export function OfertaCuratedCard({ oferta }: { oferta: Oferta }) {
           href={oferta.linkAfiliado}
           rel={EXTERNAL_LINK_REL}
           target="_blank"
-          className="mt-auto block text-center bg-success text-white py-2.5 rounded-lg font-bold text-sm hover:bg-success/90 transition"
+          className="mt-auto block text-center bg-success text-white py-2.5 rounded-lg font-bold text-sm hover:bg-success/90 transition whitespace-nowrap"
         >
           Pegar oferta →
         </a>

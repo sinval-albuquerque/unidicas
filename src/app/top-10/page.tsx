@@ -54,11 +54,14 @@ export default function Top10Page() {
                 {i + 1}
               </span>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={r.imagem}
-                alt={r.produto}
-                className="shrink-0 w-24 h-24 rounded-lg object-cover bg-bg-gray"
-              />
+              <div
+                aria-hidden
+                className="shrink-0 w-24 h-24 rounded-lg bg-bg-gray flex items-center justify-center"
+              >
+                <span className="text-[0.6rem] text-text-muted font-bold uppercase tracking-widest">
+                  {categoria?.nome ?? r.categoria}
+                </span>
+              </div>
               <div className="flex-1 min-w-0">
                 <p className="text-xs uppercase tracking-wider text-primary font-bold">
                   {categoria?.nome ?? r.categoria}

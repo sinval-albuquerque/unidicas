@@ -61,11 +61,14 @@ export function ProductList({
                 {i + 1}
               </span>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={r.imagem}
-                alt={r.produto}
-                className="shrink-0 w-20 h-20 rounded-lg object-cover bg-bg-gray"
-              />
+              <div
+                aria-hidden
+                className="shrink-0 w-20 h-20 rounded-lg bg-bg-gray flex items-center justify-center"
+              >
+                <span className="text-[0.55rem] text-text-muted font-bold uppercase tracking-widest">
+                  {r.categoria}
+                </span>
+              </div>
               <div className="flex-1 min-w-0">
                 <p className="text-xs uppercase tracking-wider text-primary font-bold">
                   {r.marketplace}

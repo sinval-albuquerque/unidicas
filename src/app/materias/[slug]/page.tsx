@@ -182,13 +182,10 @@ export default async function MateriaSinglePage({
 
       {materia.imagem && (
         <figure className="max-w-6xl mx-auto px-4 mb-12">
-          <div className="relative aspect-[16/9] rounded-2xl overflow-hidden bg-bg-gray shadow-floating">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={materia.imagem}
-              alt={materia.titulo}
-              className="w-full h-full object-cover"
-            />
+          <div className="relative aspect-[16/9] rounded-2xl overflow-hidden bg-bg-gray shadow-floating flex items-center justify-center">
+            <span className="text-text-muted text-xs font-extrabold uppercase tracking-widest">
+              {materia.categoria ?? "materia"}
+            </span>
           </div>
         </figure>
       )}
@@ -260,14 +257,11 @@ export default async function MateriaSinglePage({
                             {m.imagem && (
                               <Link
                                 href={`/materias/${m.slug}`}
-                                className="shrink-0 w-16 h-16 rounded-lg overflow-hidden bg-bg-gray"
+                                className="shrink-0 w-16 h-16 rounded-lg overflow-hidden bg-bg-gray flex items-center justify-center"
                               >
-                                {/* eslint-disable-next-line @next/next/no-img-element */}
-                                <img
-                                  src={m.imagem}
-                                  alt=""
-                                  className="w-full h-full object-cover transition group-hover:scale-110"
-                                />
+                                <span className="text-[0.55rem] text-text-muted font-bold uppercase tracking-widest">
+                                  ver
+                                </span>
                               </Link>
                             )}
                             <div className="flex-1 min-w-0">

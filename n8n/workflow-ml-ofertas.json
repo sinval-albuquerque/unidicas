@@ -1,0 +1,347 @@
+{
+  "name": "Unidicas - Sync Ofertas ML v2",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "hours": 6
+            }
+          ]
+        }
+      },
+      "id": "cron-trigger",
+      "name": "Cron (6h)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -640,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $env.GSHEET_DOC_ID }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "={{ $env.GSHEET_SHEET_NAME }}",
+          "mode": "name"
+        },
+        "options": {
+          "range": "A1:Z1000"
+        }
+      },
+      "id": "gsheet-read",
+      "name": "Ler Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.4,
+      "position": [
+        -400,
+        0
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "REPLACE_WITH_YOUR_GSHEET_CREDENTIAL_ID",
+          "name": "Google Sheets OAuth2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "is-ativa",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "ativa",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "has-id",
+              "leftValue": "={{ $json.mlb_id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter-ativas",
+      "name": "Filtra status=ativa + tem mlb_id",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -160,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://api.mercadolibre.com/items/{{ $json.mlb_id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 30000,
+          "retry": {
+            "maxTries": 3
+          }
+        }
+      },
+      "id": "ml-api-item",
+      "name": "ML API: /items/:id",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        80,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ============================================================\n// Mapeia item da API oficial do ML -> MDX + JSON normalizado\n// ============================================================\n\nconst AFFILIATE_ID = $env.ML_AFFILIATE_ID || 'UNIDICASOFERTAS';\nconst PROJECT_PATH = $env.UNIDICAS_PROJECT_PATH || 'C:\\\\Users\\\\Sinval\\\\Projetos\\\\unidicas';\nconst DESCONTO_MIN_PCT = Number($env.DESCONTO_MIN_PCT || 15);\n\nfunction slugify(s) {\n  return String(s || '')\n    .toLowerCase()\n    .normalize('NFD').replace(/[\\u0300-\\u036f]/g, '')\n    .replace(/[^a-z0-9]+/g, '-')\n    .replace(/(^-|-$)/g, '')\n    .slice(0, 80);\n}\n\nfunction escapeYaml(s) {\n  return String(s == null ? '' : s).replace(/\"/g, '\\\\\"');\n}\n\nfunction formatBRL(n) {\n  const num = Number(n);\n  if (!Number.isFinite(num)) return '0';\n  return num.toLocaleString('pt-BR', { minimumFractionDigits: 0 });\n}\n\nfunction stableSlug(mlbId, titulo) {\n  const t = slugify(titulo).slice(0, 50);\n  return t ? `${t}-${mlbId.toLowerCase()}` : mlbId.toLowerCase();\n}\n\nfunction fullImage(thumbUrl) {\n  if (!thumbUrl) return '';\n  return thumbUrl\n    .replace('-I.jpg', '-O.jpg')\n    .replace('-I-W250.jpg', '-O.jpg')\n    .replace('-I-W200.jpg', '-O.jpg')\n    .replace('-I-W100.jpg', '-O.jpg')\n    .replace('-I-W50.jpg', '-O.jpg');\n}\n\nfunction mlbToSiteCategory(mlbId, hint) {\n  const map = {\n    MLB1051: 'notebooks',\n    MLB1648: 'celulares',\n    MLB1574: 'fones',\n    MLB1132: 'smartwatches',\n    MLB120314: 'air-fryers',\n    MLB5726: 'eletrodomesticos',\n  };\n  if (map[mlbId]) return map[mlbId];\n  if (hint) return hint;\n  return 'outros';\n}\n\nconst item = $input.first().json;\nconst sheetRow = $('Ler Google Sheets').item.json;\nconst mlbId = String(item.id || sheetRow.mlb_id);\n\nif (!item || !item.id) {\n  throw new Error(`Item sem ID. Resposta: ${JSON.stringify(item).slice(0, 200)}`);\n}\n\nconst titulo = item.title || sheetRow.categoria || mlbId;\nconst slug = stableSlug(mlbId, titulo);\n\nconst preco = Number(item.price);\nconst precoOriginal = Number(item.original_price || preco);\n\nif (!Number.isFinite(preco) || preco <= 0) {\n  throw new Error(`Preco invalido para ${mlbId}: ${preco}`);\n}\n\nconst descontoPct = precoOriginal > preco\n  ? Math.round((1 - preco / precoOriginal) * 100)\n  : 0;\n\nif (descontoPct < DESCONTO_MIN_PCT) {\n  return [{ json: { descartado: true, motivo: `desconto ${descontoPct}% < ${DESCONTO_MIN_PCT}%`, mlbId } }];\n}\n\nconst condicao = item.condition === 'new' ? 'novo' : 'usado';\nconst estoque = Number(item.available_quantity || 0);\nconst semEstoque = estoque <= 0;\n\nif (semEstoque) {\n  return [{ json: { descartado: true, motivo: 'sem estoque', mlbId } }];\n}\n\nconst freteGratis = !!(item.shipping && item.shipping.free_shipping);\nconst parcels = item.installments\n  ? `${item.installments.quantity}x R$ ${formatBRL(item.installments.amount)}`\n  : null;\n\nconst cupom = sheetRow.cupom || undefined;\nconst imagem = fullImage(item.secure_thumbnail || item.thumbnail);\n\nconst separator = item.permalink.includes('?') ? '&' : '?';\nconst linkAfiliado = `${item.permalink}${separator}matt_word=${AFFILIATE_ID}&matt_tool=${AFFILIATE_ID}`;\n\nconst categoriaSlug = mlbToSiteCategory(item.category_id, sheetRow.categoria_slug);\nconst expiraEm = new Date(Date.now() + 6 * 60 * 60 * 1000).toISOString().slice(0, 10);\n\nconst pros = [\n  `De R$ ${formatBRL(precoOriginal)} por R$ ${formatBRL(preco)}`,\n  `Desconto de ${descontoPct}%`,\n  condicao === 'novo' ? 'Produto novo' : null,\n  freteGratis ? 'Frete gratis (Full)' : null,\n  parcels ? `Parcelado em ${parcels}` : null,\n  estoque < 10 ? `Estoque baixo: ${estoque} unidade(s)` : null,\n].filter(Boolean);\n\nconst contras = [\n  sheetRow.cupom ? 'Cupom aplicavel no carrinho' : null,\n].filter(Boolean);\n\nconst prosYaml = pros.map(p => `  - \"${escapeYaml(p)}\"`).join('\\n');\nconst contrasYaml = contras.length\n  ? `contras:\\n${contras.map(c => `  - \"${escapeYaml(c)}\"`).join('\\n')}`\n  : `contras: []`;\n\nconst tags = ['oferta-ml', categoriaSlug];\nif (freteGratis) tags.push('frete-gratis');\nif (descontoPct >= 30) tags.push('super-oferta');\n\nconst resumo = `${titulo} por R$ ${formatBRL(preco)} (era R$ ${formatBRL(precoOriginal)}, -${descontoPct}%).`;\n\nconst mdx = `---\nslug: \"${slug}\"\ntitulo: \"${escapeYaml(titulo)} - ${descontoPct}% OFF\"\nproduto: \"${escapeYaml(titulo)}\"\ncategoria: \"${categoriaSlug}\"\nnota: 4.0\nimagem: \"${imagem}\"\nmarketplace: \"Mercado Livre\"\npreco: ${preco}\nprecoOriginal: ${precoOriginal}\nlinkAfiliado: \"${linkAfiliado}\"${cupom ? `\\ncupom: \"${escapeYaml(cupom)}\"` : ''}\npros:\n${prosYaml}\n${contrasYaml}\nresumo: \"${escapeYaml(resumo)}\"\nemDestaque: ${descontoPct >= 30}\natributos:\n  preco: ${preco}\n  desconto: ${descontoPct}\nexpiraEm: \"${expiraEm}\"\ntags:\n${tags.map(t => `  - \"${t}\"`).join('\\n')}\n---\n\n## ${titulo} com ${descontoPct}% de desconto\n\n<ProTip>Oferta capturada automaticamente do **Mercado Livre** em ${new Date().toLocaleString('pt-BR')}. O preco pode ter mudado - confirme na pagina do vendedor antes de comprar.</ProTip>\n\n<Warning>Precos e estoque do Mercado Livre mudam rapidamente. Esta oferta pode expirar a qualquer momento.</Warning>\n\n**Por que esta oferta entrou na lista:**\n\n- **Desconto de ${descontoPct}%**: de R$ ${formatBRL(precoOriginal)} por R$ ${formatBRL(preco)}\n${pros.slice(1).map(p => `- ${p}`).join('\\n')}\n\n[Ver oferta no Mercado Livre](${linkAfiliado})\n`;\n\nconst json = {\n  id: mlbId,\n  slug,\n  titulo,\n  categoria_id: item.category_id,\n  categoria_slug: categoriaSlug,\n  preco_de: precoOriginal,\n  preco_por: preco,\n  desconto: descontoPct,\n  estoque,\n  condicao,\n  frete_gratis: freteGratis,\n  parcelas: parcels,\n  cupom: cupom || null,\n  link_afiliado: linkAfiliado,\n  imagem,\n  seller: item.seller_id ? { id: item.seller_id } : undefined,\n  data_postagem: new Date().toISOString(),\n};\n\nreturn [{\n  json: {\n    slug,\n    mlbId,\n    mdPath: `${PROJECT_PATH}\\\\src\\\\content\\\\ofertas\\\\${slug}.mdx`,\n    jsonPath: `${PROJECT_PATH}\\\\content\\\\produtos\\\\${mlbId}.json`,\n    mdx,\n    jsonContent: JSON.stringify(json, null, 2),\n    titulo,\n    preco,\n    precoOriginal,\n    descontoPct,\n    linkAfiliado,\n  }\n}];\n"
+      },
+      "id": "code-mdx",
+      "name": "Code: Normaliza + Gera MDX/JSON",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        320,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "not-discarded",
+              "leftValue": "={{ $json.descartado }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "false"
+              }
+            },
+            {
+              "id": "has-mdx",
+              "leftValue": "={{ $json.mdx }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter-not-discarded",
+      "name": "Filtra nao-descartados",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        560,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=file:///{{ $json.mdPath }}",
+        "sendBody": true,
+        "bodyContentType": "text_plain",
+        "specifyBody": "string",
+        "jsonString": "",
+        "rawString": "={{ $json.mdx }}",
+        "options": {}
+      },
+      "id": "write-mdx",
+      "name": "Grava MDX",
+      "type": "n8n-nodes-base.writeFile",
+      "typeVersion": 1,
+      "position": [
+        760,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=file:///{{ $json.jsonPath }}",
+        "sendBody": true,
+        "bodyContentType": "text_plain",
+        "specifyBody": "string",
+        "jsonString": "",
+        "rawString": "={{ $json.jsonContent }}",
+        "options": {}
+      },
+      "id": "write-json",
+      "name": "Grava JSON (compat)",
+      "type": "n8n-nodes-base.writeFile",
+      "typeVersion": 1,
+      "position": [
+        960,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "command": "cd /d {{ $env.UNIDICAS_PROJECT_PATH || 'C:\\Users\\Sinval\\Projetos\\unidicas' }} && git add src/content/ofertas/ content/produtos/ && git diff --cached --quiet || (git commit -m \"Bot n8n: sync ML {{ new Date().toISOString().slice(0,10) }} ({{ $json.titulo }})\" && git push origin main)"
+      },
+      "id": "git-push",
+      "name": "git commit + push",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1.1,
+      "position": [
+        1160,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Cron (6h)": {
+      "main": [
+        [
+          {
+            "node": "Ler Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ler Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Filtra status=ativa + tem mlb_id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtra status=ativa + tem mlb_id": {
+      "main": [
+        [
+          {
+            "node": "ML API: /items/:id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ML API: /items/:id": {
+      "main": [
+        [
+          {
+            "node": "Code: Normaliza + Gera MDX/JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code: Normaliza + Gera MDX/JSON": {
+      "main": [
+        [
+          {
+            "node": "Filtra nao-descartados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtra nao-descartados": {
+      "main": [
+        [
+          {
+            "node": "Grava MDX",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Grava MDX": {
+      "main": [
+        [
+          {
+            "node": "Grava JSON (compat)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Grava JSON (compat)": {
+      "main": [
+        [
+          {
+            "node": "git commit + push",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "saveDataSuccessExecution": "all",
+    "saveDataErrorExecution": "all"
+  },
+  "versionId": "2.0",
+  "meta": {
+    "templateCredsSetupCompleted": false
+  },
+  "id": "unidicas-sync-ml-ofertas-v2",
+  "tags": [
+    {
+      "name": "unidicas"
+    },
+    {
+      "name": "ml"
+    },
+    {
+      "name": "ofertas"
+    }
+  ]
+}

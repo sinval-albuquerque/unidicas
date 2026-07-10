@@ -81,19 +81,6 @@ export const CATEGORIAS: Categoria[] = [
       { id: "preco", label: "Preço", unidade: "R$", maiorMelhor: false, icone: "💰" },
     ],
   },
-  {
-    slug: "ferramentas",
-    nome: "Ferramentas",
-    descricao: "Furadeiras, parafusadeiras, serras, chaves e ferramentas elétricas e manuais para obra, reforma e trabalho.",
-    secao: "ferramentas-de-construcao",
-    atributos: [
-      { id: "potencia", label: "Potência", unidade: "W", maiorMelhor: true, icone: "⚡" },
-      { id: "velocidade", label: "Velocidade", unidade: "rpm", maiorMelhor: true, icone: "🔄" },
-      { id: "torque", label: "Torque", unidade: "Nm", maiorMelhor: true, icone: "💪" },
-      { id: "peso", label: "Peso", unidade: "kg", maiorMelhor: false, icone: "⚖️" },
-      { id: "preco", label: "Preço", unidade: "R$", maiorMelhor: false, icone: "💰" },
-    ],
-  },
 ];
 
 /** Mapa slug -> Categoria para acesso O(1). */
