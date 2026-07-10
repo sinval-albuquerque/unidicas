@@ -11,6 +11,16 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: path.resolve("."),
   },
+  // Permite que <Image> aceite URLs externas (placeholders Unsplash e
+  // futuras hospedagens). Imagens em /public são servidas pelo Next
+  // automaticamente e não precisam entrar aqui.
+  images: {
+    remotePatterns: [
+      { protocol: "https", hostname: "images.unsplash.com" },
+      { protocol: "https", hostname: "http2.mlstatic.com" },
+      { protocol: "https", hostname: "cdn.shopify.com" },
+    ],
+  },
 };
 
 export default nextConfig;

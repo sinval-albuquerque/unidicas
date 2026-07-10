@@ -24,11 +24,15 @@ export function MateriaCard({ materia, variant = "default" }: Props) {
         {materia.imagem && (
           <Link
             href={`/materias/${materia.slug}`}
-            className="shrink-0 relative w-20 h-20 rounded-lg overflow-hidden bg-bg-gray shadow-soft flex items-center justify-center"
+            className="shrink-0 relative w-20 h-20 rounded-lg overflow-hidden bg-bg-gray shadow-soft"
           >
-            <span className="text-[0.55rem] text-text-muted font-bold uppercase tracking-widest">
-              {categoria?.nome ?? "materia"}
-            </span>
+            <Image
+              src={materia.imagem}
+              alt={materia.titulo}
+              fill
+              sizes="80px"
+              className="object-cover"
+            />
           </Link>
         )}
         <div className="flex-1 min-w-0">
@@ -57,13 +61,20 @@ export function MateriaCard({ materia, variant = "default" }: Props) {
           className="block relative aspect-[16/9] rounded-2xl overflow-hidden bg-bg-gray mb-5 no-underline shadow-elevated"
         >
           {materia.imagem ? (
+            <Image
+              src={materia.imagem}
+              alt={materia.titulo}
+              fill
+              sizes="(max-width: 1024px) 100vw, 800px"
+              className="object-contain p-4 bg-bg-gray"
+              priority
+            />
+          ) : (
             <div className="w-full h-full bg-bg-gray flex items-center justify-center">
               <span className="text-text-muted text-xs font-extrabold uppercase tracking-widest">
                 {categoria?.nome ?? "materia"}
               </span>
             </div>
-          ) : (
-            <div className="w-full h-full bg-bg-gray" />
           )}
 
           {/* Overlay gradient inferior para legibilidade */}
@@ -103,13 +114,19 @@ export function MateriaCard({ materia, variant = "default" }: Props) {
         className="block relative aspect-[16/10] overflow-hidden bg-bg-gray no-underline"
       >
         {materia.imagem ? (
+          <Image
+            src={materia.imagem}
+            alt={materia.titulo}
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+            className="object-contain p-3 bg-bg-gray"
+          />
+        ) : (
           <div className="w-full h-full bg-bg-gray flex items-center justify-center">
             <span className="text-text-muted text-xs font-extrabold uppercase tracking-widest">
               {categoria?.nome ?? "materia"}
             </span>
           </div>
-        ) : (
-          <div className="w-full h-full bg-bg-gray" />
         )}
 
         {categoria && (

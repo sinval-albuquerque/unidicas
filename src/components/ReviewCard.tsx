@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { Review } from "@/types/review";
 import { EXTERNAL_LINK_REL } from "@/lib/constants";
 import { RatingBadge } from "./RatingBadge";
@@ -15,13 +16,23 @@ export function ReviewCard({ review }: { review: Review }) {
 
   return (
     <article className="group bg-bg border border-border rounded-2xl overflow-hidden hover-lift flex flex-col shadow-soft hover:shadow-floating min-w-0">
-      <div className="relative aspect-[16/10] sm:aspect-auto sm:h-44 bg-bg-gray flex items-center justify-center">
-        <span className="text-text-muted text-sm font-bold uppercase tracking-widest">
-          {review.categoria}
-        </span>
+      <div className="relative aspect-[16/10] sm:aspect-auto sm:h-44 bg-bg-gray flex items-center justify-center overflow-hidden">
+        {review.imagem ? (
+          <Image
+            src={review.imagem}
+            alt={review.titulo}
+            fill
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            className="object-contain p-2 transition group-hover:scale-[1.02]"
+          />
+        ) : (
+          <span className="text-text-muted text-sm font-bold uppercase tracking-widest">
+            {review.categoria}
+          </span>
+        )}
 
         {/* Badges no canto superior — max-w impede estourar canto */}
-        <div className="absolute top-2.5 left-2.5 sm:top-3 sm:left-3 flex flex-col gap-1.5 max-w-[60%]">
+        <div className="absolute top-2.5 left-2.5 sm:top-3 sm:left-3 flex flex-col gap-1.5 max-w-[60%] z-10">
           {review.emDestaque && (
             <span className="bg-accent text-bg-dark text-[0.65rem] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-soft whitespace-nowrap">
               ★ Destaque
@@ -35,12 +46,12 @@ export function ReviewCard({ review }: { review: Review }) {
         </div>
 
         {/* Nota no canto inferior direito */}
-        <div className="absolute bottom-2.5 right-2.5 sm:bottom-3 sm:right-3">
+        <div className="absolute bottom-2.5 right-2.5 sm:bottom-3 sm:right-3 z-10">
           <RatingBadge nota={review.nota} compact />
         </div>
 
         {/* Overlay gradient sutil para legibilidade dos badges */}
-        <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-black/20 to-transparent pointer-events-none" />
+        <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-black/20 to-transparent pointer-events-none z-[1]" />
       </div>
 
       <div className="p-4 sm:p-5 flex flex-col flex-1 min-w-0">

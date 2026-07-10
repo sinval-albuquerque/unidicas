@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { Oferta } from "@/types/oferta";
 import { EXTERNAL_LINK_REL } from "@/lib/constants";
 
@@ -24,11 +25,21 @@ export function OfertaCuratedCard({ oferta }: { oferta: Oferta }) {
 
   return (
     <article className="bg-bg border border-border rounded-xl overflow-hidden transition hover:shadow-lg hover:-translate-y-0.5 flex flex-col min-w-0">
-      <div className="relative aspect-[16/10] sm:aspect-auto sm:h-44 bg-bg-gray flex items-center justify-center">
-        <span className="text-text-muted text-sm font-bold uppercase tracking-widest">
-          {oferta.categoria}
-        </span>
-        <div className="absolute top-2 left-2 flex flex-col gap-1.5 max-w-[65%]">
+      <div className="relative aspect-[16/10] sm:aspect-auto sm:h-44 bg-bg-gray flex items-center justify-center overflow-hidden">
+        {oferta.imagem ? (
+          <Image
+            src={oferta.imagem}
+            alt={oferta.titulo}
+            fill
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            className="object-contain p-2"
+          />
+        ) : (
+          <span className="text-text-muted text-sm font-bold uppercase tracking-widest">
+            {oferta.categoria}
+          </span>
+        )}
+        <div className="absolute top-2 left-2 flex flex-col gap-1.5 max-w-[65%] z-10">
           {desconto > 0 && (
             <span className="bg-danger text-white text-[0.7rem] font-extrabold px-2 py-0.5 rounded uppercase tracking-wide whitespace-nowrap">
               -{desconto}%
@@ -48,7 +59,7 @@ export function OfertaCuratedCard({ oferta }: { oferta: Oferta }) {
             </span>
           ))}
         </div>
-        <span className="absolute bottom-2 right-2 bg-bg/90 backdrop-blur text-[0.65rem] font-bold px-2 py-0.5 rounded uppercase tracking-wide text-text-soft max-w-[55%] truncate">
+        <span className="absolute bottom-2 right-2 bg-bg/90 backdrop-blur text-[0.65rem] font-bold px-2 py-0.5 rounded uppercase tracking-wide text-text-soft max-w-[55%] truncate z-10">
           {oferta.marketplace}
         </span>
       </div>

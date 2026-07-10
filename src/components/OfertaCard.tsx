@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { Review } from "@/types/review";
 import { EXTERNAL_LINK_REL } from "@/lib/constants";
 import { RatingBadge } from "./RatingBadge";
@@ -22,11 +23,21 @@ export function OfertaCard({ review }: { review: Review }) {
 
   return (
     <article className="bg-bg border border-border rounded-xl overflow-hidden transition hover:shadow-lg hover:-translate-y-0.5 flex flex-col min-w-0">
-      <div className="relative aspect-[16/10] sm:aspect-auto sm:h-44 bg-bg-gray flex items-center justify-center">
-        <span className="text-text-muted text-sm font-bold uppercase tracking-widest">
-          {review.categoria}
-        </span>
-        <div className="absolute top-2 left-2 flex flex-col gap-1.5 max-w-[65%]">
+      <div className="relative aspect-[16/10] sm:aspect-auto sm:h-44 bg-bg-gray flex items-center justify-center overflow-hidden">
+        {review.imagem ? (
+          <Image
+            src={review.imagem}
+            alt={review.titulo}
+            fill
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            className="object-contain p-2"
+          />
+        ) : (
+          <span className="text-text-muted text-sm font-bold uppercase tracking-widest">
+            {review.categoria}
+          </span>
+        )}
+        <div className="absolute top-2 left-2 flex flex-col gap-1.5 max-w-[65%] z-10">
           {desconto > 0 && (
             <span className="bg-danger text-white text-[0.7rem] font-extrabold px-2 py-0.5 rounded uppercase tracking-wide whitespace-nowrap">
               -{desconto}%
@@ -38,7 +49,7 @@ export function OfertaCard({ review }: { review: Review }) {
             </span>
           )}
         </div>
-        <div className="absolute bottom-2 right-2 max-w-[55%]">
+        <div className="absolute bottom-2 right-2 max-w-[55%] z-10">
           <MarketplaceBadge
             nome={review.marketplace}
             link={review.linkAfiliado}

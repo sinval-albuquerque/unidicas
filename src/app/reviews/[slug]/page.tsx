@@ -9,6 +9,7 @@ import { ProductGrid } from "@/components/ProductGrid";
 import { ProductList } from "@/components/ProductList";
 import { ProTip, Warning, Cite } from "@/components/ProTip";
 import { RatingBadge } from "@/components/RatingBadge";
+import Image from "next/image";
 import {
   obterReviewPorSlug,
   obterTodasReviews,
@@ -178,10 +179,23 @@ export default async function ReviewSinglePage({
           IMAGEM DESTAQUE
          ================================================================= */}
       <figure className="max-w-6xl mx-auto px-4 mb-10 sm:mb-12">
-        <div className="relative aspect-[16/9] rounded-xl sm:rounded-2xl overflow-hidden bg-bg-gray shadow-floating flex items-center justify-center">
-          <span className="text-text-muted font-extrabold uppercase tracking-widest">
-            {review.produto}
-          </span>
+        <div className="relative aspect-[16/9] rounded-xl sm:rounded-2xl overflow-hidden bg-bg-gray shadow-floating">
+          {review.imagem ? (
+            <Image
+              src={review.imagem}
+              alt={review.titulo}
+              fill
+              sizes="(max-width: 1024px) 100vw, 1024px"
+              className="object-contain p-4"
+              priority
+            />
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center px-4 text-center">
+              <span className="text-text-muted font-extrabold uppercase tracking-widest">
+                {review.produto}
+              </span>
+            </div>
+          )}
         </div>
       </figure>
 
