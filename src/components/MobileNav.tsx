@@ -137,17 +137,6 @@ export function MobileNav({ aberto, onFechar }: MobileNavProps) {
             </Link>
           ))}
         </nav>
-
-        {/* CTA fixo no rodapé do drawer */}
-        <div className="p-3 border-t border-border">
-          <Link
-            href="/produtos"
-            onClick={onFechar}
-            className="block text-center bg-primary hover:bg-primary-dark text-white text-sm font-semibold px-4 py-3 rounded-lg no-underline transition"
-          >
-            Ver catálogo
-          </Link>
-        </div>
       </aside>
     </div>
   );

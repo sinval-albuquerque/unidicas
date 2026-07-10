@@ -78,17 +78,6 @@ export function Header() {
         <div className="flex items-center justify-between gap-6 py-3.5">
           <Logo size={40} priority />
 
-          {/* Em mobile o CTA "Ver catalogo" + hamburguer moram dentro do NavBar. */}
-          {/* Em desktop o NavBar mostra so a nav horizontal; o CTA vive aqui. */}
-          <div className="hidden md:flex items-center gap-2.5">
-            <Link
-              href="/produtos"
-              className="bg-primary hover:bg-primary-dark text-white text-sm font-semibold px-4 py-2 rounded-lg no-underline transition shadow-glow-primary"
-            >
-              Ver catalogo
-            </Link>
-          </div>
-
           <NavBar />
         </div>
       </div>

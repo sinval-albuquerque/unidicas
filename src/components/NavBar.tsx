@@ -51,12 +51,6 @@ export function NavBar() {
 
       {/* ===== Mobile (<md) ===== */}
       <div className="flex items-center gap-2 md:hidden">
-        <Link
-          href="/produtos"
-          className="bg-primary hover:bg-primary-dark text-white text-sm font-semibold px-3 py-2 rounded-lg no-underline transition"
-        >
-          Ver catálogo
-        </Link>
         <button
           type="button"
           onClick={() => setDrawerAberto(true)}
