@@ -9,7 +9,14 @@
     "lint": "eslint",
     "test": "vitest run",
     "test:watch": "vitest",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "check:images": "node scripts/check-images.mjs",
+    "ofertas:db:migrate": "node --env-file=.env.local scripts/migrate-ofertas-to-supabase.mjs",
+    "ofertas:db:verify": "node --env-file=.env.local scripts/verify-ofertas.mjs",
+    "ofertas:db:apply-schema": "node --env-file=.env.local scripts/apply-schema.mjs",
+    "ofertas:db:verify-schema": "node --env-file=.env.local scripts/verify-schema.mjs",
+    "ofertas:db:fix-schema": "node --env-file=.env.local scripts/fix-schema-drift.mjs",
+    "ofertas:db:smoke-anon": "node --env-file=.env.local scripts/smoke-anon.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.110.2",
