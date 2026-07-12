@@ -1,26 +1,26 @@
 // Extrai produtos de https://www.mercadolivre.com.br/c/ferramentas
-// e gera blocos YAML em ofertas-input.txt.
+// usando o MLB_ID CANÔNICO (do href do produto), não a "variant" (que
+// aparece nos preloads de imagem e links de tracking).
 //
-// O ML bloqueia 403 a chamada de /items/{id}, mas a página /c/ferramentas
-// renderiza server-side com todos os produtos. Cada card tem:
-//   - link /p/MLBxxx ou /sec/MLBxxx  -> MLB_ID
-//   - <h2> com o título
-//   - <span class="andes-money-amount__fraction"> com o preço
-//   - <img> com a imagem (data-src ou src)
-// O scraping é best-effort: pode falhar em alguns cards (ML muda HTML).
+// Estratégia:
+//  1. Pega TODOS os hrefs /<slug>/p/MLB<ID> (MLB canônico) na ordem
+//  2. Para cada href, acha o preço DEPOIS do MLB_ID e antes do próximo
+//  3. Atribui cada preço ao MLB_ID canônico (o do href)
 //
-// Uso: node scripts/extrair-ferramentas.mjs [--max=20]
+// Uso: node scripts/extrair-ferramentas.mjs [--max=20] [--url=URL]
 
 import fs from "node:fs";
 import path from "node:path";
 
-const URL = "https://www.mercadolivre.com.br/c/ferramentas";
+const DEFAULT_URL = "https://www.mercadolivre.com.br/c/ferramentas";
 const UA =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
 
 const args = process.argv.slice(2);
 const maxArg = args.find((a) => a.startsWith("--max="));
+const urlArg = args.find((a) => a.startsWith("--url="));
 const MAX = maxArg ? parseInt(maxArg.split("=")[1], 10) : 20;
+const URL = urlArg ? urlArg.split("=").slice(1).join("=") : DEFAULT_URL;
 
 const res = await fetch(URL, {
   headers: {
@@ -36,10 +36,8 @@ if (!res.ok) {
 }
 
 const html = await res.text();
-console.log(`HTML: ${html.length} bytes`);
+console.log(`HTML: ${html.length} bytes  (${URL})`);
 
-// Converte slug "lavadora-de-alta-presso-krcher-compacta-1500psi-1400w"
-// em "Lavadora De Alta Presso Krcher Compacta 1500psi 1400w".
 function deslugify(slug) {
   return String(slug)
     .split("-")
@@ -50,117 +48,118 @@ function deslugify(slug) {
     .join(" ");
 }
 
-// Estratégia: o HTML de /c/ferramentas tem cards com links canônicos no
-// formato  https://www.mercadolivre.com.br/<slug>/p/MLB<ID>
-// (ou /sec/MLB<ID>). Pega cada link e extrai do contexto (3000 chars) o
-// título, preço e imagem.
-const linkRegex = /https?:\/\/(?:www\.)?mercadolivre\.com\.br\/[a-z0-9-]+\/(?:p|sec)\/(MLB\d{8,})/gi;
-const seen = new Set();
+// 1. Pega todos os hrefs canônicos (MLB_ID = canônico do produto)
+const linkRegex = /href="https?:\/\/(?:www\.)?mercadolivre\.com\.br\/[a-z0-9-]+\/(?:p|sec)\/(MLB\d{8,})[^"]*"/g;
+const links = [...html.matchAll(linkRegex)].map((m) => ({ id: m[1], idx: m.index }));
+console.log(`hrefs canônicos: ${links.length}`);
+
+// 2. Pega todas as frações e centavos na ordem
+const fracAll = [
+  ...html.matchAll(/andes-money-amount__fraction[^>]*>(\d+)/g),
+].map((m) => ({ val: parseInt(m[1], 10), idx: m.index }));
+const centsAll = [
+  ...html.matchAll(/andes-money-amount__cents[^>]*>(\d+)/g),
+].map((m) => ({ val: parseInt(m[1], 10), idx: m.index }));
+
+// 3. Para cada link canônico, acha o preço DEPOIS dele
 const products = [];
+const seen = new Set();
+for (let i = 0; i < links.length; i++) {
+  const cur = links[i];
+  if (seen.has(cur.id)) continue;
 
-let match;
-while ((match = linkRegex.exec(html)) !== null) {
-  const productUrl = match[0];
-  const mlbId = match[1];
-  if (seen.has(mlbId)) continue;
-  seen.add(mlbId);
+  const next = links[i + 1];
+  const lo = cur.idx;
+  const hi = next ? next.idx : html.length;
 
-  const start = Math.max(0, match.index - 3000);
-  const end = Math.min(html.length, match.index + 3000);
-  const ctx = html.slice(start, end);
+  // Fração DEPOIS do MLB_ID atual
+  const frac = fracAll.find((f) => f.idx > lo && f.idx < hi);
+  if (!frac) continue;
 
-  // Slug da URL vira título (fallback confiável)
-  const slugFromUrl = productUrl.match(
-    /mercadolivre\.com\.br\/([a-z0-9-]+)\/(?:p|sec)\//,
+  // Centavo (opcional) próximo
+  const cents = centsAll.find(
+    (c) => c.idx > lo && c.idx < hi && Math.abs(c.idx - frac.idx) < 500,
   );
-  let titulo = slugFromUrl ? deslugify(slugFromUrl[1]) : null;
+  const precoFinal = cents ? frac.val + cents.val / 100 : frac.val;
 
-  // Tenta pegar título melhor via h2/h3 do card
-  const titleMatch = ctx.match(/<h[23][^>]*>([^<]{8,180})<\/h[23]>/);
-  if (titleMatch && titleMatch[1].length > (titulo?.length ?? 0)) {
-    titulo = titleMatch[1]
-      .replace(/&amp;/g, "&")
-      .replace(/&quot;/g, '"')
-      .replace(/&#39;/g, "'")
-      .replace(/&nbsp;/g, " ")
-      .replace(/\s+/g, " ")
-      .trim();
-  }
-  if (!titulo) titulo = `Produto ${mlbId}`;
+  // Imagem
+  const img = [
+    ...html.slice(lo, hi).matchAll(/(https?:\/\/http2\.mlstatic\.com\/[^"]+\.webp)/gi),
+  ]
+    .map((m) => m[1])
+    .find((u) => u.includes(cur.id));
+  const imagem = img ? img.replace(/-[A-Z]\.webp$/i, "-O.webp") : null;
 
-  // Preço
-  const inteiroMatch = ctx.match(/andes-money-amount__fraction[^>]*>(\d+)/);
-  if (!inteiroMatch) continue;
-  const centavosMatch = ctx.match(/andes-money-amount__cents[^>]*>(\d+)/);
-  const preco = parseInt(inteiroMatch[1], 10);
-  const centavos = centavosMatch ? parseInt(centavosMatch[1], 10) : 0;
-  const precoFinal = centavos > 0 ? preco + centavos / 100 : preco;
-
-  // Preço original: se houver mais de um valor no card, o maior é o cheio
-  const precos = [
-    ...ctx.matchAll(/andes-money-amount__fraction[^>]*>(\d+)/g),
-  ].map((x) => parseInt(x[1], 10));
-  const precoOriginal = precos.length > 1 ? Math.max(...precos) : precoFinal;
-
-  // Imagem: primeira URL http2.mlstatic com o MLB_ID
-  const imgRegex = new RegExp(`(https?://http2\\.mlstatic\\.com/[^"]+${mlbId}[^"]+\\.webp)`, "gi");
-  let imagem =
-    [...ctx.matchAll(imgRegex)]
-      .map((x) => x[1])[0] ||
-    [...ctx.matchAll(/(https?:\/\/http2\.mlstatic\.com\/[^"]+\.webp)/gi)]
-      .map((x) => x[1])[0];
-  if (imagem) imagem = imagem.replace(/-[A-Z]\.webp$/i, "-O.webp");
+  // Slug: vem do href canônico que estamos processando (não do contexto anterior)
+  const ownHref = html.slice(lo, lo + 1500).match(
+    /href="https?:\/\/(?:www\.)?mercadolivre\.com\.br\/([a-z0-9-]+)\/(?:p|sec)\//,
+  );
+  // Fallback: procura em qualquer ponto próximo
+  const ctxSlug = html.slice(Math.max(0, lo - 100), lo + 500).match(
+    /mercadolivre\.com\.br\/([a-z0-9-]+)\/(?:p|sec)\/MLB\d{8,}/,
+  );
+  const rawSlug = ownHref?.[1] || ctxSlug?.[1] || cur.id.toLowerCase();
+  const slug = rawSlug;
+  const titulo = deslugify(slug);
 
   products.push({
-    mlbId,
+    mlbId: cur.id,
+    slug,
     titulo,
     preco: precoFinal,
-    precoOriginal,
-    url: productUrl.split("?")[0],
+    url: `https://www.mercadolivre.com.br/${slug}/p/${cur.id}`,
     imagem,
   });
+  seen.add(cur.id);
 }
 
-console.log(`Extraídos: ${products.length} produtos únicos`);
-const sample = products.slice(0, MAX);
+console.log(`Produtos canônicos com preço: ${products.length}`);
 
-// Gera YAML no formato do ofertas-input.txt
+const sample = products.slice(0, MAX);
 const blocks = sample.map((p) => {
-  const slug = p.titulo
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
+  const cleanSlug = p.slug
     .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
+    .replace(/[^a-z0-9-]/g, "")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "")
     .slice(0, 80);
   return [
-    `slug: ${slug}`,
+    `slug: ${cleanSlug}`,
+    `mlbId: ${p.mlbId}`,
     `titulo: "${p.titulo.replace(/"/g, '\\"')}"`,
     `produto: "${p.titulo.replace(/"/g, '\\"')}"`,
     `categoria: ferramentas`,
     `preco: ${p.preco}`,
     `precoOriginal: ${p.preco}`,
-    `imagem: ${p.imagem}`,
+    `imagem: ${p.imagem || ""}`,
     `marketplace: Mercado Livre`,
     `url: ${p.url}`,
     `emDestaque: false`,
     `nota: 4.5`,
     `tags: [Mais Vendido, Frete Grátis]`,
-    `resumo: "Encontrado na seção de ferramentas do Mercado Livre."`,
+    `resumo: "Encontrado na seção de ferramentas do Mercado Livre. Edite o resumo."`,
   ].join("\n");
 });
 
-const header = `# Extraído automaticamente em ${new Date().toISOString()}
-# Fonte: ${URL}
-# Total extraído: ${sample.length} de ${products.length}
-# Pipeline: rode  npm run ofertas:ingest
+const header = `# Extraído automaticamente de ${URL}
+# Data: ${new Date().toISOString()}
+# Total extraído: ${sample.length} de ${products.length} produtos com preço
+#
+# Próximo passo: revise os blocos abaixo (título, preço, slug) e rode:
+#   npm run ofertas:ingest
+#   npm run ofertas:db:migrate
 # ----------------------------------------------------------------------------
 `;
 
 const out = header + blocks.join("\n---\n") + "\n---\n";
 const dest = path.join(process.cwd(), "ofertas-input.txt");
 fs.writeFileSync(dest, out, "utf-8");
-
 console.log(`Gravado: ${dest}  (${out.length} bytes, ${sample.length} blocos)`);
-console.log("\nPrimeiro bloco de exemplo:");
+
+console.log("\nAmostra (primeiro bloco):");
 console.log(blocks[0]);
+
+console.log("\nTodos os preços extraídos:");
+for (const p of products) {
+  console.log(`  ${p.mlbId}  R$ ${p.preco.toFixed(2)}  ${p.slug}`);
+}
