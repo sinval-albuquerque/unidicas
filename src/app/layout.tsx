@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import Script from "next/script";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
@@ -57,21 +56,23 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className={`${inter.variable} h-full antialiased`}>
       <head>
-        {/* Google Ads (gtag.js) — instalado via next/script para SSR seguro
-            e deduplicação automática entre navegações client-side. */}
-        <Script
+        {/* Google Ads (gtag.js) — snippet vanilla no <head> para garantir
+            carregamento SSR (Next 13+ com next/script+afterInteractive nao
+            injeta no SSR). Carrega o mais cedo possivel. */}
+        <script
           async
           src="https://www.googletagmanager.com/gtag/js?id=AW-18148597305"
-          strategy="afterInteractive"
         />
-        <Script id="google-ads-init" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'AW-18148597305');
-          `}
-        </Script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'AW-18148597305');
+            `,
+          }}
+        />
       </head>
       <body className="min-h-full flex flex-col">
         <Header />
