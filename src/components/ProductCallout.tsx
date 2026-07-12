@@ -104,7 +104,7 @@ export function ProductCallout({
           href={href}
           target="_blank"
           rel={EXTERNAL_LINK_REL}
-          className="shrink-0 bg-primary hover:bg-primary-dark text-white text-sm font-bold px-4 py-2 rounded-lg no-underline transition"
+          className="shrink-0 bg-primary-dark hover:bg-primary text-white! text-sm font-bold px-4 py-2 rounded-lg no-underline transition"
         >
           {ctaLabel}
         </a>
@@ -158,7 +158,7 @@ export function ProductCallout({
           href={href}
           target="_blank"
           rel={EXTERNAL_LINK_REL}
-          className="inline-flex items-center gap-2 bg-primary hover:bg-primary-dark text-white font-bold px-5 py-2.5 rounded-lg no-underline transition"
+          className="inline-flex items-center gap-2 bg-primary-dark hover:bg-primary text-white! font-bold px-5 py-2.5 rounded-lg no-underline transition"
         >
           {ctaLabel}
           <span aria-hidden>→</span>

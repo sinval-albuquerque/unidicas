@@ -159,13 +159,13 @@ h2 { letter-spacing: -0.025em; }
   color: transparent;
 }
 
-/* Links de texto */
-:where(a):not([class*="bg-"]):not([class*="hover:bg-"]):not([class*="text-white"]):not([class*="text-black"]) {
+/* Links de texto - NAO aplicar a botoes/links com classe de cor explicita. */
+:where(a):not([class*="bg-"]):not([class*="text-"]) {
   color: var(--color-primary);
   text-decoration: none;
   transition: color 0.15s ease;
 }
-:where(a):not([class*="bg-"]):not([class*="hover:bg-"]):not([class*="text-white"]):not([class*="text-black"]):hover {
+:where(a):not([class*="bg-"]):not([class*="text-"]):hover {
   text-decoration: underline;
   text-underline-offset: 3px;
   text-decoration-thickness: 1.5px;
