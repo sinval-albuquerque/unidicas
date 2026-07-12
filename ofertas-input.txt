@@ -1,0 +1,36 @@
+# ============================================================================
+#  OFERTAS PARA INGEST — Unidicas
+# ============================================================================
+#  O ML bloqueia scraping em 2026 (testado: 403 do seu PC e de qualquer
+#  servidor). O fluxo é: VOCÊ extrai os dados no navegador e cola aqui.
+#
+#  Como usar:
+#    1. Para cada link, abra a página do produto no navegador.
+#    2. Copie os 11 campos abaixo (veja o exemplo completo no fim).
+#    3. Cole aqui como UM bloco YAML, separado por `---` do próximo.
+#    4. Rode:  npm run ofertas:ingest
+#    5. Rode:  npm run ofertas:db:migrate  (sobe pro Supabase)
+#
+#  O script aplica automaticamente:
+#    - Extrai MLB_ID da URL
+#    - Anexa ?matt_word=unidicasofertas&pid=unidicasofertas
+#    - Faz upgrade da imagem -F.webp -> -O.webp (tamanho original)
+#    - Slug automático se você não fornecer
+#    - MDX no padrão de src/content/ofertas/*.mdx
+# ----------------------------------------------------------------------------
+
+# Exemplo (apague este bloco antes de colar os seus):
+slug: furadeira-bosch-gsr-12v
+titulo: "Furadeira Parafusadeira Bosch GSR 12V com 2 baterias — 25% OFF"
+produto: "Furadeira Parafusadeira Bosch GSR 12V com 2 baterias"
+categoria: ferramentas
+preco: 549
+precoOriginal: 729
+imagem: https://http2.mlstatic.com/D_NQ_NP_2X_835348-MLB123456789_082025-F.webp
+marketplace: Mercado Livre
+url: https://www.mercadolivre.com.br/furadeira-parafusadeira-bosch-gsr-12v-com-2-baterias/p/MLB1234567890
+emDestaque: true
+nota: 4.7
+tags: [Mais Vendido, Frete Grátis, FULL]
+resumo: "Parafusadeira 12V com 2 baterias + maleta. 4.7★ (2mil+ vendidos)."
+---
