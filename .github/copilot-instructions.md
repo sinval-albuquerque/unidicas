@@ -9,7 +9,7 @@ Site de reviews de produtos (afiliados). Stack: Next.js 16 (App Router) + TypeSc
 
 ## Como adicionar um novo produto (review)
 
-Quando o usuário pedir para adicionar um produto (ex.: "adicione o iPhone 16", "crie uma review do Galaxy S25"), criar um arquivo em `src/content/reviews/<slug>.mdx` com este template (preencher com os dados fornecidos; usar `https://images.unsplash.com/...` para imagem se não houver URL):
+Quando o usuário pedir para adicionar um produto (ex.: "adicione o iPhone 16", "crie uma review do Galaxy S25"), criar um arquivo em `src/content/reviews/<slug>.mdx` com este template (preencher com os dados fornecidos; **imagem deve ser real — URL do marketplace ou arquivo local em `public/reviews/<slug>.webp`**, nunca Unsplash/placeholder):
 
 ```mdx
 ---
@@ -18,7 +18,10 @@ titulo: "Nome do Produto: destaque principal"
 produto: "Nome curto do produto"
 categoria: "notebooks" | "celulares" | "fones" | "air-fryers" | "smartwatches"
 nota: 4.5
-imagem: "https://images.unsplash.com/...?w=600"
+# Opção A — foto real do marketplace:
+imagem: "https://http2.mlstatic.com/D_NQ_NP_2X_XXXXX-MLA...-F.webp"
+# Opção B — arquivo local em public/reviews/<slug>.webp:
+# imagem: "/reviews/nome-do-produto-em-kebab.webp"
 marketplace: "Amazon" | "Mercado Livre" | "Shopee" | "Magalu" | "AliExpress"
 preco: 999
 precoOriginal: 1299  # opcional
@@ -40,6 +43,7 @@ atributos:
 ## Review completa
 
 Texto da review em MDX. Você pode usar:
+
 - `<ProductCallout title="..." href="..." price={...}>descrição</ProductCallout>`
 - `<ProductGrid ids={["slug-outro"]} titulo="Veja também" />`
 - `<ProductList categoria="fones" limite={3} />`
@@ -77,7 +81,7 @@ Conteúdo em MDX. Use os componentes acima para embutir produtos.
 ## Regras
 
 1. Sempre criar slug em kebab-case a partir do nome.
-2. Usar caminhos de imagem do Unsplash como placeholder.
+2. **Imagens devem ser reais** — foto do produto no marketplace (`http2.mlstatic.com/...`) ou arquivo local em `public/reviews/<slug>.webp`. **Proibido Unsplash, stock ou placeholders genéricos.** O linter `npm run check:images` falha CI se detectar Unsplash.
 3. Não inventar links de afiliado reais — usar `https://example.com/...`.
 4. Sempre incluir `atributos.preco` (o ranking de comparações depende disso).
 5. Validar que a `categoria` exista em `src/lib/categorias.ts`.

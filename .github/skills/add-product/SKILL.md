@@ -24,7 +24,7 @@ description: Adiciona um novo produto (review) ou matéria no projeto Unidicas. 
    - **Link de afiliado**
    - **2-3 prós e 1-2 contras**
    - **Resumo de 1 frase**
-   - **Imagem (URL)** — opcional, usar placeholder Unsplash se não houver
+   - **Imagem (URL)** — **obrigatório** ser foto real do produto (URL do marketplace, ex.: `http2.mlstatic.com/...`) ou arquivo local em `public/reviews/<slug>.webp`. Não usar Unsplash, stock ou placeholder genérico.
 
 2. Derivar o **slug** em kebab-case a partir do nome (ex.: "iPhone 16 Pro" → `iphone-16-pro`).
 
@@ -38,10 +38,10 @@ description: Adiciona um novo produto (review) ou matéria no projeto Unidicas. 
 
 ## Atalho — template mínimo
 
-Se o usuário só der nome + categoria + preço, criar com placeholders:
+Se o usuário só der nome + categoria + preço, criar **com placeholders apenas onde o usuário ainda não tem valor real** — exceto `imagem`, que **precisa ser real** desde o início:
 
-- imagem: `https://images.unsplash.com/photo-...` (escolher foto relacionada)
-- linkAfiliado: `https://example.com/<slug>`
+- imagem: **`NÃO criar com placeholder`** — pedir ao usuário a URL do produto no marketplace ou usar imagem local em `public/reviews/<slug>.webp`. O linter `npm run check:images` falha CI se detectar Unsplash.
+- linkAfiliado: `https://example.com/<slug>` (placeholder, o usuário troca depois)
 - pros/contras: 1-2 itens genéricos (deixar o usuário preencher depois)
 - emDestaque: `false`
 
@@ -50,5 +50,5 @@ Se o usuário só der nome + categoria + preço, criar com placeholders:
 - Slug único (sem espaços, sem acentos, kebab-case)
 - `categoria` válida (deve estar em `src/lib/categorias.ts`)
 - `atributos.preco` sempre presente
-- Imagem é URL válida (começa com `http`)
+- **Imagem real** (URL do marketplace ou arquivo local em `public/reviews/<slug>.webp`). Nunca Unsplash, stock ou placeholder.
 - Nota entre 0 e 5

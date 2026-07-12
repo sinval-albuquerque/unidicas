@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """
-Finaliza as 3 fotos faltantes:
-- bicicleta-spinning-mzy-15kg: URL real do ML achada em /ofertas/p1
-- smartphone-galaxy-a07-256gb: Unsplash especifica (Samsung preto)
-- iphone-16-256gb: Unsplash especifica (iPhone rosa)
+Finaliza as 3 fotos faltantes, usando URLs REAIS do Mercado Livre:
+- smartphone-galaxy-a07-256gb: Galaxy A07 preto
+- iphone-16-256gb: iPhone 16 rosa
+- bicicleta-spinning-mzy-15kg: spinning MZY 15kg
 
+O projeto NÃO usa Unsplash — toda imagem é foto real do produto.
 Baixa, salva em public/brand/produtos/ e atualiza frontmatter das MDX.
 """
 
@@ -23,17 +24,12 @@ UA = (
     "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
 )
 
-# slug -> URL ou None (None = tenta Unsplash)
+# slug -> URL real do produto no marketplace (Mercado Livre).
+# O projeto NÃO usa Unsplash — toda imagem deve ser foto real.
 PRODUTOS = {
-    "smartphone-galaxy-a07-256gb":   None,  # Unsplash (Samsung preto)
-    "iphone-16-256gb":              None,  # Unsplash (iPhone rosa)
-    "bicicleta-spinning-mzy-15kg":   "https://http2.mlstatic.com/D_Q_NP_2X_997574-MLA109633443994_042026-AB.webp",
-}
-
-# URLs Unsplash otimizadas com queries ESPECIFICAS
-UNSPLASH = {
-    "smartphone-galaxy-a07-256gb":  "https://images.unsplash.com/photo-1592899677977-2c797cd0d648?w=600&q=80",  # Samsung preto
-    "iphone-16-256gb":             "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=600&q=80",  # iPhone rosa/violeta
+    "smartphone-galaxy-a07-256gb":  "https://http2.mlstatic.com/D_NQ_NP_2X_895724-MLA91526198522_092025-F.webp",  # Galaxy A07 preto
+    "iphone-16-256gb":             "https://http2.mlstatic.com/D_NQ_NP_2X_835348-MLA1040287790_082025-F.webp",  # iPhone 16 rosa
+    "bicicleta-spinning-mzy-15kg":  "https://http2.mlstatic.com/D_Q_NP_2X_997574-MLA109633443994_042026-AB.webp",
 }
 
 
@@ -88,19 +84,14 @@ def main() -> int:
     updated = []
 
     for slug, ml_url in PRODUTOS.items():
-        if ml_url:
-            url = ml_url
-            print(f"  --> {slug}  <-  ML real")
-        else:
-            url = UNSPLASH[slug]
-            print(f"  --> {slug}  <-  Unsplash especifica")
+        url = ml_url
+        print(f"  --> {slug}  <-  ML real")
 
         ext = ext_from_url(url)
         dest = OUT_DIR / f"{slug}{ext}"
         try:
             size = download(url, dest)
-            src = "ML" if ml_url else "Unsplash"
-            print(f"       OK ({size//1024} KB, {src})")
+            print(f"       OK ({size//1024} KB, ML)")
         except Exception as e:
             print(f"       ERR {e}")
             failures.append((slug, str(e)))

@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 """
-Para os 3 produtos faltantes, faz 3 tentativas:
+Para os 3 produtos faltantes, faz 3 tentativas (todas com URLs REAIS do ML):
 1. Hit URL /p/MLB com PowerShell, parsear por regex por og:image ou mlstatic
 2. Se falhar, tentar /c/celulares-e-telefones e /ofertas page=2/3
-3. Última opção: fallback Unsplash com query especifica do produto
+3. Última opção: usar URL hard-coded do `download-missing.py` (também ML)
+
+O projeto NÃO usa Unsplash — toda imagem é foto real do produto.
 """
 import re
 import sys
