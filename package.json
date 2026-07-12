@@ -11,6 +11,8 @@
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
     "check:images": "node scripts/check-images.mjs",
+    "sync:ofertas": "node scripts/sync-ofertas-ml.mjs",
+    "ofertas:ingest": "node scripts/ofertas-ingest.mjs",
     "ofertas:db:migrate": "node --env-file=.env.local scripts/migrate-ofertas-to-supabase.mjs",
     "ofertas:db:verify": "node --env-file=.env.local scripts/verify-ofertas.mjs",
     "ofertas:db:apply-schema": "node --env-file=.env.local scripts/apply-schema.mjs",
