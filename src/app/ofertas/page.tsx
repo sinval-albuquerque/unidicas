@@ -2,13 +2,31 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { OfertaCuratedCard } from "@/components/OfertaCuratedCard";
 import { OfertaCard } from "@/components/OfertaCard";
-import { obterTodasOfertas } from "@/lib/ofertas-content";
+import { obterOfertasAtivas } from "@/lib/ofertas-db";
 import { obterTodasReviews } from "@/lib/reviews";
 import {
   AFILIADO_ML_PERFIL_URL,
   OFERTAS_ML_LABEL,
   OFERTAS_ML_LISTA_URL,
 } from "@/lib/ofertas";
+
+/**
+ * Página /ofertas
+ *
+ * Fonte primária: Supabase (tabela `ofertas`) — atualizada dinamicamente
+ *   sem rebuild do site.
+ * Fallback: MDX em `src/content/ofertas/*.mdx` (se Supabase não responder).
+ *
+ * Renderização: ISR. O HTML é regenerado a cada `revalidate` segundos
+ *   (ver `export const revalidate` abaixo). Visitantes sempre veem uma
+ *   página estática rápida, mas o conteúdo é "fresco" sem git push.
+ *
+ * Como editar ofertas:
+ *   1. Table Editor do Supabase, OU
+ *   2. SQL direto, OU
+ *   3. `node scripts/migrate-ofertas-to-supabase.mjs` (sobe os .mdx)
+ */
+export const revalidate = 3600; // 1 hora
 
 /**
  * Página /ofertas
@@ -42,8 +60,8 @@ export const metadata: Metadata = {
   },
 };
 
-export default function OfertasPage() {
-  const ofertasCuradas = obterTodasOfertas();
+export default async function OfertasPage() {
+  const ofertasCuradas = await obterOfertasAtivas();
   const reviews = obterTodasReviews()
     .filter((r) => r.precoOriginal && r.precoOriginal > r.preco)
     .sort((a, b) => b.nota - a.nota)
