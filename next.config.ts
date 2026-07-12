@@ -11,6 +11,42 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: path.resolve("."),
   },
+  // Redirects 301 — preservam SEO e mandam tráfego órfão para a index.
+  // Adicione aqui matérias removidas para que links antigos não virem 404.
+  async redirects() {
+    return [
+      {
+        source: "/materias/fone-bluetooth-anc-e-bom",
+        destination: "/materias",
+        permanent: true,
+      },
+      {
+        source: "/materias/melhor-notebook-home-office-2026",
+        destination: "/materias",
+        permanent: true,
+      },
+      {
+        source: "/materias/air-fryer-vale-a-pena",
+        destination: "/materias",
+        permanent: true,
+      },
+      {
+        source: "/materias/fone-para-ansiedade-foco",
+        destination: "/materias",
+        permanent: true,
+      },
+      {
+        source: "/materias/air-fryer-entrega-rapida-frete-gratis",
+        destination: "/materias",
+        permanent: true,
+      },
+      {
+        source: "/materias/notebook-para-estudantes",
+        destination: "/materias",
+        permanent: true,
+      },
+    ];
+  },
   // Hosts remotos permitidos para <Image>. Imagens em /public são servidas
   // automaticamente e não precisam entrar aqui.
   // Regra: o projeto NÃO usa Unsplash — toda imagem deve ser real
