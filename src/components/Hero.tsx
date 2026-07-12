@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { CATEGORIAS } from "@/lib/categorias";
+import { SECOES } from "@/lib/secoes";
 import { obterTodasReviews } from "@/lib/reviews";
 import { obterTodasOfertas } from "@/lib/ofertas-content";
 import { HeroOfertaRotativa } from "./HeroOfertaRotativa";
@@ -107,15 +108,19 @@ export function Hero() {
           <HeroOfertaRotativa pool={pool} fallback={ofertaDestaque} />
         </div>
 
-        {/* Categorias pills */}
+        {/* Seções pills (agrupamento de nível superior das categorias) */}
         <div className="mt-12 md:mt-16 flex flex-wrap justify-center gap-2">
-          {CATEGORIAS.map((c) => (
+          {SECOES.map((s) => (
             <Link
-              key={c.slug}
-              href={`/categorias/${c.slug}`}
-              className="bg-bg/80 hover:bg-bg border border-border text-text-soft hover:border-primary hover:text-primary text-sm font-medium px-4 py-2 rounded-full no-underline transition backdrop-blur-sm hover:shadow-soft"
+              key={s.slug}
+              href={`/secoes/${s.slug}`}
+              className="inline-flex items-center gap-2 bg-bg/80 hover:bg-bg border border-border text-text-soft hover:text-primary text-sm font-medium px-4 py-2 rounded-full no-underline transition backdrop-blur-sm hover:shadow-soft"
+              style={{ ["--section-color" as string]: s.cor }}
             >
-              {c.nome}
+              <span aria-hidden className="text-base leading-none">
+                {s.icone}
+              </span>
+              <span>{s.nome}</span>
             </Link>
           ))}
         </div>
