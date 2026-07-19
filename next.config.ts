@@ -52,6 +52,7 @@ const nextConfig: NextConfig = {
   // Regra: o projeto NÃO usa Unsplash — toda imagem deve ser real
   // (foto do produto no marketplace) ou arquivo local em /public.
   images: {
+    qualities: [75, 90],
     remotePatterns: [
       { protocol: "https", hostname: "http2.mlstatic.com" },
       { protocol: "https", hostname: "cdn.shopify.com" },

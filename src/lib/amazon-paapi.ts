@@ -257,7 +257,7 @@ export async function obterPrecosAmazon(
 
       if (!res.ok) {
         const text = await res.text();
-        console.warn(
+        console.debug(
           `[amazon-paapi] HTTP ${res.status} para batch ${batch.join(",")}: ${text.slice(0, 200)}`,
         );
         continue;
