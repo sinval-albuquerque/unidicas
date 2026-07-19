@@ -10,7 +10,6 @@ import { scrapingPrecosLive } from "@/lib/scrape-ofertas";
 import {
   AFILIADO_ML_PERFIL_URL,
   OFERTAS_ML_LABEL,
-  OFERTAS_ML_LISTA_URL,
 } from "@/lib/ofertas";
 import { SITE_NAME } from "@/lib/constants";
 import type { Oferta } from "@/types/oferta";
@@ -211,32 +210,6 @@ export default async function OfertasPage({
                 </div>
               </Link>
             )}
-
-            {/* ===== Vitrine ML ===== */}
-            <a
-              href={OFERTAS_ML_LISTA_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group block bg-linear-to-r from-accent/5 to-accent/10 border-2 border-accent/40 rounded-2xl p-5 md:p-6 mb-8 no-underline hover:border-accent transition"
-            >
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div>
-                  <span className="inline-block bg-accent text-black text-[0.65rem] font-extrabold px-2.5 py-0.5 rounded uppercase tracking-wider mb-2">
-                    Vitrine oficial
-                  </span>
-                  <h2 className="text-lg md:text-xl font-extrabold text-text group-hover:text-primary transition">
-                    Ver lista completa no {OFERTAS_ML_LABEL}
-                  </h2>
-                  <p className="text-sm text-text-soft mt-1">
-                    Todos os produtos curados em uma página. Atualizada pelo
-                    Mercado Livre.
-                  </p>
-                </div>
-                <span className="self-start sm:self-center inline-flex items-center gap-2 bg-accent text-black font-extrabold text-sm px-5 py-3 rounded-lg group-hover:bg-accent/90 transition shrink-0">
-                  Abrir vitrine →
-                </span>
-              </div>
-            </a>
 
             {/* ===== Grade de ofertas ===== */}
             {ofertasFiltradas.length > 0 && (
