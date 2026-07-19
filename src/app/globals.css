@@ -141,15 +141,17 @@ body {
 /* =========================================================================
    Tipografia
    ========================================================================= */
-h1, h2, h3, h4, h5, h6 {
-  color: var(--color-text);
-  font-weight: 800;
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-}
+@layer base {
+  h1, h2, h3, h4, h5, h6 {
+    color: var(--color-text);
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
 
-h1 { letter-spacing: -0.03em; }
-h2 { letter-spacing: -0.025em; }
+  h1 { letter-spacing: -0.03em; }
+  h2 { letter-spacing: -0.025em; }
+}
 
 .gradient-text {
   background: var(--gradient-text);

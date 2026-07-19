@@ -97,7 +97,7 @@ export function MateriaCard({ materia, variant = "default" }: Props) {
             <p className="text-[0.65rem] uppercase tracking-widest text-accent font-bold mb-2">
               Materia
             </p>
-            <h2 className="text-2xl md:text-3xl font-extrabold leading-tight drop-shadow-lg">
+            <h2 className="text-white text-2xl md:text-3xl font-extrabold leading-tight drop-shadow-lg">
               {materia.titulo}
             </h2>
           </div>
