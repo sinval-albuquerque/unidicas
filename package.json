@@ -18,7 +18,9 @@
     "ofertas:db:apply-schema": "node --env-file=.env.local scripts/apply-schema.mjs",
     "ofertas:db:verify-schema": "node --env-file=.env.local scripts/verify-schema.mjs",
     "ofertas:db:fix-schema": "node --env-file=.env.local scripts/fix-schema-drift.mjs",
-    "ofertas:db:smoke-anon": "node --env-file=.env.local scripts/smoke-anon.mjs"
+    "ofertas:db:smoke-anon": "node --env-file=.env.local scripts/smoke-anon.mjs",
+    "ofertas:db:cleanup": "node --env-file=.env.local scripts/deactivate-stale-ofertas.mjs",
+    "ofertas:link": "node scripts/gerar-link-afiliado.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.110.2",

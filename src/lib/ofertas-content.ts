@@ -28,16 +28,22 @@ export function obterTodasOfertas(): Oferta[] {
 
       if (!fm.slug || !fm.titulo) return null;
 
-      // Aviso (não erro) se linkAfiliado não tem matt_word
-      if (fm.linkAfiliado && !fm.linkAfiliado.includes("matt_word=")) {
-        console.warn(
-          `[ofertas] '${fm.slug}' não tem matt_word no linkAfiliado — comissão não será rastreada.`,
-        );
+      // Aviso se linkAfiliado não tem parâmetro de rastreamento
+      if (fm.linkAfiliado) {
+        const isAmazon = fm.marketplace?.toLowerCase().includes("amazon");
+        const trackingParam = isAmazon ? "tag=" : "matt_word=";
+        if (!fm.linkAfiliado.includes(trackingParam)) {
+          console.warn(
+            `[ofertas] '${fm.slug}' não tem ${trackingParam} no linkAfiliado — comissão não será rastreada.`,
+          );
+        }
       }
 
       return {
         slug: fm.slug,
         titulo: fm.titulo,
+        mlbId: fm.mlbId,
+        asin: fm.asin,
         categoria: fm.categoria ?? "outros",
         preco: fm.preco ?? 0,
         precoOriginal: fm.precoOriginal,
@@ -51,6 +57,7 @@ export function obterTodasOfertas(): Oferta[] {
         nota: fm.nota,
         resumo: fm.resumo ?? "",
         conteudo: content,
+        verificadoEm: fm.verificadoEm,
       } as Oferta;
     })
     .filter((o): o is Oferta => o !== null)

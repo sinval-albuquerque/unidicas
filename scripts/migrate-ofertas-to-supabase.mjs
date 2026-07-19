@@ -54,6 +54,8 @@ function parseOfertas() {
       titulo: data.titulo,
       produto: data.produto ?? data.titulo,
       categoria: data.categoria ?? "outros",
+      mlb_id: data.mlbId ?? null,
+      asin: data.asin ?? null,
       preco: Number(data.preco ?? 0),
       preco_original: data.precoOriginal == null ? null : Number(data.precoOriginal),
       imagem: data.imagem ?? "",
@@ -66,6 +68,7 @@ function parseOfertas() {
       nota: data.nota == null ? null : Number(data.nota),
       resumo: data.resumo ?? "",
       conteudo: content,
+      verificado_em: data.verificadoEm ?? null,
       ativo: true,
       updated_at: new Date().toISOString(),
     };

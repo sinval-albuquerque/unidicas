@@ -1,15 +1,21 @@
 import type { ReactNode } from "react";
 import { EXTERNAL_LINK_REL } from "@/lib/constants";
 
+function toNumber(v?: number | string): number | undefined {
+  if (v === undefined || v === null) return undefined;
+  const n = typeof v === "string" ? Number(v) : v;
+  return Number.isFinite(n) ? n : undefined;
+}
+
 interface ProductCalloutProps {
   /** Nome do produto. */
   title: string;
   /** URL de afiliado (compra). */
   href: string;
-  /** Preço atual (número em reais). */
-  price?: number;
-  /** Preço original (riscado). */
-  originalPrice?: number;
+  /** Preço atual (número ou string). */
+  price?: number | string;
+  /** Preço original (riscado, número ou string). */
+  originalPrice?: number | string;
   /** Nome do marketplace. */
   marketplace?: string;
   /** Imagem do produto (opcional). */
@@ -46,9 +52,11 @@ export function ProductCallout({
   ctaLabel = "Ver oferta",
   children,
 }: ProductCalloutProps) {
+  const priceNum = toNumber(price);
+  const originalPriceNum = toNumber(originalPrice);
   const desconto =
-    originalPrice && price
-      ? Math.round(((originalPrice - price) / originalPrice) * 100)
+    originalPriceNum && priceNum
+      ? Math.round(((originalPriceNum - priceNum) / originalPriceNum) * 100)
       : 0;
 
   if (variant === "inline") {
@@ -61,9 +69,9 @@ export function ProductCallout({
       >
         <span aria-hidden>🛒</span>
         {title}
-        {price !== undefined && (
+        {priceNum !== undefined && (
           <span className="text-text-soft font-normal">
-            · R$ {price.toLocaleString("pt-BR")}
+            · R$ {priceNum.toLocaleString("pt-BR")}
           </span>
         )}
         <span aria-hidden>→</span>
@@ -89,12 +97,12 @@ export function ProductCallout({
             {marketplace ?? "Produto em destaque"}
           </p>
           <p className="text-base font-extrabold text-text truncate">{title}</p>
-          {price !== undefined && (
+          {priceNum !== undefined && (
             <p className="text-sm font-bold text-success">
-              R$ {price.toLocaleString("pt-BR")}
-              {originalPrice && (
+              R$ {priceNum.toLocaleString("pt-BR")}
+              {originalPriceNum && (
                 <span className="text-xs text-text-muted line-through ml-2 font-normal">
-                  R$ {originalPrice.toLocaleString("pt-BR")}
+                  R$ {originalPriceNum.toLocaleString("pt-BR")}
                 </span>
               )}
             </p>
@@ -130,15 +138,15 @@ export function ProductCallout({
             </p>
             <h3 className="text-xl font-extrabold text-text">{title}</h3>
           </div>
-          {price !== undefined && (
+          {priceNum !== undefined && (
             <div className="text-right shrink-0">
               <p className="text-xs text-text-muted">Preço</p>
               <p className="text-2xl font-extrabold text-text">
-                R$ {price.toLocaleString("pt-BR")}
+                R$ {priceNum.toLocaleString("pt-BR")}
               </p>
-              {originalPrice && (
+              {originalPriceNum && (
                 <p className="text-xs text-text-muted line-through">
-                  de R$ {originalPrice.toLocaleString("pt-BR")}
+                  de R$ {originalPriceNum.toLocaleString("pt-BR")}
                 </p>
               )}
               {desconto > 0 && (

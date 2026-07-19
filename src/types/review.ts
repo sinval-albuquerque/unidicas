@@ -62,6 +62,7 @@ export interface ReviewFrontmatter {
   titulo: string;
   produto: string;
   categoria: CategoriaSlug;
+  mlbId?: string;
   nota: number;
   imagem: string;
   marketplace: string;

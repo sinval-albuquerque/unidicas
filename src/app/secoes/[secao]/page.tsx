@@ -3,6 +3,8 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { obterSecao, SECOES, obterCategoriasPorSecao } from "@/lib/secoes";
 import { obterReviewsPorCategoria } from "@/lib/reviews";
+import { obterOfertasAtivas } from "@/lib/ofertas-db";
+import { OfertaCuratedCard } from "@/components/OfertaCuratedCard";
 import { SecaoBadge } from "@/components/SecaoBadge";
 import { Sidebar } from "@/components/Sidebar";
 
@@ -40,6 +42,17 @@ export default async function SecaoPage({
   const reviewsSecao = categorias.flatMap((c) => obterReviewsPorCategoria(c.slug));
   const destaques = reviewsSecao.filter((r) => r.emDestaque).slice(0, 3);
   const destaquesFinal = destaques.length > 0 ? destaques : reviewsSecao.slice(0, 3);
+
+  // Ofertas ativas de todas as categorias da seção
+  const slugsCategorias = new Set(categorias.map((c) => c.slug));
+  const todasOfertas = await obterOfertasAtivas();
+  const ofertasSecao = todasOfertas
+    .filter((o) => slugsCategorias.has(o.categoria))
+    .sort(
+      (a, b) =>
+        (b.precoOriginal && b.precoOriginal > b.preco ? b.precoOriginal - b.preco : 0) -
+        (a.precoOriginal && a.precoOriginal > a.preco ? a.precoOriginal - a.preco : 0),
+    );
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-10">
@@ -109,6 +122,28 @@ export default async function SecaoPage({
               </div>
             )}
           </section>
+
+          {/* Ofertas da seção */}
+          {ofertasSecao.length > 0 && (
+            <section>
+              <div className="flex items-end justify-between mb-4 pb-2 border-b-2 border-border">
+                <h2 className="text-xl font-extrabold tracking-tight">
+                  Ofertas em {secao.nome}
+                </h2>
+                <Link
+                  href="/ofertas"
+                  className="text-sm font-semibold text-primary hover:underline no-underline shrink-0"
+                >
+                  Ver todas →
+                </Link>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {ofertasSecao.slice(0, 6).map((oferta) => (
+                  <OfertaCuratedCard key={oferta.slug} oferta={oferta} />
+                ))}
+              </div>
+            </section>
+          )}
 
           {/* Reviews em destaque da seção */}
           {destaquesFinal.length > 0 && (

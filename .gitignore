@@ -33,6 +33,10 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
+# Mercado Livre OAuth — tokens + PKCE verifier (sensíveis)
+.ml-tokens.json
+.ml-pkce.json
+
 # vercel
 .vercel
 

@@ -1,50 +1,38 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { OfertaCuratedCard } from "@/components/OfertaCuratedCard";
 import { OfertaCard } from "@/components/OfertaCard";
+import { OfertaSidebar } from "@/components/OfertaSidebar";
 import { obterOfertasAtivas } from "@/lib/ofertas-db";
 import { obterTodasReviews } from "@/lib/reviews";
+import { scrapingPrecosLive } from "@/lib/scrape-ofertas";
 import {
   AFILIADO_ML_PERFIL_URL,
   OFERTAS_ML_LABEL,
   OFERTAS_ML_LISTA_URL,
 } from "@/lib/ofertas";
+import { SITE_NAME } from "@/lib/constants";
+import type { Oferta } from "@/types/oferta";
 
 /**
- * Página /ofertas
+ * Página /ofertas — SSR DINÂMICO.
  *
- * Fonte primária: Supabase (tabela `ofertas`) — atualizada dinamicamente
- *   sem rebuild do site.
- * Fallback: MDX em `src/content/ofertas/*.mdx` (se Supabase não responder).
+ * A cada requisição:
+ *  1. Obtém metadados das ofertas (título, imagem, link) do MDX/Supabase
+ *  2. Busca PREÇOS ATUALIZADOS via scraping ao vivo da listagem /c/ofertas
+ *  3. Mescla os preços frescos com os dados editoriais
  *
- * Renderização: ISR. O HTML é regenerado a cada `revalidate` segundos
- *   (ver `export const revalidate` abaixo). Visitantes sempre veem uma
- *   página estática rápida, mas o conteúdo é "fresco" sem git push.
+ * Se o scraping falhar (ML fora do ar), usa os preços salvos — site nunca quebra.
  *
- * Como editar ofertas:
- *   1. Table Editor do Supabase, OU
- *   2. SQL direto, OU
- *   3. `node scripts/migrate-ofertas-to-supabase.mjs` (sobe os .mdx)
- */
-export const revalidate = 3600; // 1 hora
-
-/**
- * Página /ofertas
+ * Cache:
+ *  - O fetch da listagem do ML tem cache de 2 min (next.revalidate: 120)
+ *  - A página em si NÃO tem cache (sem ISR) — cada visita vê dados frescos
  *
- * Fonte primária: ofertas curadas manualmente em `src/content/ofertas/*.mdx`.
- * Cada oferta tem link de afiliado com `?matt_word=unidicasofertas` —
- * rastreamento oficial do programa de afiliados do Mercado Livre.
- *
- * Fonte secundária (fallback): reviews do Unidicas com desconto ativo.
- *
- * Por que não usar a API do Mercado Livre?
- * O ML fechou todos os endpoints de search/trends/highlights para IPs de
- * datacenter (incluindo AWS/Vercel) em 2025. Tentamos:
- *  - /sites/MLB/search       → 403 PolicyAgent
- *  - /trends/MLB             → 403
- *  - /highlights/MLB         → 403
- *  - lista.mercadolivre.com.br (LPSM) → account-verification anti-bot
- * Solução: curadoria manual = 100% confiável, sem risco de ban.
+ * Por que não usar /items/API nem /p/MLB...?
+ *  - /items/ → 403 de datacenter (produtos catalog)
+ *  - /p/MLB... → account-verification (anti-bot)
+ *  - /c/ofertas → ✅ 200 de QUALQUER IP, sempre funciona
  */
 
 export const metadata: Metadata = {
@@ -60,153 +48,303 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function OfertasPage() {
+export default async function OfertasPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string }>;
+}) {
+  const { q } = await searchParams;
+  const query = q?.trim().toLowerCase() ?? "";
+
+  // 1. Obtém dados base das ofertas (MDX → Supabase fallback)
   const ofertasCuradas = await obterOfertasAtivas();
+
+  // 2. Scrape preços ao vivo — ML + Amazon
+  const precosLive = await scrapingPrecosLive(ofertasCuradas);
+
+  // 3. Mescla preços frescos nos dados das ofertas
+  const hoje = new Date().toISOString().split("T")[0];
+  const ofertasComPrecosLive: Oferta[] = ofertasCuradas.map((oferta) => {
+    // Tenta encontrar preço por mlbId (ML) ou asin (Amazon)
+    const id = oferta.mlbId ?? oferta.asin;
+    if (!id) return oferta;
+
+    const live = precosLive.get(id);
+    if (!live) return oferta;
+
+    return {
+      ...oferta,
+      preco: live.preco,
+      precoOriginal: live.precoOriginal ?? oferta.precoOriginal,
+      verificadoEm: hoje,
+    };
+  });
+
+  // 3.5. Filtra pela query de busca (se houver)
+  const ofertasFiltradas: Oferta[] = query
+    ? ofertasComPrecosLive.filter((o) => {
+        const haystack = [
+          o.titulo,
+          o.produto,
+          o.resumo,
+          o.categoria,
+          o.marketplace,
+          ...(o.tags ?? []),
+        ]
+          .join(" ")
+          .toLowerCase();
+        return haystack.includes(query);
+      })
+    : ofertasComPrecosLive;
+
+  // 4. Reviews com desconto (fallback, igual antes)
   const reviews = obterTodasReviews()
     .filter((r) => r.precoOriginal && r.precoOriginal > r.preco)
     .sort((a, b) => b.nota - a.nota)
     .slice(0, 6);
 
+  // Pega a primeira oferta em destaque para o hero
+  const ofertaHero = (query ? ofertasFiltradas : ofertasComPrecosLive).find(
+    (o) => o.emDestaque,
+  );
+
   return (
-    <div className="max-w-6xl mx-auto px-4 py-10">
-      {/* ===== Hero ===== */}
-      <header className="mb-8">
-        <p className="text-xs uppercase tracking-[0.2em] text-accent font-extrabold mb-2">
-          🔥 Ofertas em destaque
-        </p>
-        <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-3">
-          As melhores ofertas verificadas
-        </h1>
-        <p className="text-base text-text-soft max-w-2xl">
-          Selecionamos as promoções com o melhor desconto do momento em{" "}
-          <strong>{OFERTAS_ML_LABEL}</strong>. Os links são de afiliado — se
-          você comprar, o Unidicas ganha uma pequena comissão, sem custo
-          extra para você.
-        </p>
-      </header>
+    <div className="bg-bg">
+      {/* ===== Breadcrumb ===== */}
+      <div className="border-b border-border bg-bg-alt">
+        <nav className="max-w-6xl mx-auto px-4 py-3 flex items-center gap-2 text-[0.65rem] sm:text-xs uppercase tracking-widest font-bold text-text-soft overflow-x-auto no-scrollbar">
+          <Link href="/" className="hover:text-primary no-underline shrink-0">
+            {SITE_NAME}
+          </Link>
+          <span className="text-text-muted shrink-0">/</span>
+          <span className="text-text truncate">Ofertas</span>
+        </nav>
+      </div>
 
-      {/* ===== Card "Abrir lista oficial" ===== */}
-      <a
-        href={OFERTAS_ML_LISTA_URL}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="group block bg-bg-alt border-2 border-accent rounded-2xl p-6 md:p-8 mb-10 no-underline hover:bg-accent-soft transition"
-      >
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div>
-            <span className="inline-block bg-accent text-black text-[0.7rem] font-extrabold px-2.5 py-0.5 rounded uppercase tracking-wider mb-2">
-              Lista oficial
-            </span>
-            <h2 className="text-xl md:text-2xl font-extrabold text-text group-hover:text-primary transition">
-              Ver a vitrine completa no {OFERTAS_ML_LABEL}
-            </h2>
-            <p className="text-sm text-text-soft mt-1 max-w-xl">
-              Abre a lista curada de produtos com desconto. Atualizada pelo
-              Mercado Livre.
-            </p>
-          </div>
-          <span className="self-start md:self-center inline-flex items-center gap-2 bg-accent text-black font-extrabold text-sm px-5 py-3 rounded-lg group-hover:bg-accent/90 transition shrink-0">
-            Abrir lista
-            <svg
-              aria-hidden
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="none"
-            >
-              <path
-                d="M4 12 L12 4 M5 4 H12 V11"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+      <div className="max-w-6xl mx-auto px-4 py-10">
+        {/* ===== Hero estilo JC ===== */}
+        <header className="mb-10">
+          <span className="inline-flex items-center gap-1 text-[0.65rem] sm:text-xs font-extrabold uppercase tracking-widest px-2.5 py-1 rounded-full bg-accent/10 text-accent border border-accent/30 mb-4">
+            🔥 Ofertas verificadas
           </span>
-        </div>
-      </a>
+          <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-3">
+            {query
+              ? `Resultados para “${q}”`
+              : "Ofertas do dia — Mercado Livre & Amazon"}
+          </h1>
+          {query && (
+            <p className="text-base text-text-soft max-w-2xl">
+              {ofertasFiltradas.length === 0
+                ? `Nenhuma oferta encontrada para “${q}”.`
+                : `${ofertasFiltradas.length} oferta${
+                    ofertasFiltradas.length === 1 ? "" : "s"
+                  } encontrada${ofertasFiltradas.length === 1 ? "" : "s"} para “${q}”.`}
+              {" "}
+              <Link
+                href="/ofertas"
+                className="text-primary font-semibold no-underline hover:underline"
+              >
+                Ver todas as ofertas
+              </Link>
+            </p>
+          )}
+        </header>
 
-      {/* ===== Ofertas curadas (primário) ===== */}
-      {ofertasCuradas.length > 0 && (
-        <section className="mb-12">
-          <div className="flex items-end justify-between mb-5 border-b border-border pb-3">
-            <div>
-              <h2 className="text-xl font-extrabold text-text">
-                Ofertas curadas
-              </h2>
-              <p className="text-sm text-text-soft mt-1">
-                {ofertasCuradas.length}{" "}
-                {ofertasCuradas.length === 1
-                  ? "oferta selecionada"
-                  : "ofertas selecionadas"}{" "}
-                — atualizadas manualmente pelo Unidicas.
-              </p>
-            </div>
-            <span className="text-[0.7rem] text-text-muted uppercase tracking-wider font-bold">
-              {ofertasCuradas.filter((o) => o.emDestaque).length} em destaque
-            </span>
-          </div>
+        {/* ===== Conteúdo principal + Sidebar ===== */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10">
+          {/* Coluna principal */}
+          <div className="lg:col-span-8 min-w-0">
+            {/* Oferta em destaque — hero card */}
+            {ofertaHero && (
+              <Link
+                href={`/ofertas/${ofertaHero.slug}`}
+                className="group block bg-bg border border-border rounded-2xl overflow-hidden mb-8 no-underline hover:shadow-floating transition"
+              >
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-0">
+                  <div className="md:col-span-5 relative aspect-4/3 md:aspect-auto md:min-h-55 bg-bg-gray flex items-center justify-center p-4">
+                    {ofertaHero.imagem ? (
+                      <Image
+                        src={ofertaHero.imagem}
+                        alt={ofertaHero.titulo}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 40vw"
+                        className="object-contain p-3"
+                      />
+                    ) : (
+                      <span className="text-text-muted text-sm font-bold uppercase">
+                        {ofertaHero.produto}
+                      </span>
+                    )}
+                    {ofertaHero.precoOriginal && (
+                      <div className="absolute top-3 left-3 bg-danger text-white px-2.5 py-1.5 rounded-lg text-sm font-extrabold shadow-md">
+                        -
+                        {Math.round(
+                          ((ofertaHero.precoOriginal - ofertaHero.preco) /
+                            ofertaHero.precoOriginal) *
+                            100,
+                        )}
+                        %
+                      </div>
+                    )}
+                  </div>
+                  <div className="md:col-span-7 p-5 md:p-6 flex flex-col justify-center">
+                    <span className="inline-block text-[0.6rem] font-bold text-primary uppercase tracking-wide mb-1">
+                      {ofertaHero.marketplace}
+                    </span>
+                    <h2 className="text-lg md:text-xl font-extrabold text-text group-hover:text-primary transition leading-snug mb-2">
+                      {ofertaHero.titulo}
+                    </h2>
+                    <p className="text-sm text-text-soft line-clamp-2 mb-3">
+                      {ofertaHero.resumo}
+                    </p>
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-xl md:text-2xl font-extrabold text-primary">
+                        R$ {ofertaHero.preco.toLocaleString("pt-BR")}
+                      </span>
+                      {ofertaHero.precoOriginal && (
+                        <span className="text-sm text-text-muted line-through">
+                          R$ {ofertaHero.precoOriginal.toLocaleString("pt-BR")}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            )}
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-            {ofertasCuradas.map((oferta) => (
-              <OfertaCuratedCard key={oferta.slug} oferta={oferta} />
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* ===== Fallback: reviews com desconto ===== */}
-      {reviews.length > 0 && (
-        <section>
-          <div className="flex items-end justify-between mb-5 border-b border-border pb-3">
-            <div>
-              <h2 className="text-xl font-extrabold text-text">
-                Reviews do Unidicas com desconto
-              </h2>
-              <p className="text-sm text-text-soft mt-1">
-                Produtos que já avaliamos e que estão com promoção ativa.
-              </p>
-            </div>
-            <Link
-              href="/produtos"
-              className="text-sm font-semibold text-primary hover:underline"
+            {/* ===== Vitrine ML ===== */}
+            <a
+              href={OFERTAS_ML_LISTA_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group block bg-linear-to-r from-accent/5 to-accent/10 border-2 border-accent/40 rounded-2xl p-5 md:p-6 mb-8 no-underline hover:border-accent transition"
             >
-              Ver todos →
-            </Link>
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div>
+                  <span className="inline-block bg-accent text-black text-[0.65rem] font-extrabold px-2.5 py-0.5 rounded uppercase tracking-wider mb-2">
+                    Vitrine oficial
+                  </span>
+                  <h2 className="text-lg md:text-xl font-extrabold text-text group-hover:text-primary transition">
+                    Ver lista completa no {OFERTAS_ML_LABEL}
+                  </h2>
+                  <p className="text-sm text-text-soft mt-1">
+                    Todos os produtos curados em uma página. Atualizada pelo
+                    Mercado Livre.
+                  </p>
+                </div>
+                <span className="self-start sm:self-center inline-flex items-center gap-2 bg-accent text-black font-extrabold text-sm px-5 py-3 rounded-lg group-hover:bg-accent/90 transition shrink-0">
+                  Abrir vitrine →
+                </span>
+              </div>
+            </a>
+
+            {/* ===== Grade de ofertas ===== */}
+            {ofertasFiltradas.length > 0 && (
+              <section>
+                <div className="flex items-end justify-between mb-5 border-b border-border pb-3">
+                  <div>
+                    <h2 className="text-lg sm:text-xl font-extrabold text-text">
+                      {query ? "Resultados da busca" : "Ofertas selecionadas"}
+                    </h2>
+                    <p className="text-sm text-text-soft mt-1">
+                      {ofertasFiltradas.length} ofertas com preços
+                      verificados
+                    </p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+                  {ofertasFiltradas.map((oferta) => (
+                    <OfertaCuratedCard key={oferta.slug} oferta={oferta} />
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* ===== Fallback: reviews com desconto ===== */}
+            {ofertasFiltradas.length === 0 && reviews.length > 0 && (
+              <section>
+                <div className="flex items-end justify-between mb-5 border-b border-border pb-3">
+                  <div>
+                    <h2 className="text-lg sm:text-xl font-extrabold text-text">
+                      {query ? "Resultados da busca" : "Ofertas selecionadas"}
+                    </h2>
+                    <p className="text-sm text-text-soft mt-1">
+                      {ofertasFiltradas.length} ofertas com preços
+                      verificados
+                    </p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+                  {ofertasFiltradas.map((oferta) => (
+                    <OfertaCuratedCard key={oferta.slug} oferta={oferta} />
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* ===== Fallback: reviews com desconto ===== */}
+            {ofertasFiltradas.length === 0 && reviews.length > 0 && (
+              <section>
+                <div className="flex items-end justify-between mb-5 border-b border-border pb-3">
+                  <div>
+                    <h2 className="text-lg sm:text-xl font-extrabold text-text">
+                      Reviews em promoção
+                    </h2>
+                    <p className="text-sm text-text-soft mt-1">
+                      Produtos analisados que estão com desconto
+                    </p>
+                  </div>
+                  <Link
+                    href="/produtos"
+                    className="text-sm font-semibold text-primary hover:underline shrink-0"
+                  >
+                    Ver todos →
+                  </Link>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+                  {reviews.map((review) => (
+                    <OfertaCard key={review.slug} review={review} />
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* ===== Vazio ===== */}
+            {ofertasComPrecosLive.length === 0 && reviews.length === 0 && (
+              <p className="text-text-soft">
+                Nenhuma oferta no momento. Confira a lista oficial do{" "}
+                {OFERTAS_ML_LABEL} acima.
+              </p>
+            )}
+
+            {/* ===== Rodapé de transparência ===== */}
+            <footer className="mt-10 pt-6 border-t border-border text-sm text-text-soft">
+              <p>
+                <strong>Transparência:</strong> este site usa links de afiliado{" "}
+                <a
+                  href={AFILIADO_ML_PERFIL_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary font-semibold underline"
+                >
+                  {OFERTAS_ML_LABEL} (unidicasofertas)
+                </a>
+                . Ao comprar por eles, o Unidicas recebe uma comissão, sem
+                alterar o preço para você.
+              </p>
+            </footer>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-            {reviews.map((review) => (
-              <OfertaCard key={review.slug} review={review} />
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* ===== Vazio (nunca deve acontecer, mas defensivo) ===== */}
-      {ofertasCuradas.length === 0 && reviews.length === 0 && (
-        <p className="text-text-soft">
-          Nenhuma oferta no momento. Confira a lista oficial do{" "}
-          {OFERTAS_ML_LABEL} acima.
-        </p>
-      )}
-
-      {/* ===== Rodapé de transparência ===== */}
-      <footer className="mt-12 pt-6 border-t border-border text-sm text-text-soft">
-        <p>
-          <strong>Transparência:</strong> este site usa links de afiliado{" "}
-          <a
-            href={AFILIADO_ML_PERFIL_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-primary font-semibold underline"
-          >
-            {OFERTAS_ML_LABEL} (unidicasofertas)
-          </a>
-          . Ao comprar por eles, o Unidicas recebe uma comissão, sem
-          alterar o preço para você.
-        </p>
-      </footer>
+          {/* Sidebar */}
+          <aside className="lg:col-span-4 min-w-0">
+            <div className="lg:sticky lg:top-24">
+              <OfertaSidebar />
+            </div>
+          </aside>
+        </div>
+      </div>
     </div>
   );
 }

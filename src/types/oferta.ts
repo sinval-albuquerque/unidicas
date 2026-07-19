@@ -21,6 +21,10 @@ export interface OfertaFrontmatter {
   produto: string;
   /** Categoria para filtrar (notebooks, celulares, fones, etc.). */
   categoria: string;
+  /** ID do produto no Mercado Livre (MLB...). Ex.: "MLB66895633". */
+  mlbId?: string;
+  /** ASIN do produto na Amazon. Ex.: "B0CCZ26B5K". */
+  asin?: string;
   /** Preço atual em R$ (com desconto, se houver). */
   preco: number;
   /** Preço original antes do desconto. Opcional. */
@@ -43,6 +47,14 @@ export interface OfertaFrontmatter {
   nota?: number;
   /** Resumo curto (1 linha) para cards compactos. */
   resumo: string;
+  /**
+   * Data ISO (YYYY-MM-DD) em que o preço foi verificado pela última vez
+   * contra a página do produto no marketplace. Opcional, mas se ausente
+   * o card mostra um aviso de preço possivelmente desatualizado.
+   *
+   * Mantido pelo `sync-ofertas-ml.mjs` (API) ou pelo extrator de HTML.
+   */
+  verificadoEm?: string;
 }
 
 export interface Oferta extends OfertaFrontmatter {

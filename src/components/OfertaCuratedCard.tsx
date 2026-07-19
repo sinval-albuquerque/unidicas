@@ -2,8 +2,26 @@ import Image from "next/image";
 import type { Oferta } from "@/types/oferta";
 import { EXTERNAL_LINK_REL } from "@/lib/constants";
 
+/** Idade máxima (em dias) antes de o preço ser considerado desatualizado. */
+const STALE_PRICE_DAYS = 7;
+
+/** "2026-07-14" → "14/07" (pt-BR compacto, sem ano). */
+function formatVerificadoEm(iso: string): string {
+  const d = new Date(iso + "T00:00:00");
+  if (Number.isNaN(d.getTime())) return iso;
+  return d.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" });
+}
+
+/** Calcula dias desde a verificação (pode ser negativo se a data for futura). */
+function diasDesde(iso: string, ref: Date = new Date()): number {
+  const d = new Date(iso + "T00:00:00");
+  if (Number.isNaN(d.getTime())) return Infinity;
+  const diff = ref.getTime() - d.getTime();
+  return Math.floor(diff / (1000 * 60 * 60 * 24));
+}
+
 /**
- * Card de oferta curada manualmente (vinda de src/content/ofertas/*.mdx).
+ * Card de oferta curada manualmente (vinda de src/content/ofertas/*.mdx ou Supabase).
  *
  * Mostra:
  *  - Imagem do produto
@@ -11,6 +29,7 @@ import { EXTERNAL_LINK_REL } from "@/lib/constants";
  *  - Marketplace
  *  - Preço original riscado + preço atual grande
  *  - Cupom se houver
+ *  - "Preço verificado em DD/MM" (ou aviso de preço possivelmente desatualizado)
  *  - CTA grande com link de afiliado rastreado
  */
 export function OfertaCuratedCard({ oferta }: { oferta: Oferta }) {
@@ -22,6 +41,9 @@ export function OfertaCuratedCard({ oferta }: { oferta: Oferta }) {
       : 0;
   const parcela =
     oferta.preco >= 12 ? Math.max(1, Math.floor(oferta.preco / 12)) : oferta.preco;
+
+  const dias = oferta.verificadoEm ? diasDesde(oferta.verificadoEm) : null;
+  const precoStale = dias === null || dias > STALE_PRICE_DAYS;
 
   return (
     <article className="bg-bg border border-border rounded-xl overflow-hidden transition hover:shadow-lg hover:-translate-y-0.5 flex flex-col min-w-0">
@@ -88,6 +110,28 @@ export function OfertaCuratedCard({ oferta }: { oferta: Oferta }) {
         <span className="text-[0.7rem] text-text-muted mb-2 break-words-anywhere">
           em até 12x de R$ {parcela.toLocaleString("pt-BR")} sem juros
         </span>
+
+        {/* Selo de verificação do preço: discreto quando fresco, alerta quando
+            pode ter mudado (>7 dias ou sem data). Incentiva o usuário a
+            conferir o link antes de comprar. */}
+        <p
+          className={
+            "text-[0.65rem] font-semibold mb-2 flex items-center gap-1 " +
+            (precoStale ? "text-amber-700" : "text-text-muted")
+          }
+          title={
+            oferta.verificadoEm
+              ? `Preço checado em ${oferta.verificadoEm}`
+              : "Sem data de verificação — preço pode ter mudado."
+          }
+        >
+          <span aria-hidden>{precoStale ? "⚠️" : "🟢"}</span>
+          {oferta.verificadoEm
+            ? precoStale
+              ? `Preço de ${formatVerificadoEm(oferta.verificadoEm)} — confira no link`
+              : `Preço verificado em ${formatVerificadoEm(oferta.verificadoEm)}`
+            : "Preço pode ter mudado — confira no link"}
+        </p>
 
         {oferta.cupom && (
           <div className="bg-accent-soft border border-accent/40 rounded-md px-2.5 py-1.5 mb-3 text-[0.7rem] font-bold text-text truncate">

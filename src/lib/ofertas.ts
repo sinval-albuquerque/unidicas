@@ -22,3 +22,17 @@ export const OFERTAS_ML_LABEL = "Mercado Livre";
 
 /** Quantas ofertas exibir na grade fallback. */
 export const OFERTAS_FALLBACK_LIMITE = 12;
+
+// =====================================================================
+// AMAZON
+// =====================================================================
+
+/** Amazon Associates Tracking ID. */
+export const AMAZON_ASSOCIATE_TAG =
+  process.env.AMAZON_ASSOCIATE_TAG ?? "unidicas-20";
+
+/** URL do perfil de afiliado Amazon. */
+export const AFILIADO_AMAZON_URL = `https://www.amazon.com.br/shop/${AMAZON_ASSOCIATE_TAG}`;
+
+/** Label genérico para Amazon. */
+export const OFERTAS_AMAZON_LABEL = "Amazon";

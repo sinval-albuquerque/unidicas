@@ -29,6 +29,7 @@ export function obterTodasReviews(): Review[] {
       return {
         slug: frontmatter.slug,
         titulo: frontmatter.titulo,
+        mlbId: frontmatter.mlbId,
         produto: frontmatter.produto ?? frontmatter.titulo,
         categoria: frontmatter.categoria ?? "sem-categoria",
         nota: frontmatter.nota ?? 0,

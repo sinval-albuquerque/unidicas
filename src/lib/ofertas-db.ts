@@ -27,6 +27,8 @@ interface OfertaRow {
   titulo: string;
   produto: string;
   categoria: string;
+  mlb_id: string | null;
+  asin: string | null;
   preco: number;
   preco_original: number | null;
   imagem: string;
@@ -39,6 +41,7 @@ interface OfertaRow {
   nota: number | null;
   resumo: string;
   conteudo: string;
+  verificado_em: string | null;
   ativo: boolean;
   created_at: string;
   updated_at: string;
@@ -48,6 +51,8 @@ function rowToOferta(row: OfertaRow): Oferta {
   return {
     slug: row.slug,
     titulo: row.titulo,
+    mlbId: row.mlb_id ?? undefined,
+    asin: row.asin ?? undefined,
     produto: row.produto,
     categoria: row.categoria,
     preco: Number(row.preco),
@@ -62,6 +67,7 @@ function rowToOferta(row: OfertaRow): Oferta {
     nota: row.nota == null ? undefined : Number(row.nota),
     resumo: row.resumo,
     conteudo: row.conteudo,
+    verificadoEm: row.verificado_em ?? undefined,
   };
 }
 

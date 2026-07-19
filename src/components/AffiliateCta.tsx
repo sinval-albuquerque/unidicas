@@ -13,14 +13,20 @@ interface AffiliateCtaProps {
   ctaLabel?: string;
   /** Nome do produto. */
   produto?: string;
-  /** Preço atual (R$). */
-  preco?: number;
-  /** Preço original riscado. */
-  precoOriginal?: number;
+  /** Preço atual (R$) — aceita número ou string. */
+  preco?: number | string;
+  /** Preço original riscado — aceita número ou string. */
+  precoOriginal?: number | string;
   /** Marketplace. */
   marketplace?: string;
   /** URL da imagem. */
   imagem?: string;
+}
+
+function toNumber(v?: number | string): number | undefined {
+  if (v === undefined || v === null) return undefined;
+  const n = typeof v === 'string' ? Number(v) : v;
+  return Number.isFinite(n) ? n : undefined;
 }
 
 function formatBRL(n?: number) {
@@ -30,25 +36,27 @@ function formatBRL(n?: number) {
 
 /**
  * Caixa de destaque para link de afiliado. Pode aparecer em 3 variantes:
- * - primary: box hero, full-width, com imagem + preço + CTA grande
- * - sidebar: card lateral sticky, com imagem menor
- * - inline: pílula compacta
+ * - primary: card full-width destacado com borda lateral colorida
+ * - sidebar: card lateral compacto
+ * - inline: pílula simples
  */
 export function AffiliateCta({
   variant = "primary",
   titulo = "Ver oferta",
   subtitulo,
   href,
-  ctaLabel = "Ver oferta →",
+  ctaLabel = "Ver oferta",
   produto,
   preco,
   precoOriginal,
   marketplace = "Mercado Livre",
   imagem,
 }: AffiliateCtaProps) {
+  const precoNum = toNumber(preco);
+  const precoOriginalNum = toNumber(precoOriginal);
   const desconto =
-    precoOriginal && preco && precoOriginal > preco
-      ? Math.round(((precoOriginal - preco) / precoOriginal) * 100)
+    precoOriginalNum && precoNum && precoOriginalNum > precoNum
+      ? Math.round(((precoOriginalNum - precoNum) / precoOriginalNum) * 100)
       : 0;
 
   // === INLINE ===
@@ -69,43 +77,32 @@ export function AffiliateCta({
   // === SIDEBAR ===
   if (variant === "sidebar") {
     return (
-      <div className="not-prose relative bg-gradient-to-br from-primary to-primary-dark text-white rounded-2xl shadow-floating overflow-hidden hover-lift">
-        <div className="absolute top-3 left-3 inline-flex items-center gap-1 bg-accent text-bg-dark text-[0.65rem] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-widest z-10">
-          ★ Oferta
+      <div className={`not-prose relative bg-bg rounded-xl border border-border shadow-soft overflow-hidden`}>
+        <div className="flex items-center gap-1.5 bg-bg-alt px-4 py-2 border-b border-border">
+          <span className="text-xs font-bold uppercase tracking-wider text-text-muted">{marketplace}</span>
+          {desconto > 0 && (
+            <span className="ml-auto bg-danger/10 text-danger text-xs font-extrabold px-2 py-0.5 rounded-md">
+              -{desconto}%
+            </span>
+          )}
         </div>
 
-        {imagem && (
-          <div className="aspect-[16/10] bg-white/10 overflow-hidden flex items-center justify-center">
-            <span className="text-white/60 text-xs font-extrabold uppercase tracking-widest">
-              {marketplace}
-            </span>
-          </div>
-        )}
-
-        <div className="p-5">
-          <p className="text-xs uppercase tracking-widest text-white/70 font-bold mb-2">
-            {titulo}
-          </p>
+        <div className="p-4">
           {produto && (
-            <h3 className="text-base font-extrabold leading-tight mb-3 line-clamp-2">
+            <h3 className="text-sm font-bold leading-snug text-text mb-2 line-clamp-2">
               {produto}
             </h3>
           )}
 
           <div className="flex items-baseline gap-2 mb-4">
-            {preco !== undefined && (
-              <span className="text-2xl font-extrabold">
-                R$ {formatBRL(preco)}
+            {precoNum !== undefined && (
+              <span className="text-xl font-extrabold text-text">
+                R$ {formatBRL(precoNum)}
               </span>
             )}
-            {precoOriginal && precoOriginal > (preco ?? 0) && (
-              <span className="text-xs text-white/60 line-through">
-                R$ {formatBRL(precoOriginal)}
-              </span>
-            )}
-            {desconto > 0 && (
-              <span className="ml-auto bg-danger text-white text-xs font-extrabold px-2 py-1 rounded-md">
-                -{desconto}%
+            {precoOriginalNum && precoOriginalNum > (precoNum ?? 0) && (
+              <span className="text-xs text-text-muted line-through">
+                R$ {formatBRL(precoOriginalNum)}
               </span>
             )}
           </div>
@@ -114,92 +111,70 @@ export function AffiliateCta({
             href={href}
             target="_blank"
             rel={EXTERNAL_LINK_REL}
-            className="block text-center bg-accent hover:bg-accent/90 text-bg-dark font-extrabold py-3 rounded-xl no-underline transition shadow-soft hover:shadow-elevated"
+            className="block w-full text-center bg-primary hover:bg-primary-dark text-white font-bold py-2.5 rounded-lg no-underline transition-all duration-200 text-sm"
           >
             {ctaLabel}
           </a>
-
-          <p className="text-[0.65rem] text-white/60 text-center mt-2">
-            Link afiliado • {marketplace}
-          </p>
         </div>
       </div>
     );
   }
 
-  // === PRIMARY (full-width hero) ===
+  // === PRIMARY (full-width card) ===
   return (
-    <div className="not-prose relative bg-gradient-to-br from-primary via-primary to-primary-dark text-white rounded-2xl shadow-pop overflow-hidden">
-      {/* Brilho decorativo */}
-      <div
-        aria-hidden
-        className="absolute -top-20 -right-20 w-64 h-64 rounded-full opacity-20 blur-3xl"
-        style={{ background: "radial-gradient(circle, #f59e0b 0%, transparent 70%)" }}
-      />
-
-      <div className="relative grid grid-cols-1 md:grid-cols-5 gap-6 p-6 md:p-8">
-        {/* Texto */}
-        <div className="md:col-span-3 flex flex-col justify-center">
-          <div className="inline-flex items-center gap-1.5 bg-accent text-bg-dark text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-widest mb-4 self-start">
-            🔥 {titulo}
-          </div>
-
-          {produto && (
-            <h3 className="text-xl md:text-2xl font-extrabold leading-tight mb-3">
-              {produto}
-            </h3>
-          )}
-
-          {subtitulo && (
-            <p className="text-white/80 text-sm md:text-base mb-5 leading-relaxed">
-              {subtitulo}
+    <aside
+      className="not-prose my-8 bg-bg border border-border rounded-xl overflow-hidden"
+    >
+      <div className="p-6">
+        <div className="flex items-start justify-between gap-4 mb-3">
+          <div>
+            <p className="text-xs uppercase tracking-[0.2em] text-primary font-bold mb-1">
+              {marketplace ?? "Produto em destaque"}
             </p>
-          )}
-
-          <div className="flex flex-wrap items-baseline gap-3 mb-5">
-            {preco !== undefined && (
-              <span className="text-3xl md:text-4xl font-extrabold">
-                R$ {formatBRL(preco)}
-              </span>
-            )}
-            {precoOriginal && precoOriginal > (preco ?? 0) && (
-              <span className="text-base text-white/60 line-through">
-                R$ {formatBRL(precoOriginal)}
-              </span>
-            )}
-            {desconto > 0 && (
-              <span className="bg-danger text-white text-sm font-extrabold px-3 py-1 rounded-md">
-                -{desconto}% OFF
-              </span>
+            {produto && (
+              <h3 className="text-xl font-extrabold text-text">{produto}</h3>
             )}
           </div>
-
-          <a
-            href={href}
-            target="_blank"
-            rel={EXTERNAL_LINK_REL}
-            className="inline-flex items-center justify-center gap-2 bg-accent hover:bg-accent/90 text-bg-dark font-extrabold text-base px-6 py-3.5 rounded-xl no-underline transition shadow-soft hover:shadow-elevated self-start"
-          >
-            {ctaLabel}
-            <span aria-hidden>→</span>
-          </a>
-
-          <p className="text-[0.65rem] text-white/60 mt-3">
-            Link de afiliado • {marketplace} • Preço e estoque sujeitos a alteração
-          </p>
+          <div className="text-right shrink-0">
+            <p className="text-xs text-text-muted">Preço</p>
+            {precoNum ? (
+              <>
+                <p className="text-2xl font-extrabold text-text">
+                  R$ {formatBRL(precoNum)}
+                </p>
+                {precoOriginalNum && precoOriginalNum > precoNum && (
+                  <p className="text-xs text-text-muted line-through">
+                    de R$ {formatBRL(precoOriginalNum)}
+                  </p>
+                )}
+                {desconto > 0 && (
+                  <span className="inline-block mt-1 bg-danger text-white text-xs font-bold px-2 py-0.5 rounded">
+                    -{desconto}%
+                  </span>
+                )}
+              </>
+            ) : (
+              <p className="text-lg font-bold text-text-muted">Consulte</p>
+            )}
+          </div>
         </div>
 
-        {/* Imagem */}
-        {imagem && (
-          <div className="md:col-span-2 flex items-center justify-center">
-            <div className="relative w-full aspect-square max-w-[280px] bg-white/10 rounded-2xl overflow-hidden shadow-pop flex items-center justify-center">
-              <span className="text-white/60 text-xs font-extrabold uppercase tracking-widest text-center px-4">
-                {produto ?? marketplace}
-              </span>
-            </div>
+        {subtitulo && (
+          <div className="text-sm text-text-soft leading-relaxed mb-5">
+            <p>{subtitulo}</p>
           </div>
         )}
+
+        <a
+          href={href}
+          target="_blank"
+          rel={EXTERNAL_LINK_REL}
+          className="inline-flex items-center gap-2 bg-primary-dark hover:bg-primary text-white! font-bold px-5 py-2.5 rounded-lg no-underline transition"
+        >
+          {ctaLabel}
+          <span aria-hidden>→</span>
+        </a>
       </div>
-    </div>
+    </aside>
   );
 }

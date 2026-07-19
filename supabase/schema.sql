@@ -15,6 +15,7 @@ create table if not exists public.ofertas (
   titulo          text          not null,
   produto         text          not null,
   categoria       text          not null default 'outros',
+  mlb_id          text                      check (mlb_id is null or mlb_id ~ '^MLB[A-Z0-9]+$'),
   preco           numeric(10,2) not null check (preco >= 0),
   preco_original  numeric(10,2)            check (preco_original is null or preco_original >= preco),
   imagem          text          not null default '',
@@ -27,16 +28,29 @@ create table if not exists public.ofertas (
   nota            numeric(2,1)             check (nota is null or (nota >= 0 and nota <= 5)),
   resumo          text          not null default '',
   conteudo        text          not null default '',
+  verificado_em   date,
   ativo           boolean       not null default true,
   created_at      timestamptz   not null default now(),
   updated_at      timestamptz   not null default now()
 );
+
+-- Migração idempotente para bases já existentes: garante a coluna
+-- `verificado_em` (e outros campos opcionais adicionados depois do CREATE).
+-- CREATE TABLE IF NOT EXISTS não adiciona colunas em tabelas pré-existentes.
+alter table public.ofertas
+  add column if not exists verificado_em date;
+alter table public.ofertas
+  add column if not exists mlb_id text check (mlb_id is null or mlb_id ~ '^MLB[A-Z0-9]+$');
+alter table public.ofertas
+  add column if not exists asin text check (asin is null or asin ~ '^B[A-Z0-9]{9}$');
 
 -- Índices de leitura (a query em obterOfertasAtivas filtra por ativo + ordena por em_destaque + preco).
 create index if not exists ofertas_ativo_idx      on public.ofertas (ativo);
 create index if not exists ofertas_destaque_idx   on public.ofertas (em_destaque, preco);
 create index if not exists ofertas_categoria_idx  on public.ofertas (categoria);
 create index if not exists ofertas_expira_idx     on public.ofertas (expira_em) where expira_em is not null;
+create index if not exists ofertas_verificado_idx on public.ofertas (verificado_em);
+create index if not exists ofertas_asin_idx on public.ofertas (asin) where asin is not null;
 
 -- Trigger: mantém updated_at em todo UPDATE.
 create or replace function public.touch_updated_at()
