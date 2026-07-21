@@ -60,7 +60,6 @@ export function ProductList({
               <span className="shrink-0 w-8 h-8 rounded-full bg-primary text-white text-sm font-extrabold flex items-center justify-center">
                 {i + 1}
               </span>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
               <div
                 aria-hidden
                 className="shrink-0 w-20 h-20 rounded-lg bg-bg-gray flex items-center justify-center"

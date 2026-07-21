@@ -68,8 +68,10 @@ async function scrapingML(
 }
 
 function extrairPrecoML(html: string, mlbId: string): PrecoScraped | null {
+  // Escape mlbId para evitar ReDoS
+  const escapedId = mlbId.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   const hrefRe = new RegExp(
-    `href="(https?://(?:www\\.)?mercadolivre\\.com\\.br/[a-z0-9-]+/p/${mlbId}[^"]*)"`,
+    `href="(https?://(?:www\\.)?mercadolivre\\.com\\.br/[a-z0-9-]+/p/${escapedId}[^"]{0,500})"`,
   );
   const m = html.match(hrefRe);
   if (!m) return null;

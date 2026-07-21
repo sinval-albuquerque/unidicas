@@ -15,11 +15,13 @@ export default function HomePage() {
 
   const materiaDestaque = materias[0];
   const outrasMaterias = materias.slice(1, 5);
-  const materiasLateral = materias.slice(0, 4);
+
+  // eslint-disable-next-line react-hooks/purity
+  const agora = Date.now();
 
   return (
     <>
-      <Hero />
+      <Hero agora={agora} />
 
       <div className="max-w-6xl mx-auto px-4 py-10">
         {/* =================================================================

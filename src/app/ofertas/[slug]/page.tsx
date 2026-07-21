@@ -11,7 +11,7 @@ import { ProductList } from "@/components/ProductList";
 import { ProTip, Warning, Cite } from "@/components/ProTip";
 import { obterTodasOfertas, obterOfertaPorSlug } from "@/lib/ofertas-content";
 import { obterCategoria } from "@/lib/categorias";
-import { SITE_NAME, EXTERNAL_LINK_REL } from "@/lib/constants";
+import { SITE_NAME } from "@/lib/constants";
 
 // =====================================================================
 // STATIC PARAMS + METADATA

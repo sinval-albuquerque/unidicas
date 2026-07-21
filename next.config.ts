@@ -47,6 +47,35 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  // Security headers + Content-Security-Policy
+  async headers() {
+    return [
+      {
+        source: "/(.*)",
+        headers: [
+          { key: "X-Frame-Options", value: "DENY" },
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+          {
+            key: "Content-Security-Policy",
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.googleadservices.com https://www.google-analytics.com",
+              "img-src 'self' data: https:",
+              "style-src 'self' 'unsafe-inline'",
+              "frame-src 'none'",
+              "object-src 'none'",
+              "base-uri 'self'",
+              "form-action 'self' https://www.googleadservices.com",
+              "connect-src 'self' https://*.supabase.co https://www.google-analytics.com https://ad.doubleclick.net https://www.googleadservices.com",
+              "font-src 'self'",
+            ].join("; "),
+          },
+        ],
+      },
+    ];
+  },
   // Hosts remotos permitidos para <Image>. Imagens em /public são servidas
   // automaticamente e não precisam entrar aqui.
   // Regra: o projeto NÃO usa Unsplash — toda imagem deve ser real

@@ -76,7 +76,7 @@ export function Header() {
       {/* Barra principal */}
       <div className="max-w-6xl mx-auto px-4">
         <div className="flex items-center justify-between gap-6 py-3.5">
-          <Logo size={40} priority />
+          <Logo size={52} priority />
 
           <NavBar />
         </div>

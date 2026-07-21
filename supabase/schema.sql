@@ -52,6 +52,31 @@ create index if not exists ofertas_expira_idx     on public.ofertas (expira_em) 
 create index if not exists ofertas_verificado_idx on public.ofertas (verificado_em);
 create index if not exists ofertas_asin_idx on public.ofertas (asin) where asin is not null;
 
+-- RLS: proteção da tabela contra acesso não autorizado
+-- A anon key (NEXT_PUBLIC_SUPABASE_ANON_KEY) só pode LER ofertas ativas.
+alter table public.ofertas enable row level security;
+
+drop policy if exists "Ofertas ativas são públicas" on public.ofertas;
+create policy "Ofertas ativas são públicas"
+  on public.ofertas for select
+  using (ativo = true);
+
+drop policy if exists "Admin pode inserir" on public.ofertas;
+create policy "Admin pode inserir"
+  on public.ofertas for insert
+  with check (auth.role() = 'service_role');
+
+drop policy if exists "Admin pode alterar" on public.ofertas;
+create policy "Admin pode alterar"
+  on public.ofertas for update
+  using (auth.role() = 'service_role')
+  with check (auth.role() = 'service_role');
+
+drop policy if exists "Admin pode deletar" on public.ofertas;
+create policy "Admin pode deletar"
+  on public.ofertas for delete
+  using (auth.role() = 'service_role');
+
 -- Trigger: mantém updated_at em todo UPDATE.
 create or replace function public.touch_updated_at()
 returns trigger as $$

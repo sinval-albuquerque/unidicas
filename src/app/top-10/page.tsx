@@ -53,7 +53,6 @@ export default function Top10Page() {
               >
                 {i + 1}
               </span>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
               <div
                 aria-hidden
                 className="shrink-0 w-24 h-24 rounded-lg bg-bg-gray flex items-center justify-center"

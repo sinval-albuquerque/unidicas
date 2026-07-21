@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { CATEGORIAS } from "@/lib/categorias";
-import { SITE_NAME, SITE_URL } from "@/lib/constants";
+import { SITE_NAME } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Como funciona o Unidicas",
@@ -71,7 +71,7 @@ export default function ComoFuncionaPage() {
         <p>
           Alguns links do site são de <strong>afiliados</strong> de marketplaces
           como Mercado Livre, Amazon, Shopee e Magalu. Quando você clica em
-          "Ver oferta" e efetua uma compra, podemos receber uma pequena
+          &ldquo;Ver oferta&rdquo; e efetua uma compra, podemos receber uma pequena
           comissão — <strong>sem custo extra para você</strong>.
         </p>
         <p>

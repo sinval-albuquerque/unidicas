@@ -1,6 +1,5 @@
 import { describe, it, expect } from "vitest";
 import { ordenarPorAtributo, obterMelhorPorAtributo, obterTabelaComparativa } from "@/lib/comparacoes";
-import { obterCategoria } from "@/lib/categorias";
 import type { AtributoComparacao, Review } from "@/types/review";
 
 const reviews: Review[] = [

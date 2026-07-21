@@ -47,7 +47,7 @@ export function Cite({
 }) {
   return (
     <blockquote className="not-prose my-6 border-l-4 border-primary bg-primary-light rounded-r-lg p-4 italic text-text-soft text-sm">
-      <div className="not-italic">"{children}"</div>
+      <div className="not-italic">&ldquo;{children}&rdquo;</div>
       <footer className="mt-2 text-xs text-text-muted not-italic">
         —{" "}
         {href ? (

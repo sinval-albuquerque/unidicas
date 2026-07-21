@@ -124,7 +124,7 @@ export function ProductCallout({
   return (
     <aside className="not-prose my-8 bg-bg border border-border rounded-xl overflow-hidden">
       {image && (
-        <div className="aspect-[16/7] overflow-hidden bg-bg-gray flex items-center justify-center">
+        <div className="aspect-16/7 overflow-hidden bg-bg-gray flex items-center justify-center">
           <span className="text-text-muted text-xs font-extrabold uppercase tracking-widest">
             {marketplace ?? "Produto em destaque"}
           </span>

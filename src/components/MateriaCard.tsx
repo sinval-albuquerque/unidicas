@@ -58,7 +58,7 @@ export function MateriaCard({ materia, variant = "default" }: Props) {
       <article className="group">
         <Link
           href={`/materias/${materia.slug}`}
-          className="block relative aspect-[16/9] rounded-2xl overflow-hidden bg-bg-gray mb-5 no-underline shadow-elevated"
+          className="block relative aspect-video rounded-2xl overflow-hidden bg-bg-gray mb-5 no-underline shadow-elevated"
         >
           {materia.imagem ? (
             <Image
@@ -78,7 +78,7 @@ export function MateriaCard({ materia, variant = "default" }: Props) {
           )}
 
           {/* Overlay gradient inferior para legibilidade */}
-          <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-2/3 bg-linear-to-t from-black/70 via-black/20 to-transparent" />
 
           {/* Badges */}
           <div className="absolute top-4 left-4 flex gap-2">
@@ -111,7 +111,7 @@ export function MateriaCard({ materia, variant = "default" }: Props) {
     <article className="group bg-bg border border-border rounded-2xl overflow-hidden hover-lift shadow-soft hover:shadow-floating flex flex-col h-full">
       <Link
         href={`/materias/${materia.slug}`}
-        className="block relative aspect-[16/10] overflow-hidden bg-bg-gray no-underline"
+        className="block relative aspect-16/10 overflow-hidden bg-bg-gray no-underline"
       >
         {materia.imagem ? (
           <Image

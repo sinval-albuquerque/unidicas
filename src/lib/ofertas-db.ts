@@ -18,7 +18,7 @@
 
 import { supabase } from "@/lib/supabase";
 import { obterTodasOfertas as obterTodasOfertasMdx } from "@/lib/ofertas-content";
-import type { Oferta, OfertaFrontmatter } from "@/types/oferta";
+import type { Oferta } from "@/types/oferta";
 
 /** Linha do Supabase (snake_case). */
 interface OfertaRow {

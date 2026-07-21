@@ -10,7 +10,7 @@ import {
 } from "@/lib/oferta-rotativa";
 
 /** Hero da home — moderno, com gradiente, stats ao vivo e CTAs duplos. */
-export function Hero() {
+export function Hero({ agora }: { agora: number }) {
   const totalReviews = obterTodasReviews().length;
   const totalOfertas = obterTodasOfertas().length;
 
@@ -26,10 +26,12 @@ export function Hero() {
   const pool = destaque.length > 0 ? destaque : comDesconto;
 
   // Oferta "atual" segundo a janela de 30min — calculada de forma
-  // determinística no servidor para casar com o primeiro tick do client.
-  const agora = Date.now();
+  // determinística no servidor. O timestamp é passado pela HomePage
+  // (server component) para evitar impureza no client.
   const ofertaDestaque =
-    selecionarOfertaRotativa(pool, agora, JANELA_ROTACAO_MS) ?? null;
+    pool.length > 0
+      ? selecionarOfertaRotativa(pool, agora, JANELA_ROTACAO_MS) ?? null
+      : null;
 
   return (
     <section className="relative overflow-hidden bg-mesh-hero">

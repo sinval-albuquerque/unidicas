@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import Script from "next/script";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
@@ -55,15 +56,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" className={`${inter.variable} h-full antialiased`}>
-      <head>
-        {/* Google Ads (gtag.js) — snippet vanilla no <head> para garantir
-            carregamento SSR (Next 13+ com next/script+afterInteractive nao
-            injeta no SSR). Carrega o mais cedo possivel. */}
-        <script
-          async
+      <head />
+      <body className="min-h-full flex flex-col">
+        {/* Google Ads (gtag.js) — carregamento SSR seguro via next/script */}
+        <Script
+          strategy="afterInteractive"
           src="https://www.googletagmanager.com/gtag/js?id=AW-18148597305"
         />
-        <script
+        <Script
+          id="gtag-init"
+          strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `
               window.dataLayer = window.dataLayer || [];
@@ -73,8 +75,6 @@ export default function RootLayout({
             `,
           }}
         />
-      </head>
-      <body className="min-h-full flex flex-col">
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />

@@ -23,7 +23,7 @@ export function OfertaCard({ review }: { review: Review }) {
 
   return (
     <article className="bg-bg border border-border rounded-xl overflow-hidden transition hover:shadow-lg hover:-translate-y-0.5 flex flex-col min-w-0">
-      <div className="relative aspect-[16/10] sm:aspect-auto sm:h-44 bg-bg-gray flex items-center justify-center overflow-hidden">
+      <div className="relative aspect-16/10 sm:aspect-auto sm:h-44 bg-bg-gray flex items-center justify-center overflow-hidden">
         {review.imagem ? (
           <Image
             src={review.imagem}

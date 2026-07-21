@@ -64,8 +64,6 @@ function ganchoPorNota(nota: number): string {
 
 /** Title CTR-optimized: keyword primária à esquerda, modificadores à direita. */
 export function buildTitle(review: Review): string {
-  const categoria = obterCategoria(review.categoria as never);
-  const categoriaNome = categoria?.nome ?? "Review";
   const notaStr = `Nota ${review.nota.toFixed(1)}/5`;
 
   // Título base: "Produto: subtítulo - Nota 4.8/5 (2026) | Categoria - Unidicas"
@@ -77,8 +75,6 @@ export function buildTitle(review: Review): string {
 
 /** Description com gatilhos de CTR: veredito, preço, desconto, marketplace. */
 export function buildDescription(review: Review): string {
-  const categoria = obterCategoria(review.categoria as never);
-  const categoriaNome = categoria?.nome ?? "produto";
   const desconto = calcularDesconto(review.preco, review.precoOriginal);
   const precoStr = fmtPreco(review.preco);
 
@@ -164,7 +160,6 @@ export function buildOpenGraph(
   canonical: string,
 ): NonNullable<Metadata["openGraph"]> {
   const categoria = obterCategoria(review.categoria as never);
-  const desconto = calcularDesconto(review.preco, review.precoOriginal);
 
   return {
     type: "article",
@@ -193,7 +188,7 @@ export function buildOpenGraph(
 /** Twitter Card com creator do site. */
 export function buildTwitter(
   review: Review,
-  canonical: string,
+  _canonical?: string,
 ): NonNullable<Metadata["twitter"]> {
   return {
     card: "summary_large_image",

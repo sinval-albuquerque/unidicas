@@ -25,7 +25,7 @@ interface LogoProps {
  *  ~2000px de lado para qualidade retina.
  */
 export function Logo({
-  size = 28,
+  size = 48,
   priority = false,
   className = "",
   aspectRatio = 1,

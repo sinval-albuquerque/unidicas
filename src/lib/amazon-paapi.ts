@@ -161,8 +161,22 @@ function buildPayload(asins: string[], tag: string): string {
 // PARSER
 // =====================================================================
 
+interface ItemResult {
+  ItemsResult?: {
+    Items?: Array<{
+      ASIN: string;
+      Offers?: {
+        Listings?: Array<{
+          Price?: { Amount?: number };
+          SavingBasis?: { Amount?: number };
+        }>;
+      };
+    }>;
+  };
+}
+
 function parsePrecos(
-  data: any,
+  data: ItemResult,
   asins: string[],
 ): Map<string, PrecoAmazon> {
   const resultado = new Map<string, PrecoAmazon>();

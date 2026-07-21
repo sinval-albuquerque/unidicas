@@ -16,7 +16,7 @@ export function ReviewCard({ review }: { review: Review }) {
 
   return (
     <article className="group bg-bg border border-border rounded-2xl overflow-hidden hover-lift flex flex-col shadow-soft hover:shadow-floating min-w-0">
-      <div className="relative aspect-[16/10] sm:aspect-auto sm:h-44 bg-bg-gray flex items-center justify-center overflow-hidden">
+      <div className="relative aspect-16/10 sm:aspect-auto sm:h-44 bg-bg-gray flex items-center justify-center overflow-hidden">
         {review.imagem ? (
           <Image
             src={review.imagem}
@@ -51,7 +51,7 @@ export function ReviewCard({ review }: { review: Review }) {
         </div>
 
         {/* Overlay gradient sutil para legibilidade dos badges */}
-        <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-black/20 to-transparent pointer-events-none z-[1]" />
+        <div className="absolute inset-x-0 top-0 h-20 bg-linear-to-b from-black/20 to-transparent pointer-events-none z-1" />
       </div>
 
       <div className="p-4 sm:p-5 flex flex-col flex-1 min-w-0">
